@@ -1,0 +1,85 @@
+/* -------------------------------------------------------------------
+// Markdown Editor Skin 
+// ------------------------------------------------------------------*/
+.jTagEditor-toolBar {
+	list-style:none;
+	margin: 0;
+	padding: 0;
+}
+.jTagEditor-toolBar ul	{
+	margin:5px 0 0;
+	padding:0;
+}
+.jTagEditor-toolBar li	{
+	float:left;
+	margin-bottom:0;
+}
+.jTagEditor-toolBar a {
+	display:block;
+	width:16px; height:16px;
+	margin:1px 3px;
+	text-indent:-1000px;
+	overflow:hidden;
+}	
+.jTagEditor-editor {
+}
+
+.jTagEditor-button1 a	{
+	background-image:url(../../../images/jquery/jtageditor/icons/h1.png);
+}
+.jTagEditor-button2 a	{
+	background-image:url(../../../images/jquery/jtageditor/icons/h2.png);
+}
+.jTagEditor-button3 a	{
+	background-image:url(../../../images/jquery/jtageditor/icons/h3.png);
+}
+.jTagEditor-button4 a	{
+	background-image:url(../../../images/jquery/jtageditor/icons/h4.png);
+}
+.jTagEditor-button5 a	{
+	background-image:url(../../../images/jquery/jtageditor/icons/h5.png);
+}
+.jTagEditor-button6 a	{
+	background-image:url(../../../images/jquery/jtageditor/icons/h6.png);
+	margin-right:20px;
+}
+.jTagEditor-button7 a	{
+	background-image:url(../../../images/jquery/jtageditor/icons/picture.png);
+}
+.jTagEditor-button8 a	{
+	background-image:url(../../../images/jquery/jtageditor/icons/link.png);
+	margin-right:20px;
+}
+.jTagEditor-button9 a	{
+	background-image:url(../../../images/jquery/jtageditor/icons/bold.png);
+}
+.jTagEditor-button10 a	{
+	background-image:url(../../../images/jquery/jtageditor/icons/italic.png);
+}
+.jTagEditor-button11 a	{
+	background-image:url(../../../images/jquery/jtageditor/icons/superscript.png);
+}
+.jTagEditor-button12 a	{
+	background-image:url(../../../images/jquery/jtageditor/icons/subscript.png);
+	margin-right:20px;
+}
+.jTagEditor-button13 a	{
+	background-image:url(../../../images/jquery/jtageditor/icons/list-bullets.png);
+}
+.jTagEditor-button14 a	{
+	background-image:url(../../../images/jquery/jtageditor/icons/list-numbers.png);
+}
+.jTagEditor-button18 a	{
+	background-image:url(../../../images/jquery/jtageditor/icons/indent.png);
+	margin-right:20px;
+}
+.jTagEditor-button19 a	{
+	background-image:url(../../../images/jquery/jtageditor/icons/code.png);
+	margin-right:20px;
+}
+.jTagEditor-rezizeHandle {
+	width:16px; height:5px;
+	margin:0px 0 0 394px;
+	background-image:url(../../../images/jquery/jtageditor/icons/handle.png);
+	cursor:n-resize;
+}

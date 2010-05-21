@@ -1,0 +1,7 @@
+h2. Lenore
+
+Out of the box no frills CMS with room for expansion and easy customisation built upon the Cake Framework
+
+h3. TODO
+
+Improve this README
