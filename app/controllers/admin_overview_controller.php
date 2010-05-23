@@ -2,8 +2,7 @@
 class AdminOverviewController extends AppController
 {
 	var $name = 'AdminOverview';
-	var $uses = array('Article','Section','Comment','Product','Category');
-//	var $layout = 'default';
+	var $uses = array('Section','Category');
 	
 	function admin_index() {
 		$this->set('title_for_layout','');
@@ -15,7 +14,7 @@ class AdminOverviewController extends AppController
 				$category_info[] = array(
 					'title'=>$cat_val,
 					'id'=>$cat_key,
-					'product_count'=>$this->Product->find('count',array('conditions'=>array('Category.id'=>$cat_key,'Product.draft'=>0)
+					'product_count'=>$this->Category->Product->find('count',array('conditions'=>array('Category.id'=>$cat_key,'Product.draft'=>0)
 				)));
 			$this->set('category_info',$category_info);
 		}
@@ -26,7 +25,7 @@ class AdminOverviewController extends AppController
 				$section_info[] = array(
 					'title'=>$sect_val,
 					'id'=>$sect_key,
-					'article_count'=>$this->Article->find('count',array('conditions'=>array('Section.id'=>$sect_key,'Article.draft'=>0))));
+					'article_count'=>$this->Section->Article->find('count',array('conditions'=>array('Section.id'=>$sect_key,'Article.draft'=>0))));
 			$this->set('section_info',$section_info);
 		}
 	}

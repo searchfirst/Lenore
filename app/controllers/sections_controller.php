@@ -33,11 +33,11 @@ class SectionsController extends AppController {
 
 
 	function admin_index() {
-		$this->set('sections',$this->Section->find('all',array(
+		$sections = $this->Section->find('all',array(
 			'order' => 'Section.order_by ASC',
 			'recursive' => 1
-		)));
-		
+		));
+		$this->set('sections',$sections);
 	}
 
 	function admin_view($id=null,$page=1) {

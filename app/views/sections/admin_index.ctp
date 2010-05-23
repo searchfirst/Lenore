@@ -32,10 +32,10 @@ echo "draft.png\" alt=\"Draft\"";
 } else {
 echo "published.png\" alt=\"Published\"";
 }?> class="flag"></td>
-<td><img src="/img/admin/flag-<?php if($section['Section']['flagged']) {
-echo "flagged.png\" alt=\"Flagged\"";
+<td><img src="/img/admin/flag-<?php if($section['Section']['featured']) {
+echo "flagged.png\" alt=\"Featured\"";
 } else {
-echo "unflagged.png\" alt=\"Unflagged\"";
+echo "unflagged.png\" alt=\"Normal\"";
 }?> class="flag"></td>
 <td><?php echo substr($time->toRSS($section['Section']['created']),0,-15);?></td>
 <td><?php echo substr($time->toRSS($section['Section']['modified']),0,-15);?></td>
