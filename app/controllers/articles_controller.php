@@ -42,8 +42,10 @@ class ArticlesController extends AppController {
 
 
 	function admin_index() {
-		$this->Article->recursive = 0;
-		$this->set('articles', $this->Article->findAll());
+		$this->set('articles', $this->Article->find('all',array('recursive'=>0)));
+		$this->viewPath = 'errors';
+		$this->render('not_found');
+		
 	}
 
 	function admin_view($id = null) {
@@ -55,23 +57,22 @@ class ArticlesController extends AppController {
 	}
 
 	function admin_add() {
-		if(empty($this->data) or isset($this->data['Referrer']['section_id']) ) {
-			$this->data['Article']['section_id'] = $this->data['Referrer']['section_id'];
-			$this->set('sections', $this->Article->Section->generateList());
+		if(empty($this->data)) {
+			$this->retrieveGetIdsToData();
+			$this->set('sections', $this->Article->Section->find('list',array('conditions'=>array('articles_enabled'=>1))));
 		} else {
-			$this->cleanUpFields();
 			if($this->Article->save($this->data)) {
-				$this->Rss->ping();
+				$last_id = $this->Article->getLastInsertId();
 				if(isset($GLOBALS['moonlight_inline_count_set'])) {
 					$this->Session->setFlash("This item has been saved. You need to upload media for this item");
-					$this->redirect('/'.strtolower($this->name).'/manageinline/'.$this->Article->getLastInsertId());
+					$this->redirect("/admin/articles/manageinline/$last_id");
 				} else {
 					$this->Session->setFlash("This item has been saved.");
-					$this->redirect('/'.strtolower($this->name).'/view/'.$this->Article->getLastInsertId());
+					$this->redirect("/admin/articles/view/$last_id");
 				}
 			} else {
-				$this->Session->setFlash('Please correct errors below.');
-				$this->set('sections', $this->Article->Section->generateList());
+				$this->Session->setFlash('Please correct the errors.');
+				$this->set('sections', $this->Article->Section->find('list',array('conditions'=>array('articles_enabled'=>1))));
 			}
 		}
 	}

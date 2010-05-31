@@ -1,6 +1,6 @@
 <h2><?php echo vsprintf("%s: %s",array(Configure::read('Section.alias'),$section['Section']['title'])) ?></h2>
 <ul class="hook_menu">
-<li><?php echo $html->link(sprintf("Add %s",Configure::read('Article.alias')),array('admin'=>true,'controller'=>'articles','action'=>'add','?'=>array('section_id'=>$section['Section']['id'])));?></li>
+<li><?php echo $html->link(sprintf("Add %s",Configure::read('Article.alias')),array('admin'=>true,'controller'=>'articles','action'=>'add','?'=>array('data[Article][section_id]'=>$section['Section']['id'])));?></li>
 <li><?php echo $html->link(sprintf("Edit %s",Configure::read('Section.alias')),array('admin'=>true,'controller'=>'sections','action'=>'edit',$section['Section']['id']));?></li>
 <li><?php echo $html->link(sprintf("Delete %s",Configure::read('Section.alias')),array('admin'=>true,'controller'=>'sections','action'=>'delete',$section['Section']['id']));?></li>
 </ul>
@@ -8,7 +8,9 @@
 <ul class="tab_hooks">
 <li><a href="#item_display_main">Main</a></li>
 <li><a href="#item_display_media">Media</a></li>
+<?php if($section['Section']['articles_enabled']):?>
 <li><a href="#item_display_children">Articles</a></li>
+<?php endif;?>
 <li><a href="#item_display_meta">SEO</a></li>
 </ul>
 
@@ -64,7 +66,7 @@ else
 </div>
 </div>
 
-<div id="item_display_children" class="tab_page">
+<?php if($section['Section']['articles_enabled']):?><div id="item_display_children" class="tab_page">
 <h3><?php echo Inflector::pluralize(Configure::read('Article.alias'));?></h3>
 <div class="content">
 <?php if(empty($section['Article'])):?>
@@ -99,7 +101,7 @@ $previous_id = $article['id'];?>
 </ul>
 <?php endif;?>
 </div>
-</div>
+</div><?php endif;?> 
 
 <div id="item_display_meta" class="tab_page">
 <h3 class="tabs-heading">SEO</h3>

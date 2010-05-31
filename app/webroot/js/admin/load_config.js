@@ -14,7 +14,8 @@ $(document).ready(function() {
 			$(this).children('div').fadeOut('fast');
 		}
 	});
-	
+
+	$('.message').dialog({modal:true});
 });
 
 

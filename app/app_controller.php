@@ -50,6 +50,26 @@ class AppController extends Controller {
 		if($this->RequestHandler->isAjax()) $this->set('is_ajax',true);
 	}
 
+	function retrieveGetIdsToData() {
+		if(!empty($this->params['url']['data'])) {
+			if(empty($this->data)) {
+				$this->data = $this->params['url']['data'];
+				unset($this->params['url']['data']);
+			} else {
+				$newdata = $this->params['url']['data'];
+				$this->data = array_merge($newdata,$this->data);
+				unset($this->params['url']['data']);
+			}
+		}
+		foreach($this->params['url'] as $x=>$params) {
+			if(preg_match('/_id$/i',$x)) {
+				$newdata['Referrer'][$x] = $params;
+				if(empty($this->data)) $this->data = array();
+				$this->data = array_merge($newdata,$this->data);
+			}
+		}
+	}
+
 	function build_acl() {
 		if (!Configure::read('debug')) {
 			return $this->_stop();

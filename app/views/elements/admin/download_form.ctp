@@ -7,7 +7,7 @@ $model = isset($model)?$model:$this->params['models'][0];
 <?php //echo $form->label('Fileupload/description][','Description',array('for'=>'FileuploadDownloadableDescription'))?> 
 <?php echo $form->input('Fileupload/description][',array(
 	'cols'=>'80','rows'=>'3','id'=>'FileuploadDownloadableDescription','label'=>array('text'=>'Description','for'=>'FileuploadDownloadableDescription')))?> 
-<?php echo $form->hidden('Fileupload/type][',array('value'=>MOONLIGHT_RESTYPE_DOWNLOAD,'id'=>'FileuploadDownloadableType'))?> 
+<?php echo $form->hidden('Fileupload/type][',array('value'=>Resource::$types['Download'],'id'=>'FileuploadDownloadableType'))?> 
 <div>
 <input type="file" name="Fileupload[]" id="FileuploadDownloadable" />
 </div>

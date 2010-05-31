@@ -16,7 +16,8 @@
 echo $content_for_layout;
 ?> 
 </div>
-<?php if ($session->check('Message.flash')) echo $session->flash();?>
-<?php if($session->check('Message.auth')) echo $session->flash('auth');?>
-</div></body>
+</div>
+<?php if ($session->check('Message.flash')) echo $session->flash();?> 
+<?php if($session->check('Message.auth')) echo $session->flash('auth');?> 
+</body>
 </html>

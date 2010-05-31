@@ -1,12 +1,12 @@
 <div class="options">
-<?php echo $this->renderElement('new_item_form',
+<?php echo $this->element('admin/new_item_form',
 	array('parentClass'=>'Section','parentName'=>$article['Section']['title'],'parentId'=>$article['Section']['id']))?>
-<?php echo $this->renderElement('edit_form',
+<?php echo $this->element('admin/edit_form',
 	array('id'=>$article['Article']['id'],'model'=>'Article','count'=>0,'title'=>$article['Article']['title']))?>
-<?php echo $this->renderElement('delete_form',
+<?php echo $this->element('admin/delete_form',
 	array('id'=>$article['Article']['id'],'model'=>'Article','count'=>0,'title'=>$article['Article']['title']))?>
 </div>
-<h2><?php echo $textAssistant->link($article['Section']['title'],"/sections/view/{$article['Section']['id']}")?> — <?php echo MOONLIGHT_ARTICLES_TITLE ?>: <?php echo $article['Article']['title']?></h2>
+<h2><?php echo $textAssistant->link($article['Section']['title'],"/admin/sections/view/{$article['Section']['id']}")?> — <?php echo Configure::read('Article.alias') ?>: <?php echo $article['Article']['title']?></h2>
 
 <div id="item_display">
 <ul>

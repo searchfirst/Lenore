@@ -2,7 +2,10 @@
 <?php echo $javascript->link('jquery/ui/core');?> 
 <?php echo $javascript->link('jquery/ui/widget');?> 
 <?php echo $javascript->link('jquery/ui/mouse');?> 
+<?php echo $javascript->link('jquery/ui/bgiframe');?> 
 <?php echo $javascript->link('jquery/ui/sortable');?> 
+<?php echo $javascript->link('jquery/ui/dialog');?> 
+<?php echo $javascript->link('jquery/ui/position');?>
 <?php echo $javascript->link('jquery/hook_menu');?> 
 <?php echo $javascript->link('jquery/dux_tabs');?> 
 <?php echo $javascript->link('admin/load_config');?> 
