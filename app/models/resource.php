@@ -4,6 +4,7 @@ class Resource extends AppModel {
 	var $validate = array();
 	var $hasAndBelongsToMany = array("Article","Section","Product","Category");
 	public static $types = array('Decorative'=>0,'Inline'=>1,'Download'=>2);
+	public static $delete_list = null;
 
 	function beforeValidate() {
 		return true;
@@ -15,6 +16,14 @@ class Resource extends AppModel {
 		return true;
 	}
 
+	public static function setDeleteList($list) {
+		if(is_array($list)) {
+			self::$delete_list = $list;
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 }
 ?>

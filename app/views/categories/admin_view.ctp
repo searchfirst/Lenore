@@ -1,50 +1,44 @@
-<div class="options">
-<?php echo $this->renderElement('new_item_form',
-	array('model'=>'Product','controller'=>'Products','parentClass'=>'Category','parentName'=>$category['Category']['title'],'parentId'=>$category['Category']['id']))?>
-<?php echo $this->renderElement('edit_form',array('id'=>$category['Category']['id'],'title'=>$category['Category']['title']))?> 
-<?php echo $this->renderElement('delete_form',array('id'=>$category['Category']['id'],'title' => $category['Category']['title']))?> 
-</div>
-<h2>Category: <?php echo $category['Category']['title']?></h2>
+<h2><?php echo sprintf('%s Category: %s',Configure::read('Category.alias'),$category['Category']['title']); ?></h2>
+<ul class="hook_menu">
+<li><?php echo $html->link(sprintf('Add %s',Configure::read('Product.alias')),array('admin'=>true,'controller'=>'products','action'=>'add','?'=>array('data[Category][id]'=>$category['Category']['id']))); ?></li>
+<li><?php echo $this->element('admin/edit_form',array('id'=>$category['Category']['id'],'l_title'=>sprintf('%s Category',Configure::read('Category.alias')),'controller'=>'categories','model'=>'Category'))?> </li>
+<li><?php echo $this->element('admin/delete_form',array('id'=>$category['Category']['id'],'l_title'=>sprintf('%s Category',Configure::read('Category.alias')),'controller'=>'categories','model'=>'Category'))?> </li>
+</ul>
 
-<div id="item_display">
-<ul>
+<ul class="tab_hooks">
 <li><a href="#item_display_main">Main</a></li>
 <li><a href="#item_display_media">Media</a></li>
 <li><a href="#item_display_children">Products</a></li>
 <li><a href="#item_display_meta">SEO</a></li>
 </ul>
 
-<div id="item_display_main">
-<h3 class="tabs-heading">Main</h3>
+<div id="item_display_main" class="tab_page">
+<h3>Main</h3>
+<div class="content">
+<?php echo $textAssistant->htmlFormatted($category['Category']['description']) ?> 
+</div>
 <div class="information">
 <dl>
 <dt>Flags</dt>
-<dd><?php if($category[$this->modelNames[0]]['draft']==1) echo "Draft item";
+<dd><?php if($category['Category']['draft']==1) echo "Draft item";
 else echo "Public item";?><br />
-<?php if($category[$this->modelNames[0]]['featured']==1) echo "Featured item";?></dd>
+<?php if($category['Category']['featured']==1) echo "Featured item";?></dd>
 <dt>Created</dt>
 <dd><?php echo $time->niceShort($category['Category']['created'])?></dd>
 <dt>Modified</dt>
 <dd><?php echo $time->niceShort($category['Category']['modified'])?></dd>
 </dl>
 </div>
-<div class="content">
-<?php echo $textAssistant->htmlFormatted($category['Category']['description']) ?> 
-</div>
-<hr />
 </div>
 
-<div id="item_display_media">
-<div class="help_information">
-<?php echo $this->renderElement('help/media')?> 
-</div>
+<div id="item_display_media" class="tab_page">
+<h3>Media</h3>
 <div class="content">
-<h3 class="tabs-heading">Media</h3>
 <h4>Image</h4>
 <?php
-if(!empty($category['Decorative'])) echo $this->renderElement('deco_image',array(
+if(!empty($category['Decorative'])) echo $this->element('admin/deco_image',array(
 		'deco_id'=>$category['Decorative'][0]['id'],'deco_title'=>$category['Decorative'][0]['title'],'parent'=>$category));
-else echo $this->renderElement('deco_image_empty',array('parent'=>$category));
+else echo $this->element('admin/deco_image_empty',array('parent'=>$category));
 ?> 
 <h4>Inline Media</h4>
 <p><?php echo $html->link('Manage inline media','manageinline/'.$category['Category']['id']) ?> (<?php
@@ -58,41 +52,66 @@ else
 ?>)</p>
 <h4>Downloads</h4>
 <?php if(!empty($category['Downloadable'])):?>
-<?php echo $this->renderElement('download_view',array('resources'=>$category['Downloadable']))?> 
+<?php echo $this->element('admin/download_view',array('resources'=>$category['Downloadable']))?> 
 <?php endif;?>
-<?php echo $this->renderElement('download_form',array('parent'=>$category))?> 
+<?php echo $this->element('admin/download_form',array('parent'=>$category))?> 
 </div>
-<hr />
-</div>
-
-<div id='item_display_children'>
-<h3 class="tabs-heading">Products</h3>
-
-<?php if(empty($category['Product'])):?>
-<p>No Products</p>
-<?php else:?>
-<ul class="item-list">
-<?php foreach($category['Product'] as $product):?>
-<li>
-<div class="options">
-<?php if(isset($previous_id)) echo $this->renderElement('moveup_form',array('controller'=>'Products','id'=>$product['id'],'model'=>'Product','prev_id'=>$previous_id));
-$previous_id = $product['id'];?> 
-<?php echo $this->renderElement('edit_form',array('controller'=>'Products','id'=>$product['id'],'model'=>'Product','title'=>$product['title']))?> 
-<?php echo $this->renderElement('delete_form',array('controller'=>'Products','model'=>'Product','id'=>$product['id'],'title'=>$product['title']))?> 
-</div>
-<?php echo $html->link($product['title'],"/products/view/{$product['id']}")?> 
-</li>
-<?php endforeach;?>
-</ul>
-<?php endif;?>
-</div>
-
-<div id="item_display_meta">
 <div class="help_information">
-<?php echo $this->renderElement('help/seo')?>
+<?php echo $this->element('admin/help/media')?> 
 </div>
+</div>
+
+<div id="item_display_children" class="tab_page">
+<h3>Products</h3>
 <div class="content">
-<h3 class="tabs-heading">SEO</h3>
+<table class="sortable">
+<colgroup></colgroup>
+<colgroup span="2" class="flags"></colgroup>
+<colgroup span="2" class="dates"></colgroup>
+<thead>
+<tr>
+<th>Title</th>
+<th colspan="2">Flags</th>
+<th>Created</th>
+<th>Modified</th>
+</tr>
+</thead>
+<tbody class="products">
+<?php if(empty($category['Product'])):?>
+<tr><td colspan="5">No Products</td></tr>
+<?php else:?>
+<?php foreach($category['Product'] as $product):?>
+<tr>
+<td>
+<span><?php echo $html->link($textAssistant->sanitiseText($product['title']),array('admin'=>true,'controller'=>'products','action'=>'view',$product['id'])); ?></span>
+<ul class="hook_menu">
+<li><?php echo $this->element('admin/edit_form',array('controller'=>'Products','id'=>$product['id'],'model'=>'Product','title'=>$product['title']))?></li>
+<li><?php echo $this->element('admin/delete_form',array('controller'=>'Products','model'=>'Product','id'=>$product['id'],'title'=>$product['title']))?></li>
+</ul>
+</td>
+<td><img src="/img/admin/flag-<?php if($product['draft']) {
+echo "draft.png\" alt=\"Draft\"";
+} else {
+echo "published.png\" alt=\"Published\"";
+}?> class="flag"></td>
+<td><img src="/img/admin/flag-<?php if($product['featured']) {
+echo "flagged.png\" alt=\"Featured\"";
+} else {
+echo "unflagged.png\" alt=\"Normal\"";
+}?> class="flag"></td>
+<td><?php echo $time->format('d M Y',$product['created']); ?></td>
+<td><?php echo $time->format('d M Y',$product['modified']); ?></td>
+</tr>
+<?php endforeach;?>
+<?php endif;?>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="item_display_meta" class="tab_page">
+<h3>SEO</h3>
+<div class="content">
 <dl>
 <dt>Description</dt>
 <?php if(!empty($category['Category']['meta_description'])):?>
@@ -117,6 +136,7 @@ $previous_id = $product['id'];?>
 </fieldset>
 </form>
 </div>
-<hr />
+<div class="help_information">
+<?php echo $this->element('admin/help/seo')?>
 </div>
 </div>

@@ -1,4 +1,4 @@
-<h2>New Article</h2>
+<h2>New <?php echo Configure::read('Article.alias') ?></h2>
 <div class="content">
 <?php echo $form->create(array('type'=>'file'));?> 
 <?php echo $form->input('Article.title', array('size'=>'60','label'=>'Title','error'=>'Please enter the Title.'))?> 
@@ -8,13 +8,15 @@
 <?php else:?>
 <?php echo $form->input('Article.section_id', array('options'=>$sections,'label'=>'Page','error'=>'Please select the Page.'));?> 
 <?php endif;?>
-<?php echo $form->input('Article.draft',array('type'=>'checkbox','value'=>1));?> 
-<?php echo $form->input('Article.featured',array('type'=>'checkbox','value'=>1));?> 
 <div>
 <label for="Fileupload">Upload an image</label>
-<?php echo $form->hidden('Fileupload/type][',array('value'=>Resource::$types['Decorative'],'id'=>'FileuploadType'));?> 
+<?php echo $form->hidden('Fileupload.type][',array('value'=>Resource::$types['Decorative'],'id'=>'FileuploadType'));?> 
 <input type="file" name="Fileupload[]" id="Fileupload" value="" />
 <?php if(isset($GLOBALS['Fileupload_error'])) echo "<div class=\"error_message\">{$GLOBALS['Fileupload_error']}</div>";?> 
 </div>
+<fieldset><legend>Flags</legend>
+<?php echo $form->input('Article.draft');?> 
+<?php echo $form->input('Article.featured');?> 
+</fieldset>
 <?php echo $form->end('Add');?> 
 </div>

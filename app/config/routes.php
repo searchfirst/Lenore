@@ -4,7 +4,7 @@ Router::connect('/admin', array('controller' => 'AdminOverview', 'action' => 'in
 Router::connect("/admin/:controller", array('action' => 'index', 'prefix' => 'admin', 'admin' => true));
 Router::connect("/admin/:controller/:action/*", array('prefix' => 'admin', 'admin' => true));
 Router::connect('/products',array('controller'=>'Categories','action'=>'index'));
-Router::connect('/products/:category/:slug',array('controller'=>'Products','action'=>'view'),array('category'=>'.+','slug'=>'.+'));
+Router::connect('/products/:category/:slug',array('controller'=>'Products','action'=>'view'),array('category'=>'.+','slug'=>'.+','pass'=>array('slug')));
 Router::connect('/products/*',array('controller'=>'Categories','action'=>'view'));
 Router::connect('/thumbs/*', array('controller'=>'Thumbs','action'=>'index'));
 Router::connect('/rss/:controller/', array('alt_content'=>'Rss','action'=>'index'));

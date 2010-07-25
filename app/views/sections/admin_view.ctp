@@ -1,8 +1,10 @@
 <h2><?php echo vsprintf("%s: %s",array(Configure::read('Section.alias'),$section['Section']['title'])) ?></h2>
 <ul class="hook_menu">
+<?php if($section['Section']['articles_enabled']):?>
 <li><?php echo $html->link(sprintf("Add %s",Configure::read('Article.alias')),array('admin'=>true,'controller'=>'articles','action'=>'add','?'=>array('data[Article][section_id]'=>$section['Section']['id'])));?></li>
-<li><?php echo $html->link(sprintf("Edit %s",Configure::read('Section.alias')),array('admin'=>true,'controller'=>'sections','action'=>'edit',$section['Section']['id']));?></li>
-<li><?php echo $html->link(sprintf("Delete %s",Configure::read('Section.alias')),array('admin'=>true,'controller'=>'sections','action'=>'delete',$section['Section']['id']));?></li>
+<?php endif; ?>
+<li><?php echo $this->element('admin/edit_form',array('controller'=>'sections','model'=>'Section','id'=>$section['Section']['id'],'title'=>$section['Section']['title']))?></li>
+<li><?php echo $this->element('admin/delete_form',array('controller'=>'sections','model'=>'Section','id'=>$section['Section']['id'],'title'=>$section['Section']['title']))?></li>
 </ul>
 
 <ul class="tab_hooks">
@@ -72,33 +74,44 @@ else
 <?php if(empty($section['Article'])):?>
 <p>No <?php echo Inflector::pluralize(Configure::read('Article.alias'));?></p>
 <?php else:?>
-<ul class="item-list">
+<table class="sortable">
+<colgroup span="1"></colgroup>
+<colgroup span="2" class="flags"></colgroup>
+<colgroup span="2" class="dates"></colgroup>
+<thead>
+<tr>
+<th>Title</th>
+<th colspan="2">Flags</th>
+<th>Created</th>
+<th>Modified</th>
+</tr>
+</thead>
+<tbody class="articles">
 <?php foreach($section['Article'] as $article):?>
-<li>
-<div class="options">
-<?php if(!isset($page_data)):?>
-<?php if(isset($previous_id)) echo $this->element('admin/moveup_form',array('controller'=>'articles','model' => 'Article','id'=>$article['id'],'prev_id'=>$previous_id));
-$previous_id = $article['id'];?> 
-<?php endif;?> 
-<?php echo $this->element('admin/edit_form',array('controller'=>'articles','model'=>'Article','id'=>$article['id'],'title'=>$article['title']))?> 
-<?php echo $this->element('admin/delete_form',array('controller'=>'articles','model'=>'Article','id'=>$article['id'],'title'=>$article['title']))?> 
+<tr id="Article_<?php echo $article['order_by']; ?>">
+<td>
+<span><?php echo $html->link($article['title'],array('admin'=>true,'controller'=>'articles','action'=>'view',$article['id']))?></span>
+<ul class="hook_menu">
+<li><?php echo $this->element('admin/edit_form',array('controller'=>'articles','model'=>'Article','id'=>$article['id'],'title'=>$article['title']))?> </li>
+<li><?php echo $this->element('admin/delete_form',array('controller'=>'articles','model'=>'Article','id'=>$article['id'],'title'=>$article['title']))?> </li>
 </div>
-<?php echo $html->link($article['title'],"/articles/view/{$article['id']}")?>
-</li>
+</td>
+<td><img src="/img/admin/flag-<?php if($article['draft']) {
+echo "draft.png\" alt=\"Draft\"";
+} else {
+echo "published.png\" alt=\"Published\"";
+}?> class="flag"></td>
+<td><img src="/img/admin/flag-<?php if($article['featured']) {
+echo "flagged.png\" alt=\"Featured\"";
+} else {
+echo "unflagged.png\" alt=\"Normal\"";
+}?> class="flag"></td>
+<td><?php echo $time->format('d M Y',$article['created']) ?></td>
+<td><?php echo $time->format('d M Y',$article['modified']) ?></td>
+</tr>
 <?php endforeach;?>
-</ul>
-<?php endif;?>
-<?php if(isset($page_data)):?>
-<ul class="page_list">
-<?php if($page_data['has_prev']):?>
-<?php $previous_link = $page_data['current'] > 2 ? '/'.($page_data['current']-1) : '';?>
-<li><?php print $html->link("Back","/sections/view/{$section['Section']['id']}$previous_link#item_display_children") ?></li>
-<?php endif;?>
-<?php if($page_data['has_next']):?>
-<?php $next_link = "/".($page_data['current']+1);?>
-<li><?php print $html->link("Next","/sections/view/{$section['Section']['id']}$next_link#item_display_children") ?></li>
-<?php endif;?>
-</ul>
+</tbody>
+</table>
 <?php endif;?>
 </div>
 </div><?php endif;?> 

@@ -2,10 +2,11 @@
 $config = array(
 	'Category' => array(
 		'alias' => 'Product',
-		'use_subcategories' => false
+		'use_subcategories' => true
 	),
 	'Product' => array(
-		'alias' => 'Product'
+		'alias' => 'Product',
+		'sales_options'=>true
 	),
 	'Section' => array(
 		'alias' => 'Page'

@@ -22,8 +22,8 @@
 <tr id="<?php echo sprintf("%s_%s",'Section',$section['Section']['id']);?>">
 <td><span><?php echo $html->link($section['Section']['title'],array('admin'=>true,'controller'=>'sections','action'=>'view',$section['Section']['id']))?></span>
 <ul class="hook_menu">
-<li><?php echo $html->link(sprintf("Edit %s",Configure::read('Section.alias')),array('admin'=>true,'controller'=>'section','action'=>'edit')) ?></li>
-<li><?php echo $html->link(sprintf("Delete %s",Configure::read('Section.alias')),array('admin'=>true,'controller'=>'section','action'=>'delete')) ?></li>
+<li><?php echo $this->element('admin/edit_form',array('controller'=>'sections','model'=>'Section','id'=>$section['Section']['id'],'title'=>$section['Section']['title']))?></li>
+<li><?php echo $this->element('admin/delete_form',array('controller'=>'sections','model'=>'Section','id'=>$section['Section']['id'],'title'=>$section['Section']['title']))?></li>
 </ul>
 </td>
 <td><?php echo count($section['Article'])?></td>

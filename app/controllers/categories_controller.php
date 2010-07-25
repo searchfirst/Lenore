@@ -3,16 +3,22 @@ class CategoriesController extends AppController {
 
 	var $name = 'Categories';
 
+	function beforeFilter() {
+		parent::beforeFilter();
+		$this->Auth->allowedActions = array('index', 'view');
+	}
+
 /*	function beforeRender() {
 		AppController::beforeRender();
 		if(!empty($this->viewVars['category']['Category']))
 			$this->set('subcategory_list', $this->Category->findAll("Category.category_id={$this->viewVars['category']['Category']['id']}"));
-	}
-*/	
+	}*/
+	
 	function index() {
 		if(isset($this->params['alt_content']) && $this->params['alt_content']=='Rss') {
 			$this->viewPath = 'errors';
-			$this->render('not_found');}
+			$this->render('not_found');
+		}
 		$this->pageTitle = MOONLIGHT_CATEGORIES_TITLE;
 		$this->set('categories',$this->Category->findAll());
 	}
@@ -38,8 +44,7 @@ class CategoriesController extends AppController {
 
 
 	function admin_index() {
-		$this->Category->recursive = 0;
-		$this->set('categories', $this->Category->findAll("Category.category_id IS NULL OR Category.category_id = 0",null,"Category.order_by ASC",null,null,2));
+		$this->set('categories', $this->Category->find('all',array('conditions'=>array('Category.category_id'=>null),'order'=>'Category.order_by ASC','recursive'=>1)));
 	}
 
 	function admin_view($id = null) {
@@ -72,25 +77,27 @@ class CategoriesController extends AppController {
 	}
 
 	function admin_edit($id = null) {
-		$this->set('category_list',
-			$this->Category->generateList(array("OR"=>array('Category.category_id'=>'IS NULL','Category.category_id'=>0)),null,null,'{n}.Category.id','{n}.Category.title'));
-		if( (isset($this->data['Category']['submit'])) || (empty($this->data)) ) {
+		$parents = $this->Category->find('list',array(
+			'conditions'=>array('Category.category_id'=>null,'NOT'=>array('Category.id'=>$id)),
+			'order'=>'Category.title ASC',
+			'recursive'=>0
+		));
+		if(empty($this->data)) {
 			if(!$id) {
-				$this->Session->setFlash('Invalid Category');
-				$this->redirect('/categories/');
+				$this->viewPath = 'errors';
+				$this->render('not_found');
 			}
-			$this->data = $this->Category->find(array('Category.id'=>$id),null,'Category.id ASC');
+			$this->data = $this->Category->find('first',array('conditions'=>array('Category.id'=>$id)));
 			$this->set('category', $this->data);
-			$this->set('parents', $this->Category->Parent->generateList());
+			$this->set('categories', $parents);
 		} else {
-			$this->cleanUpFields();
 			if($this->Category->save($this->data)) {
 				if(isset($GLOBALS['moonlight_inline_count_set'])) {
 					$this->Session->setFlash("This item has been saved. You may need to upload media for this item");
-					$this->redirect("/".strtolower($this->name)."/manageinline/$id");
+					$this->redirect("/admin/categories/manageinline/$id");
 				} else {
 					$this->Session->setFlash("This item has been saved.");
-					$this->redirect("/".strtolower($this->name)."/view/$id");
+					$this->redirect("/admin/categories/view/$id");
 				}
 			} else {
 				$this->Session->setFlash('Please correct errors below.');
@@ -144,6 +151,26 @@ class CategoriesController extends AppController {
 			$this->Session->setFlash('Invalid '.$this->modelClass.'.');
 			$this->redirect('/'.strtolower($this->name).'/');
 		}
+	}
+
+	function admin_reorder() {
+		$ajax_result = true;
+		if(!(empty($this->data['Initial'])||empty($this->data['Final']))) {
+			$new_ids = $this->data['Final'];
+			$current_orders = $this->Category->find('all',array(
+				'conditions' => array('Category.id'=>$this->data['Initial']),
+				'recursive' => 0,
+				'fields' => array('Category.id','Category.order_by'),
+				'order' => 'Category.order_by ASC'
+			));
+			foreach($current_orders as $x=>$co) {
+				$category = array('Category'=>array('id'=>$new_ids[$x],'order_by'=>$co['Category']['order_by']));
+				if(!$this->Category->save($category)) $ajax_result = $ajax_result && false;
+			}
+		} else {
+			$ajax_result = $ajax_result && false;
+		}
+		$this->set('ajax_result',$ajax_result?'Success':'Fail');	
 	}
 
 

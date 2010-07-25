@@ -1,0 +1,34 @@
+body {
+padding: 20px;
+}
+
+#content .dashboard {
+display: table;
+border-collapse: separate;
+border-spacing: 12px 0;
+padding: 0;
+table-layout: fixed;
+width: 100%;
+}
+
+#content .dashboard .primary, #content .dashboard .secondary {
+display: table-cell;
+width: 50%;
+}
+
+ul.grid li {
+display: inline-block;
+}
+
+ul.grid li a {
+display: block;
+text-align: center;
+}
+
+ul.grid li a:hover, ul.grid a:focus {
+}
+
+ul.grid li img {
+display: block;
+width: auto;
+}

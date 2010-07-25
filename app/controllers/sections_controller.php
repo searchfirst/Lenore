@@ -46,24 +46,7 @@ class SectionsController extends AppController {
 			$this->redirect('/admin/sections/');
 		}
 		$slug = $this->Section->field('slug',array("Section.id"=>$id));
-/*		if(preg_match('/(events|news|blog|log)/i',$slug)) {
-			$this->Section->bindModel(array('hasMany'=>array(
-				'Article'=>array('className'=>'Article','conditions'=>'draft=0','order'=>'modified ASC'))));
-			$section_data = $this->Section->read(null,$id);
-			$section_data_articles = $this->Section->Article->findAll(array("Section.id"=>$id),null,"Article.created DESC",10,$page,1);
-			//Loop through results and add ['Article'] contents to array
-			$section_data['Article'] = array();
-			foreach($section_data_articles as $section_data_article)
-				$section_data['Article'][] = $section_data_article['Article'];
-			$page_data['num_pages'] = ceil($this->Section->Article->findCount(array("Section.id"=>$id))/10);
-			$page_data['has_prev'] = ($page > 1);
-			$page_data['has_next'] = ($page < $page_data['num_pages']);
-			$page_data['current'] = $page;
-			$this->set('page_data',$page_data);
-			$this->set('section',$section_data);
-		} else {
-*/			$this->set('section', $this->Section->find('first', array('conditions'=>array('Section.id'=>$id))));
-/*		}*/
+			$this->set('section', $this->Section->find('first', array('conditions'=>array('Section.id'=>$id))));
 	}
 
 	function admin_add() {
@@ -90,7 +73,7 @@ class SectionsController extends AppController {
 				$this->Session->setFlash('Invalid id for Section');
 				$this->redirect('/sections/');
 			}
-			$this->data = $this->Section->read(null, $id);
+			$this->data = $this->Section->find('first',array('conditions'=>array('Section.id'=>$id)));
 			$this->set('section',$this->data);
 		} else {
 			$this->cleanUpFields();

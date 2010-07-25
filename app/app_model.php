@@ -2,29 +2,28 @@
 class AppModel extends Model {
 
 	function afterSave() {
-		if(	($order_id = $this->getLastInsertId()) &&
-			 (!isset($this->alreadySaved)) ) {
-			$this->alreadySaved = true;
+		if(($order_id = $this->getLastInsertId()) && (!isset($this->already_saved))) {
+			$this->already_saved = true;
 			$this->saveField('order_by',$order_id);
 		}
 	}
 	
 	function afterDelete() {
-		$res_del_object = new Resource;
-		if(!empty($GLOBALS['resources_for_deletion']) && $this->name!='Resource')
-			foreach($GLOBALS['resources_for_deletion'] as $res_item)
-				$res_del_object->del($res_item);
+		$resource = new Resource;
+		if(!empty(Resource::$delete_list) && $this->name!='Resource')
+			foreach(Resource::$delete_list as $res)
+				$resource->del($res);
 		return true;
 	}
 	
 	function beforeDelete() {
 		if($this->name!=='Resource') {
-			$tmp_data = $this->findById($this->id);
-			$tmp_res_list = array();
-			foreach($tmp_data['Resource'] as $tmp_resource) $tmp_res_list[] = $tmp_resource['id'];
-			foreach($tmp_data['Decorative'] as $tmp_resource) $tmp_res_list[] = $tmp_resource['id'];
-			foreach($tmp_data['Downloadable'] as $tmp_resource) $tmp_res_list[] = $tmp_resource['id'];
-			$GLOBALS['resources_for_deletion'] = $tmp_res_list;
+			$model = $this->findById($this->id);
+			$delete_list = array();
+			foreach($model['Resource'] as $resource) $delete_list[] = $resource['id'];
+			foreach($model['Decorative'] as $resource) $delete_list[] = $resource['id'];
+			foreach($model['Downloadable'] as $resource) $delete_list[] = $resource['id'];
+			Resource::setDeleteList($delete_list);
 		}
 		return true;
 	}
@@ -39,14 +38,10 @@ class AppModel extends Model {
 	/* Description Functions (Preparation of the description for formatting) */
 	
 	function sanitiseData() {
-		if(isset($this->data['description']) && !empty($this->data['description'])) {
-			if(MOONLIGHT_ALLOW_HTML_IN_DESCRIPTIONS == false) 
-				$this->data['description'] = strip_tags($this->data['description']);
-			else
-				$this->data['description'] = strip_tags($this->data['description'],MOONLIGHT_PERMITTED_HTML_ELEMENTS);
-			$this->data['description'] = trim($this->data['description']);
+		if(!empty($this->data['description'])) {
+			$this->data['description'] = trim(strip_tags($this->data['description'],Configure::read('TextAssistant.permitted_html_elements')));
 		}
-		if(isset($this->data['title']) && !empty($this->data['title'])) {
+		if(!empty($this->data['title'])) {
 			$this->data['title'] = trim(strip_tags($this->data['title']));
 		}
 	}
@@ -61,7 +56,7 @@ class AppModel extends Model {
 	}
 	
 	function handleInlineResourceText() { //returns an array of data or false if no resource text found
-		if(	isset($this->data[$this->name]['description']) && (!empty($this->data[$this->name]['description'])) ) {
+		if(!empty($this->data[$this->name]['description'])) {
 			if(preg_match_all('/{\[(media)\]([^\[\]{}]*)}/',$this->data[$this->name]['description'],$matches)) {
 				$res_count = count($matches[0]);
 				for($i=0;$i<$res_count;$i++)
@@ -75,7 +70,43 @@ class AppModel extends Model {
 	/* End of Description Functions */
 	
 	/* File Upload Functions */
-	function handleFileUploads() {
+	
+	public function handleFileUploads() {
+		if(!empty($this->data['Resource'])) {
+			$resources['Resource']['Resource'] = $this->getExistingResourceIds();
+			foreach($this->data['Resource'] as $x => $resource) {
+				if($resource['type']==Resource::$types['Decorative'] && $this->alreadyHasDeco()) {
+					$this->fileUploadError('has_deco');
+				} else {
+					if($resource['file'][error]==UPLOAD_ERR_OK) {
+						$this->repairMimeTypes($resource['type'],$resource['name']);
+						$resource['mime_type'] = $resource['file']['type'];
+						$resource['extension'] = $this->getExtension($resource['file']['type'],$resource['file']['name']);
+						$resource['slug'] = $this->Resource->getUniqueSlug($this->getParentTitle($x));
+						$resource['path'] = Configure::read('Resource.media_path').DS.Inflector::underscore($this->name).DS;
+						$resource['type'] = $resource['file']['type'];
+
+						if($this->moveUpload($resource)) {
+							unset($resource_data['file']);
+							if($this->Resource->save(array('Resource'=>$resource_data))) {
+								$resources['Resource']['Resource'][] = $this->Resource->getLastInsertId();
+							} else {
+								$this->fileUploadError('save_error');
+							}
+						} else {
+							$this->fileUploadError('move_file');
+						}
+
+//						if($this->_moveFileuploadFile(0,$resource_data) && $this->Resource->save($resource_data)) {
+//							$this->data['Resource']['Resource'][] = (string) ($last_id = $this->Resource->getLastInsertId());
+						
+					}
+				}
+			}
+		}
+	}
+	
+	function _handleFileUploads() {
 		if(!empty($_FILES['Fileupload']) && !empty($_FILES['Fileupload']['tmp_name'][0])) {
 			$count_uploads = $this->_countUploads(); //count the number of files uploaded
 			if( ($count_uploads==1) && ($this->data['Fileupload']['type'][0]==MOONLIGHT_RESTYPE_DECO) ) {
@@ -138,21 +169,56 @@ class AppModel extends Model {
 		else return false;
 	}
 	
+	function getExistingResourceIds() {
+		$resource_ids = array();
+		if(!empty($this->data[$this->name]['id'])) {
+			$model = $this->find('first',array(
+				'conditions'=>array("{$this->name}.id"=>$this->data[$this->name]['id']),
+				'recursive'=>1
+			));
+			if(isset($model['Decorative']))
+				foreach($model['Decorative'] as $item)
+					$resource_ids[] = $item['id'];
+			if(isset($model['Resource']))
+				foreach($model['Resource'] as $item)
+					$resource_ids[] = $item['id'];
+			if(isset($model['Downloadable']))
+				foreach($model['Downloadable'] as $item)
+					$resource_ids[] = $item['id'];
+		}
+		return $resource_ids;
+	}
+	
 	function _prepareExistingResourceIds() {
-		$existing_resource_ids = array();
-		if(empty($this->id)) return array();
-		else {
-			$get_resource_ids = $this->findById($this->id);
-			if(isset($get_resource_ids['Decorative']))
-				foreach($get_resource_ids['Decorative'] as $resource_item)
-					$existing_resource_ids[] = $resource_item['id'];
-			if(isset($get_resource_ids['Resource']))
-				foreach($get_resource_ids['Resource'] as $resource_item)
-					$existing_resource_ids[] = $resource_item['id'];
-			if(isset($get_resource_ids['Downloadable']))
-				foreach($get_resource_ids['Downloadable'] as $resource_item)
-					$existing_resource_ids[] = $resource_item['id'];
-			return $existing_resource_ids;
+		$resource_ids = array();
+		if(!empty($this->id)) {
+			$model = $this->findById($this->id);
+			if(isset($model['Decorative']))
+				foreach($model['Decorative'] as $resource_item)
+					$resource_ids[] = $resource_item['id'];
+			if(isset($model['Resource']))
+				foreach($model['Resource'] as $resource_item)
+					$resource_ids[] = $resource_item['id'];
+			if(isset($model['Downloadable']))
+				foreach($model['Downloadable'] as $resource_item)
+					$resource_ids[] = $resource_item['id'];
+		}
+		return $resource_ids;
+	}
+	
+	public function fileUploadError($key) {
+		$upload_errors = array(
+			'has_deco' => 'You are uploading a new decorative image when this item already has one.',
+			'move_file' => 'Error moving file. Serious error. Contact support.',
+			'file_error' => 'Error with file. Check it\'s a valid media file of the correct size and dimensions.',
+			'save_error' => 'Error saving a Resource.',
+			'unknown' => 'General file upload error. Contact support.'
+		);
+		if(in_array($upload_errors,$key)) {
+			Session::setFlash($upload_errors[$key]);
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
@@ -160,7 +226,22 @@ class AppModel extends Model {
 		$GLOBALS['Fileupload_error'] = $errortype;
 	}
 	
-	function _repairMimeTypes(&$fileupload_type,$filename) {
+	public function repairMimeTypes(&$fileupload_type,$filename) {
+		if($fileupload_type=='image/pjpeg') {
+			$fileupload_type = 'image/jpeg';
+		} elseif($fileupload_type=='application/octet-stream') {
+			switch(pathinfo($filename,PATHINFO_EXTENSION)) {
+				case 'flv':
+					$fileupload_type = 'video/x-flv';
+					break;
+				default:
+					$fileupload_type = 'application/octet-stream';
+					break;
+			}
+		}
+	}
+	/*
+	function repairMimeTypes(&$fileupload_type,$filename) {
 		//TODO: Parse the mimetype, determine if it is erroneous and change the mimetype
 		//TODO: move the IE handling over to this function
 		if($fileupload_type=='image/pjpeg') {
@@ -176,13 +257,27 @@ class AppModel extends Model {
 			}
 		}
 	}
+	*/
+	function moveUpload($resource_data) {
+		$tmp_file = $resource_data['file']['tmp_name'];
+		$new_file = "{$resource_data['path']}{$resource_data['slug']}.{$resource_data['extension']}";
+		return move_uploaded_file($tmp_file,$new_file);
+	}
 	
 	function _moveFileuploadFile($fi,$resource_data) {
 		$uploaded_file = $_FILES['Fileupload']['tmp_name'][$fi];
 		$moved_file = $resource_data['path'].$resource_data['slug'].'.'.$resource_data['extension'];
 		return move_uploaded_file($uploaded_file,$moved_file);
 	}
-		
+	
+	function countUploads() {
+		$upload_count = 0;
+		foreach($this->data['Resource'] as $resource)
+			if(!empty($resource['file_upload']['error']) && $resource['file_upload']['error']!=4)
+				$upload_count++;
+		return $upload_count;
+	}
+	
 	function _countUploads() {
 		$upload_count = 0;
 		foreach($_FILES['Fileupload']['error'] as $error_code) if($error_code!=4) $upload_count++;
@@ -223,12 +318,33 @@ class AppModel extends Model {
 		}
 	}
 	
+	function getParentTitle($x) {
+		$t = 'Untitled Media';
+		if(!empty($this->data['Resource'][$x]['title'])) {
+			$t = $this->data['Resource'][$x]['title'];
+		} elseif(!empty($this->data[$this->name]['title'])) {
+			$t = $this->data[$this->name]['title'];
+		} elseif($t_fromdb = $this->field('title')) {
+			$t = $t_fromdb;
+		}
+		return $t;
+	}
+	
 	function _getParentTitle ($uploadindex = 0) {
 		if(isset($this->data['Fileupload']['title'][$uploadindex])  && !empty($this->data['Fileupload']['title'][$uploadindex]))
 			return $this->data['Fileupload']['title'][$uploadindex];
 		elseif(isset($this->data[$this->name]['title'])) return $this->data[$this->name]['title'];
 		elseif($title_from_parent = $this->field('title')) return $this->field('title');
 		else return 'Untitled Media';
+	}
+
+	public function setUploadExtension($mimetype,$filename) {
+		$arr_mimetype = array('image/jpeg'=>'jpg','image/png'=>'png','image/gif'=>'gif');
+		if(isset($arr_mimetype[$mimetype])) {
+			return $arr_mimetype[$mimetype];
+		} else {
+			return (($ext_from_file = pathinfo($filename,PATHINFO_EXTENSION))!='')?$ext_from_file:'';
+		}
 	}
 	
 	function _getUploadExtension($mimetype, $filename) {
@@ -239,6 +355,26 @@ class AppModel extends Model {
 		);
 		if(isset($arr_mimetype[$mimetype])) return $arr_mimetype[$mimetype];
 		else return (($ext_from_file = pathinfo($filename,PATHINFO_EXTENSION))!='')?$ext_from_file:'';
+	}
+	
+	public function alreadyHasDeco() {
+		if(empty($this->id)) {
+			return false;
+		} else {
+			$check_for_deco = $this->find('first',array(
+				'conditions'=>array("{$this->name}.id"=>$this->id),'recursive'=>1
+			));
+			if(!empty($check_for_deco['Decorative'])) {
+				foreach($check_for_deco['Decorative'] as $resource) {
+					if($resource['type']==Resource::$types['Decorative']) {
+						return true;
+					}
+				}
+			} else {
+				return false;
+			}
+		}
+		return false;
 	}
 	
 	function _alreadyHasDeco() {

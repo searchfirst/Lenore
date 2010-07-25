@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
 <title><?php if(!empty($title_for_layout)) echo $textAssistant->sanitiseText("$title_for_layout |");?> Website Administration</title>
 <?php echo $this->element('admin/js');?> 
 <?php echo $this->element('admin/css');?>

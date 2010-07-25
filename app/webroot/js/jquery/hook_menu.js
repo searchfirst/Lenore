@@ -17,15 +17,18 @@ jQuery.fn.hookMenu = function(settings) {
 			current_hook[i].wrapInner('<span class="hook_menu_xc"/>');
 			hook_menu_xc[i] = current_hook[i].children().eq(0);
 			hook_menu_xy[i] = {
-				'width': Math.max(hook_menu_xc[i].outerWidth(),175),
+//				'width': Math.max(hook_menu_xc[i].outerWidth(),175),
+				'min-width': hook_menu_xc[i].outerWidth(),
 				'top': current_hook[i].offset().top + current_hook[i].height(),
 				'left': current_hook[i].offset().left
 			};
 			hook_menu[i].recalcCoords = function() {
 				hook_menu[i].css({
-					'left': current_hook[i].offset().left,
+//					'left': current_hook[i].offset().left,
+					'left': hook_menu_xc[i].offset().left,
 					'top': hook_menu_xc[i].offset().top + hook_menu_xc[i].height(),
-					'width': Math.max(hook_menu_xc[i].outerWidth(),175)
+					'min-width': hook_menu_xc[i].outerWidth()
+//					'width': Math.max(hook_menu_xc[i].outerWidth(),175)
 				});
 			}
 			hook_menu[i].css({

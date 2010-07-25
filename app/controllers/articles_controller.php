@@ -3,6 +3,11 @@ class ArticlesController extends AppController {
 
 	var $name = 'Articles';
 	var $uses = array('Article');
+
+	function beforeFilter() {
+		parent::beforeFilter();
+		$this->Auth->allowedActions = array('index', 'view');
+	}
 	
 	function index() {
 		if( isset($this->params['alt_content']) && ($this->params['alt_content']=='Rss') &&
@@ -78,18 +83,15 @@ class ArticlesController extends AppController {
 	}
 
 	function admin_edit($id = null) {
-		if( (isset($this->data['Article']['submit'])) || (empty($this->data)) ) {
+		if(empty($this->data)) {
 			if(!$id) {
 				$this->Session->setFlash('Invalid id for Article');
 				$this->redirect('/articles/');
 			}
-			$this->data = $this->Article->read(null, $id);
-			$this->set('article', $this->data);
-			$this->set('sections', $this->Article->Section->generateList());
+			$this->data = $this->Article->findById($id);
+			$this->set('sections', $this->Article->Section->find('list'));
 		} else {
-			$this->cleanUpFields();
 			if($this->Article->save($this->data)) {
-				$this->Rss->ping();
 				if(isset($GLOBALS['moonlight_inline_count_set'])) {
 					$this->Session->setFlash("This item has been saved. You may need to upload media for this item");
 					$this->redirect("/".strtolower($this->name)."/manageinline/$id");
@@ -107,12 +109,12 @@ class ArticlesController extends AppController {
 
 	function admin_delete($id = null) {
 		if(!$id) {
-			$this->Session->setFlash('Invalid id for Article');
-			$this->redirect($this->referer('/articles/'));
+			$this->viewPath = 'errors';
+			$this->render('not_found');
 		}
-		if( ($this->data['Article']['id']==$id) && ($this->Article->del($id)) ) {
+		if(!empty($this->data['Article']['id']) && ($this->data['Article']['id']==$id) && ($this->Article->del($id)) ) {
 			$this->Session->setFlash('Article successfully deleted');
-			$this->redirect($this->referer('/articles/'));
+			$this->redirect($this->referer('/admin/'));
 		} else {
 			$this->set('id',$id);
 		}
@@ -151,6 +153,24 @@ class ArticlesController extends AppController {
 		}
 	}
 
-
+	function admin_reorder() {
+		$ajax_result = true;
+		if(!(empty($this->data['Initial'])||empty($this->data['Final']))) {
+			$new_ids = $this->data['Final'];
+			$current_orders = $this->Article->find('all',array(
+				'conditions' => array('Article.id'=>$this->data['Initial']),
+				'recursive' => 0,
+				'fields' => array('Article.id','Article.order_by'),
+				'order' => 'Article.order_by ASC'
+			));
+			foreach($current_orders as $x=>$co) {
+				$article = array('Article'=>array('id'=>$new_ids[$x],'order_by'=>$co['Article']['order_by']));
+				if(!$this->Article->save($article)) $ajax_result = $ajax_result && false;
+			}
+		} else {
+			$ajax_result = $ajax_result && false;
+		}
+		$this->set('ajax_result',$ajax_result?'Success':'Fail');	
+	}
 }
 ?>

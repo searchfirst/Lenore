@@ -1,50 +1,45 @@
-<div class="options">
-<?php echo $this->renderElement('new_item_form',array(
-	'parentClass'=>'Category','parentName'=>$product['Category']['title'],'parentId'=>$product['Category']['id']))?> 
-<?php echo $this->renderElement('edit_form',array('id'=>$product['Product']['id'],'title'=>$product['Product']['title']))?> 
-<?php echo $this->renderElement('delete_form',array('id'=>$product['Product']['id'],'title'=>$product['Product']['title']))?> 
-</div>
-<h2><?php echo $textAssistant->link($product['Category']['title'],"/categories/view/{$product['Category']['id']}")?> — Product: <?php echo $product['Product']['title']?></h2>
+<h2><?php echo sprintf('%s: %s',Configure::read('Product.alias'),$product['Category']['title']); ?></h2>
+<ul class="hook_menu">
+<?php echo $this->element('admin/edit_form',array('id'=>$product['Product']['id'],'controller'=>'products','model'=>'Product','title'=>$product['Product']['title']))?> 
+<?php echo $this->element('admin/delete_form',array('id'=>$product['Product']['id'],'controller'=>'products','model'=>'Product','title'=>$product['Product']['title']))?> 
+</ul>
 
-<div id="item_display">
-<ul>
+<ul class="tab_hooks">
 <li><a href="#item_display_main">Main</a></li>
 <li><a href="#item_display_media">Media</a></li>
-<?php if(defined('MOONLIGHT_PRODUCTS_SALES_OPTIONS') && MOONLIGHT_PRODUCTS_SALES_OPTIONS):?>
+<?php if(Configure::read('Product.sales_options')):?>
 <li><a href="#item_display_sales">Sales</a></li>
 <?php endif;?>
 <li><a href="#item_display_meta">SEO</a></li>
 </ul>
-<div id="item_display_main">
-<h3 class="tabs-heading">Main</h3>
+
+<div id="item_display_main" class="tab_page">
+<h3>Main</h3>
+<div class="content">
+<?php echo $textAssistant->htmlFormatted($product['Product']['description'])?>
+</div>
 <div class="information">
 <dl>
 <dt>Flags</dt>
-<dd><?php if($product[$this->modelNames[0]]['draft']==1) echo "Draft item";
+<dd><?php if($product['Product']['draft']==1) echo "Draft item";
 else echo "Public item";?><br />
-<?php if($product[$this->modelNames[0]]['featured']==1) echo "Featured item";?></dd>
+<?php if($product['Product']['featured']==1) echo "Featured item";?></dd>
 <dt>Created</dt>
 <dd><?php echo $time->niceShort($product['Product']['created'])?></dd>
 <dt>Modified</dt>
 <dd><?php echo $time->niceShort($product['Product']['modified'])?></dd>
 </dl>
 </div>
-<div class="content">
-<?php echo $textAssistant->htmlFormatted($product['Product']['description'])?>
 </div>
-<hr />
-</div>
-<div id="item_display_media">
-<h3 class="tabs-heading">Media</h3>
-<div class="help_information">
-<?php echo $this->renderElement('help/media') ?>
-</div>
+
+<div id="item_display_media" class="tab_page">
+<h3>Media</h3>
 <div class="content">
 <h4>Image</h4>
 <?php
-if(!empty($product['Decorative'])) echo $this->renderElement('deco_image',array(
+if(!empty($product['Decorative'])) echo $this->element('admin/deco_image',array(
 	'deco_id'=>$product['Decorative'][0]['id'],'deco_title'=>$product['Decorative'][0]['title'],'parent'=>$product));
-else echo $this->renderElement('deco_image_empty',array('parent'=>$product));
+else echo $this->element('admin/deco_image_empty',array('parent'=>$product));
 ?> 
 <h4>Inline Media</h4>
 <p><?php echo $html->link('Manage inline media','manageinline/'.$product['Product']['id']) ?> (<?php
@@ -58,17 +53,20 @@ else
 ?>)</p>
 <h4>Downloads</h4>
 <?php if(!empty($product['Downloadable'])):?>
-<?php echo $this->renderElement('download_view',array(
+<?php echo $this->element('admin/download_view',array(
 	'resources'=>$product['Downloadable']
 )); ?>
 <?php endif;?>
-<?php echo $this->renderElement('download_form',array('parent'=>$product))?> 
+<?php echo $this->element('admin/download_form',array('parent'=>$product))?> 
 </div>
-<hr />
+<div class="information">
+<?php echo $this->element('admin/help/media'); ?> 
 </div>
-<?php if(defined('MOONLIGHT_PRODUCTS_SALES_OPTIONS') && MOONLIGHT_PRODUCTS_SALES_OPTIONS):?>
-<div id="item_display_sales">
-<h3 class="tabs-heading">Sales</h3>
+</div>
+
+<?php if(Configure::read('Product.sales_options')):?>
+<div id="item_display_sales" class="tab_page">
+<h3>Sales</h3>
 <div class="content">
 <dl>
 <dt>Price</dt>
@@ -87,11 +85,9 @@ else
 </div>
 </div>
 <?php endif;?>
-<div id="item_display_meta">
-<h3 class="tabs-heading">SEO</h3>
-<div class="help_information">
-<?php echo $this->renderElement('help/seo')?> 
-</div>
+
+<div id="item_display_meta" class="tab_page">
+<h3>SEO</h3>
 <div class="content">
 <dl>
 <dt>Description</dt>
@@ -117,6 +113,7 @@ else
 </fieldset>
 </form>
 </div>
-<hr />
+<div class="information">
+<?php echo $this->element('admin/help/seo')?> 
 </div>
 </div>

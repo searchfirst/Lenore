@@ -10,12 +10,10 @@ class ProductsController extends AppController
 			$this->render('not_found');
 		}
 		$this->set('products',$this->Product->findall("Product.draft=0",null,'Product.modified DESC',20));
-		$this->pageTitle = MOONLIGHT_CATEGORIES_TITLE;
+		$this->pageTitle = Inflector::pluralize(Configure::read('Product.alias'));
 	}
 	
 	function view($slug=null) {
-		$slug = $this->params['slug'];
-		
 		$product = $this->Product->find(array('Product.draft'=>0,'Product.slug'=>$slug));
 		if(!empty($product) && (!isset($this->params['alt_content']) || $this->params['alt_content']!='Rss')) {
 			if($product['Category']['slug']!=$this->params['category']) {
@@ -46,14 +44,13 @@ class ProductsController extends AppController
 			$this->data['Product']['category_id'] = $this->data['Referrer']['category_id'];
 			$this->set('category', $this->Product->Category->generateList());
 		} else {
-			$this->cleanUpFields();
 			if($this->Product->save($this->data)) {
 				if(isset($GLOBALS['moonlight_inline_count_set'])) {
 					$this->Session->setFlash("This item has been saved. You need to upload media for this item");
-					$this->redirect('/'.strtolower($this->name).'/manageinline/'.$this->Product->getLastInsertId());
+					$this->redirect('/admin/products/manageinline/'.$this->Product->getLastInsertId());
 				} else {
 					$this->Session->setFlash("This item has been saved.");
-					$this->redirect('/'.strtolower($this->name).'/view/'.$this->Product->getLastInsertId());
+					$this->redirect('/admin/products/view/'.$this->Product->getLastInsertId());
 				}
 			} else {
 				$this->Session->setFlash('Please correct the errors below');
@@ -66,14 +63,13 @@ class ProductsController extends AppController
 	function admin_edit($id) {
 		if( (isset($this->data['Product']['submit'])) || (empty($this->data)) ) {
 			if(!$id) {
-				$this->Session->setFlash('Invalid id for Article');
-				$this->redirect('/articles/');
+				$this->viewPath = 'errors';
+				$this->render('not_found');
 			}
-			$this->data = $this->Product->read(null, $id);
-			$this->set('product',$this->data);
-			$this->set('categories', $this->Product->Category->generateList());
+			$this->data = $this->Product->find('first', array('conditions'=>array('Product.id'=>$id)));
+//			$this->set('product',$this->data);
+			$this->set('categories', $this->Product->Category->find('list',array('recursive'=>0)));
 		} else {
-			$this->cleanUpFields();
 			if($this->Product->save($this->data)) {
 				if(isset($GLOBALS['moonlight_inline_count_set'])) {
 					$this->Session->setFlash("This item has been saved. You now need to upload any media for this item");
