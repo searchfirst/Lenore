@@ -19,7 +19,7 @@ class CategoriesController extends AppController {
 			$this->viewPath = 'errors';
 			$this->render('not_found');
 		}
-		$this->pageTitle = MOONLIGHT_CATEGORIES_TITLE;
+		$this->pageTitle = Configure::read('Category.alias');
 		$this->set('categories',$this->Category->findAll());
 	}
 	
@@ -52,15 +52,20 @@ class CategoriesController extends AppController {
 			$this->Session->setFlash('Invalid Category.');
 			$this->redirect('/categories/');
 		}
-		$this->set('category', $this->Category->find(array('Category.id'=>$id),null,'Category.id ASC'));
+		$this->data = $this->Category->find('first',array(
+			'conditions' => array('Category.id'=>$id),
+			'recursive'=>2
+		));
+		//$this->set('category', $this->Category->find(array('Category.id'=>$id),null,'Category.id ASC'));
+		$this->set('category', $this->data);
 	}
 
 	function admin_add() {
-		$this->set('category_list', $this->Category->generateList('Category.category_id IS NULL or Category.category_id = 0'));
-		if(empty($this->data)) {
-			$this->set('parents', $this->Category->Parent->generateList());
-		} else {
-			$this->cleanUpFields();
+		$this->set('categories',$this->Category->find('list',array(
+			'conditions' => array('Category.category_id'=>null),
+			'order' => 'Category.title'
+		)));
+		if(!empty($this->data)) {
 			if($this->Category->save($this->data)) {
 				if(isset($GLOBALS['moonlight_inline_count_set'])) {
 					$this->Session->setFlash("This item has been saved. You need to upload media for this item");
@@ -71,38 +76,36 @@ class CategoriesController extends AppController {
 				}
 			} else {
 				$this->Session->setFlash('Please correct errors below.');
-				$this->set('parents', $this->Category->Parent->generateList());
 			}
 		}
 	}
 
 	function admin_edit($id = null) {
-		$parents = $this->Category->find('list',array(
+		$this->set('categories', $this->Category->find('list',array(
 			'conditions'=>array('Category.category_id'=>null,'NOT'=>array('Category.id'=>$id)),
 			'order'=>'Category.title ASC',
 			'recursive'=>0
-		));
+		)));
 		if(empty($this->data)) {
 			if(!$id) {
 				$this->viewPath = 'errors';
 				$this->render('not_found');
 			}
 			$this->data = $this->Category->find('first',array('conditions'=>array('Category.id'=>$id)));
-			$this->set('category', $this->data);
-			$this->set('categories', $parents);
 		} else {
 			if($this->Category->save($this->data)) {
-				if(isset($GLOBALS['moonlight_inline_count_set'])) {
-					$this->Session->setFlash("This item has been saved. You may need to upload media for this item");
-					$this->redirect("/admin/categories/manageinline/$id");
-				} else {
+				if(!$this->RequestHandler->isAjax()) {
 					$this->Session->setFlash("This item has been saved.");
 					$this->redirect("/admin/categories/view/$id");
+				} else {
+					$this->set('result','Success');
 				}
 			} else {
-				$this->Session->setFlash('Please correct errors below.');
-				$this->set('category', $this->Category->read(null, $id));
-				$this->set('parents', $this->Category->Parent->generateList());
+				if(!$this->RequestHandler->isAjax()) {
+					$this->Session->setFlash('Please correct errors below.');
+				} else {
+					$this->set('result','Fail');
+				}
 			}
 		}
 	}

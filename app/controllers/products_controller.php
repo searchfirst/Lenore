@@ -67,7 +67,6 @@ class ProductsController extends AppController
 				$this->render('not_found');
 			}
 			$this->data = $this->Product->find('first', array('conditions'=>array('Product.id'=>$id)));
-//			$this->set('product',$this->data);
 			$this->set('categories', $this->Product->Category->find('list',array('recursive'=>0)));
 		} else {
 			if($this->Product->save($this->data)) {
@@ -76,12 +75,12 @@ class ProductsController extends AppController
 					$this->redirect("/".Inflector::underscore($this->name)."/manageinline/$id");
 				} else {
 					$this->Session->setFlash("This item has been saved. You now need to upload any media for this item");
-					$this->redirect("/".Inflector::underscore($this->name)."/view/$id");
+					$this->redirect("/admin/products/view/$id");
 				}
 			} else {
 				$this->Session->setFlash('Please correct errors below.');
 				$this->set('product',$this->data);
-				$this->set('categories', $this->Product->Category->generateList());
+				$this->set('categories', $this->Product->Category->find('list',array('recursive'=>0)));
 			}
 		}
 	}
@@ -137,6 +136,25 @@ class ProductsController extends AppController
 		}
 	}
 
+	function admin_reorder() {
+		$ajax_result = true;
+		if(!(empty($this->data['Initial'])||empty($this->data['Final']))) {
+			$new_ids = $this->data['Final'];
+			$current_orders = $this->Product->find('all',array(
+				'conditions' => array('Product.id'=>$this->data['Initial']),
+				'recursive' => 0,
+				'fields' => array('Product.id','Product.order_by'),
+				'order' => 'Product.order_by ASC'
+			));
+			foreach($current_orders as $x=>$co) {
+				$product = array('Product'=>array('id'=>$new_ids[$x],'order_by'=>$co['Product']['order_by']));
+				if(!$this->Product->save($product)) $ajax_result = $ajax_result && false;
+			}
+		} else {
+			$ajax_result = $ajax_result && false;
+		}
+		$this->set('ajax_result',$ajax_result?'Success':'Fail');	
+	}
 
 
 }

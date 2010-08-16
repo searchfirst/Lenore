@@ -1,22 +1,25 @@
-<h2>Add Category</h2>
-<form action="<?php echo $html->url('/categories/add'); ?>" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
-<div class="options">
-<?php //echo $form->labelTag('Category/draft','Draft')?> 
-<?php //echo $html->checkbox('Category/draft',null,array('value'=>1))?> 
-<?php //echo $form->labelTag('Category/featured','Featured')?> 
-<?php //echo $html->checkbox('Category/featured',null,array('value'=>1))?> 
-</div>
+<h2><?php echo sprintf('Add %s Category',Configure::read('Category.alias')) ?></h2>
+<div class="content">
+<?php echo $form->create('Category',array('type'=>'file')); ?>
 <?php echo $form->input('Category.title',array('size'=>'60','error'=>'Please enter the Title.'))?> 
 <?php echo $form->input('Category.description',array(
-	'cols'=>'60','rows'=>'20','value'=>$this->renderElement('item_templates/new_category'),'error'=>'Please enter the Description.'))?> 
-<?php if(MOONLIGHT_USE_SUBCATEGORIES && !empty($category_list)):?>
-<?php echo $form->select("Category.category_id",$category_list,null,array('error'=>'Please enter the Category Id.','title'=>'Subcategory Of'))?> 
+	'cols'=>'60',
+	'rows'=>'20',
+	'value'=>$this->element('admin/item_templates/new_category'),
+	'label'=>'Content'
+));?> 
+<?php if(Configure::read('Category.use_subcategories') && !empty($categories)):?>
+<?php echo $form->input("Category.category_id",array(
+	'empty'=>true,
+	'label'=>sprintf(('Parent %s Category'),Configure::read('Category.alias'))
+));?> 
 <?php endif;?>
-<div>
-<label for="Fileupload">Upload an image</label>
-<?php echo $form->hidden('Fileupload/type][',array('value'=>MOONLIGHT_RESTYPE_DECO,'id'=>'FileuploadType'))?> 
-<input type="file" name="Fileupload[]" id="Fileupload" value="" />
-<?php if(isset($GLOBALS['Fileupload_error'])) echo "<div class=\"error_message\">{$GLOBALS['Fileupload_error']}</div>";?> 
-</div>
-<?php echo $form->submit('Add')?> 
+<?php echo $form->hidden('Resource.1.type',array('value'=>Resource::$types['Decorative']))?> 
+<?php echo $form->input('Resource.1.file',array('label'=>'Thumbnail Image','type'=>'file')); ?> 
+<fieldset><legend>Flags</legend>
+<?php echo $form->input('Category.draft'); ?> 
+<?php echo $form->input('Category.featured'); ?> 
+</fieldset>
+<?php echo $form->end(array('label'=>sprintf('Add %s Category',Configure::read('Category.alias'))))?> 
 </form>
+</div>

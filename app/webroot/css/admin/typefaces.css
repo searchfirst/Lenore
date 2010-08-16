@@ -1,0 +1,63 @@
+@font-face {
+	font-family: 'MgOpenCosmetica';
+	src: url('/media/typefaces/mgopen-cosmetica-oblique-webfont.eot');
+	src: local('☺'), url('/media/typefaces/mgopen-cosmetica-oblique-webfont.woff') format('woff'), url('/media/typefaces/mgopen-cosmetica-oblique-webfont.ttf') format('truetype'), url('/media/typefaces/mgopen-cosmetica-oblique-webfont.svg#webfontH4MTzWfG') format('svg');
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'MgOpenCosmetica';
+	src: url('/media/typefaces/mgopen-cosmetica-regular-webfont.eot');
+	src: local('☺'), url('/media/typefaces/mgopen-cosmetica-regular-webfont.woff') format('woff'), url('/media/typefaces/mgopen-cosmetica-regular-webfont.ttf') format('truetype'), url('/media/typefaces/mgopen-cosmetica-regular-webfont.svg#webfontsFDb8tjf') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'MgOpenCosmetica';
+	src: url('/media/typefaces/mgopen-cosmetica-bold-oblique-webfont.eot');
+	src: local('☺'), url('/media/typefaces/mgopen-cosmetica-bold-oblique-webfont.woff') format('woff'), url('/media/typefaces/mgopen-cosmetica-bold-oblique-webfont.ttf') format('truetype'), url('/media/typefaces/mgopen-cosmetica-bold-oblique-webfont.svg#webfonthZuFdqlR') format('svg');
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'MgOpenCosmetica';
+	src: url('/media/typefaces/mgopen-cosmetica-bold-webfont.eot');
+	src: local('☺'), url('/media/typefaces/mgopen-cosmetica-bold-webfont.woff') format('woff'), url('/media/typefaces/mgopen-cosmetica-bold-webfont.ttf') format('truetype'), url('/media/typefaces/mgopen-cosmetica-bold-webfont.svg#webfontiAC6gmza') format('svg');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'MgOpenModernaBoldOblique';
+	src: url('/media/typefaces/mgopen-moderna-bold-oblique-webfont.eot');
+	src: local('☺'), url('/media/typefaces/mgopen-moderna-bold-oblique-webfont.woff') format('woff'), url('/media/typefaces/mgopen-moderna-bold-oblique-webfont.ttf') format('truetype'), url('/media/typefaces/mgopen-moderna-bold-oblique-webfont.svg#webfont5vlWli6X') format('svg');
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'MgOpenModerna';
+	src: url('/media/typefaces/mgopen-moderna-bold-webfont.eot');
+	src: local('☺'), url('/media/typefaces/mgopen-moderna-bold-webfont.woff') format('woff'), url('/media/typefaces/mgopen-moderna-bold-webfont.ttf') format('truetype'), url('/media/typefaces/mgopen-moderna-bold-webfont.svg#webfont7JjuDOLc') format('svg');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'MgOpenModerna';
+	src: url('/media/typefaces/mgopen-moderna-oblique-webfont.eot');
+	src: local('☺'), url('/media/typefaces/mgopen-moderna-oblique-webfont.woff') format('woff'), url('/media/typefaces/mgopen-moderna-oblique-webfont.ttf') format('truetype'), url('/media/typefaces/mgopen-moderna-oblique-webfont.svg#webfont9nrricRV') format('svg');
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'MgOpenModerna';
+	src: url('/media/typefaces/mgopen-moderna-regular-webfont.eot');
+	src: local('☺'), url('/media/typefaces/mgopen-moderna-regular-webfont.woff') format('woff'), url('/media/typefaces/mgopen-moderna-regular-webfont.ttf') format('truetype'), url('/media/typefaces/mgopen-moderna-regular-webfont.svg#webfontFSLNf58a') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}

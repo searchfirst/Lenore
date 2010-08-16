@@ -15,11 +15,11 @@ class AppController extends Controller {
 		$template_theme = Configure::read('Moonlight.template_theme');
 		if(!empty($template_theme)) {
 			$template_theme_path = "themes".DS."$template_theme";
+			if(file_exists(APP.'views'.DS.$template_theme_path.DS.Inflector::underscore($this->name).DS.$this->action.".ctp")) {
+				$this->viewPath = $template_theme_path.DS.$this->viewPath;
+			}
 		} else {
 			$template_theme_path = '';
-		}
-		if(file_exists(ROOT.DS.APP.'views'.DS.$template_theme_path.DS.$this->action.".ctp")) {
-			$this->viewPath = $template_theme_path.DS.$this->viewPath;
 		}
 		$this->set('menu_prefix',Configure::read('Menu.prefix'));
 		$this->set('menu_suffix',Configure::read('Menu.suffix'));
@@ -47,7 +47,11 @@ class AppController extends Controller {
 			$this->RequestHandler->renderAs($this,'xml');
 			$this->RequestHandler->respondAs('xml');
 		}
-		if($this->RequestHandler->isAjax()) $this->set('is_ajax',true);
+		if($this->RequestHandler->isAjax()) {
+			$this->set('is_ajax',true);
+			$ajax_view_file = APP.'views'.DS.Inflector::underscore($this->name).DS.'ajax'.DS.$this->action.'.ctp';
+			if(file_exists($ajax_view_file)) $this->viewPath = $this->viewPath.DS.'ajax';
+		}
 	}
 
 	function retrieveGetIdsToData() {

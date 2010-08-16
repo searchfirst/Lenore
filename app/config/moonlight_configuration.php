@@ -1,4 +1,5 @@
 <?php
+setlocale(LC_MONETARY, 'en_GB.UTF8');
 $config = array(
 	'Category' => array(
 		'alias' => 'Product',

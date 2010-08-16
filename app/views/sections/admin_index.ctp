@@ -6,42 +6,31 @@
 <?php if(empty($sections)):?>
 <p>No <?php echo Inflector::pluralize(Configure::read('Section.alias')) ?></p>
 <?php else:?>
-<table class="sortable">
-<colgroup span="2"></colgroup>
-<colgroup span="2" class="flags"></colgroup>
-<colgroup span="2" class="dates"></colgroup>
-<thead><tr>
-<th>Title</th>
-<th><?php echo Inflector::pluralize(Configure::read('Article.alias'));?></th>
-<th colspan="2">Flags</th>
-<th>Created</th>
-<th>Modified</th>
-</thead>
-<tbody class="sections">
+<ul class="sortable sections">
 <?php foreach($sections as $section):?>
-<tr id="<?php echo sprintf("%s_%s",'Section',$section['Section']['id']);?>">
-<td><span><?php echo $html->link($section['Section']['title'],array('admin'=>true,'controller'=>'sections','action'=>'view',$section['Section']['id']))?></span>
+<li id="<?php echo sprintf("%s_%s",'Section',$section['Section']['id']);?>" class="<?php
+$sortable_sections_flags = array();
+if($section['Section']['draft']) $sortable_sections_flags[] = 'draft';
+if($section['Section']['featured']) $sortable_sections_flags[] = 'featured';
+echo implode(" ",$sortable_sections_flags);
+?>">
+<span><?php echo $html->link($section['Section']['title'],array('admin'=>true,'controller'=>'sections','action'=>'view',$section['Section']['id']))?></span>
 <ul class="hook_menu">
 <li><?php echo $this->element('admin/edit_form',array('controller'=>'sections','model'=>'Section','id'=>$section['Section']['id'],'title'=>$section['Section']['title']))?></li>
 <li><?php echo $this->element('admin/delete_form',array('controller'=>'sections','model'=>'Section','id'=>$section['Section']['id'],'title'=>$section['Section']['title']))?></li>
 </ul>
 </td>
-<td><?php echo count($section['Article'])?></td>
-<td><img src="/img/admin/flag-<?php if($section['Section']['draft']) {
-echo "draft.png\" alt=\"Draft\"";
-} else {
-echo "published.png\" alt=\"Published\"";
-}?> class="flag"></td>
-<td><img src="/img/admin/flag-<?php if($section['Section']['featured']) {
-echo "flagged.png\" alt=\"Featured\"";
-} else {
-echo "unflagged.png\" alt=\"Normal\"";
-}?> class="flag"></td>
-<td><?php echo substr($time->toRSS($section['Section']['created']),0,-15);?></td>
-<td><?php echo substr($time->toRSS($section['Section']['modified']),0,-15);?></td>
-</tr>
+<?php if((integer) $section['Article'] > 0): ?>
+<span class="item_count"><?php echo sprintf("%s %s",count($section['Article']),((integer) $section['Article']>1?'Articles':'Article'))?></span>
+<?php else: ?>
+<span></span>
+<?php endif; ?>
+<span class="mover"></span>
+<span class="dates">
+<i><?php echo $time->format('d M Y',$section['Section']['created']);?></i>
+<i><?php echo $time->format('d M Y',$section['Section']['modified']);?></i>
+</span>
+</li>
 <?php endforeach;?>
-</tbody>
-</table>
 <?php endif;?>
 </div>

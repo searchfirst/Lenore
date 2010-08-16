@@ -13,22 +13,19 @@ jQuery.fn.hookMenu = function(settings) {
 		hook_menu[i] = jQuery(this).next('ul.hook_menu');
 		if(hook_menu[i].length) {
 			current_hook[i].append('<span class="hook_menu_x">Expand</span>');
-			hook_menu_x[i] = current_hook[i].children('span.hook_menu_x').eq(0);
+			hook_menu_x[i] = current_hook[i].find('span.hook_menu_x').eq(0);
 			current_hook[i].wrapInner('<span class="hook_menu_xc"/>');
 			hook_menu_xc[i] = current_hook[i].children().eq(0);
 			hook_menu_xy[i] = {
-//				'width': Math.max(hook_menu_xc[i].outerWidth(),175),
 				'min-width': hook_menu_xc[i].outerWidth(),
 				'top': current_hook[i].offset().top + current_hook[i].height(),
 				'left': current_hook[i].offset().left
 			};
 			hook_menu[i].recalcCoords = function() {
 				hook_menu[i].css({
-//					'left': current_hook[i].offset().left,
 					'left': hook_menu_xc[i].offset().left,
 					'top': hook_menu_xc[i].offset().top + hook_menu_xc[i].height(),
 					'min-width': hook_menu_xc[i].outerWidth()
-//					'width': Math.max(hook_menu_xc[i].outerWidth(),175)
 				});
 			}
 			hook_menu[i].css({
@@ -42,8 +39,8 @@ jQuery.fn.hookMenu = function(settings) {
 				mouseenter: function(e) {
 					jQuery(this).parent().toggleClass('hook_highlight');
 				},
-				mouseout: function(e) {
-					jQuery(this).parent().toggleClass('hook_highlight');
+				mouseleave: function(e) {
+					jQuery(this).parent().removeClass('hook_highlight');
 				},
 				click: function(e) {
 					hook_menu[i].recalcCoords();
@@ -51,16 +48,26 @@ jQuery.fn.hookMenu = function(settings) {
 				}
 			});
 			hook_menu[i].bind({
-				mouseout: function(e) {
-					var isChild = $(e.currentTarget).has($(e.relatedTarget)).length;
-					if(!(isChild)) {
-						hook_menu[i].fadeOut('fast');
-					}
+				mouseleave: function(e) {
+					hook_menu[i].fadeOut('fast');
 				},
 				click: function(e) {
 					hook_menu[i].fadeOut('fast');
 				}
 			});
+		}
+		$(hook_menu_xc[i]).css({'-webkit-user-select':'none','-moz-user-select':'none','user-select':'none'});
+		current_hook[i].bind({
+			contextmenu: function(e){
+				e.preventDefault();
+				hook_menu_x[i].click();
+			}
+		});
+	});
+	$(document).bind('scroll',function(){
+		for(x in hook_menu) {
+			$(hook_menu_x[x]).mouseleave();
+			hook_menu[x].mouseleave();
 		}
 	});
 	return this;

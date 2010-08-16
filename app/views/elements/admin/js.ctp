@@ -6,6 +6,8 @@
 <?php echo $javascript->link('jquery/ui/sortable');?> 
 <?php echo $javascript->link('jquery/ui/dialog');?> 
 <?php echo $javascript->link('jquery/ui/position');?>
+<?php echo $javascript->link('jquery/lib/iphoneui');?> 
+<?php echo $javascript->link('jquery/inline_edit');?> 
 <?php echo $javascript->link('jquery/hook_menu');?> 
 <?php echo $javascript->link('jquery/dux_tabs');?> 
 <?php echo $javascript->link('admin/load_config');?>

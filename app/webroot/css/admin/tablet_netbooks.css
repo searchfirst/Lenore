@@ -1,19 +1,28 @@
-body {
-padding: 20px;
+#content h2:first-child:after {
+margin-bottom: 0;
 }
 
-#content .dashboard {
+#content > .dashboard, #content .content {
 display: table;
 border-collapse: separate;
-border-spacing: 12px 0;
+border-spacing: 12px;
 padding: 0;
 table-layout: fixed;
 width: 100%;
 }
 
-#content .dashboard .primary, #content .dashboard .secondary {
+#content .dashboard .primary, #content .content .primary {
 display: table-cell;
-width: 50%;
+width: 60%;
+}
+
+#content .dashboard .secondary,  #content .content .secondary {
+display: table-cell;
+width: 40%;
+}
+
+#content div.content div.secondary > div.item {
+padding-left: 12px;
 }
 
 ul.grid li {
@@ -31,4 +40,8 @@ ul.grid li a:hover, ul.grid a:focus {
 ul.grid li img {
 display: block;
 width: auto;
+}
+
+#content ul.sortable > li > span.dates {
+display: block;
 }

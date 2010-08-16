@@ -78,7 +78,7 @@ class AppModel extends Model {
 				if($resource['type']==Resource::$types['Decorative'] && $this->alreadyHasDeco()) {
 					$this->fileUploadError('has_deco');
 				} else {
-					if($resource['file'][error]==UPLOAD_ERR_OK) {
+					if($resource['file']['error']==UPLOAD_ERR_OK) {
 						$this->repairMimeTypes($resource['type'],$resource['name']);
 						$resource['mime_type'] = $resource['file']['type'];
 						$resource['extension'] = $this->getExtension($resource['file']['type'],$resource['file']['name']);
@@ -214,7 +214,7 @@ class AppModel extends Model {
 			'save_error' => 'Error saving a Resource.',
 			'unknown' => 'General file upload error. Contact support.'
 		);
-		if(in_array($upload_errors,$key)) {
+		if(in_array($key,$upload_errors)) {
 			Session::setFlash($upload_errors[$key]);
 			return true;
 		} else {

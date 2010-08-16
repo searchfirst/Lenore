@@ -52,7 +52,6 @@ class SectionsController extends AppController {
 	function admin_add() {
 		if(empty($this->data)) {
 		} else {
-			$this->cleanUpFields();
 			if($this->Section->save($this->data)) {
 				if(isset($GLOBALS['moonlight_inline_count_set'])) {
 					$this->Session->setFlash("This item has been saved. You need to upload media for this item");
@@ -76,7 +75,6 @@ class SectionsController extends AppController {
 			$this->data = $this->Section->find('first',array('conditions'=>array('Section.id'=>$id)));
 			$this->set('section',$this->data);
 		} else {
-			$this->cleanUpFields();
 			if($this->Section->save($this->data)) {
 				if(isset($GLOBALS['moonlight_inline_count_set'])) {
 					$this->Session->setFlash("This item has been saved. You may need to upload media for this item");
@@ -93,15 +91,18 @@ class SectionsController extends AppController {
 	}
 
 	function admin_delete($id = null) {
+		$this->set('id',$id);
 		if(!$id) {
-			$this->Session->setFlash('Invalid id for Section');
-			$this->redirect('/sections/');
+			$this->viewPath = 'errors';
+			$this->render('not_found');
 		}
-		if( ($this->data['Section']['id']==$id) && ($this->Section->del($id)) ) {
-			$this->Session->setFlash('The Section deleted: id '.$id.'');
-			$this->redirect('/sections/');
-		} else {
-			$this->set('id',$id);
+		if(!empty($this->data['Section']['id'])) {
+			if($this->Section->delete($this->data['Section']['id'])) {
+				$this->Session->setFlash(sprintf('%s deleted',Configure::read('Section.alias')));
+			} else {
+				$this->Session->setFlash(sprintf('There was an error deleting this %s',Configure::read('Section.alias')));
+			}
+			$this->redirect('/admin/sections/');			
 		}
 	}
 

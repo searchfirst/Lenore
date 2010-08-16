@@ -1,4 +1,4 @@
-<h2>Dashboard: <?php echo vsprintf('%s (%s)',array(Configure::read('Moonlight.website_name'),$_SERVER['HTTP_HOST'])) ?></h2>
+<h2>Dashboard</h2>
 <div class="dashboard">
 <div class="primary">
 <h3>Manage This Site</h3>

@@ -1,9 +1,9 @@
 $(document).ready(function() {
-	$('#content > h2:first-child, span').hookMenu();
+	$('#content > h2:first-child, #content h3, span').hookMenu();
 	$('ul.tab_hooks').duxTab();
 	loadSortableLists();
-	loadSortableTables();
 	loadAJAXDialogLinks();
+	loadEditableMeta();
 	
 	$('img.flag').each(function(i){$(this).after(" ["+$(this).attr('alt')+"]");});
 	
@@ -42,6 +42,7 @@ function loadSortableLists() {
 	var sortable_lists = $('#content ul.sortable');
 	sortable_lists.each(function(i){
 		var current_s_list = this;
+		$(current_s_list).find('li span.mover').addTouch();
 		$(current_s_list).data('controller',$(current_s_list).attr('class').split(" ")[1]);
 		$(current_s_list).sortable({
 			stop: function(e,ui){
@@ -68,44 +69,32 @@ function loadSortableLists() {
 				ui.children().each(function() {$(this).width($(this).width());});
 				return ui;
 			},
-			placeholder: 'sortable-placeholder'
+			placeholder: 'sortable-placeholder',
+			handle: 'span.mover',
+			axis: 'y'
 		});
 		$(current_s_list).data('Initial',$(current_s_list).sortable('serialize',{key:'data[Initial][]'}));
 	});	
 }
+function loadEditableMeta() {
+	var editable = $('div.meta span.editable');
+	if(editable.length > 0) {
+	 	var editable_form = $('div.meta form'),
+			editable_url = editable_form.attr('action'),
+			e_id = editable_url.split('/')[4],
+			e_controller = editable.parents('ul').eq(0).attr('class');
 
-function loadSortableTables() {
-	var sortable_tables = $('#content table.sortable');
-	sortable_tables.each(function(i){
-		var current_s_table = this;
-		$(current_s_table).data('controller',$('tbody',current_s_table).attr('class'));
-		$('tbody',current_s_table).sortable({
-			stop: function(e,ui){
-				$(current_s_table).data('Final',$(this).sortable('serialize',{key:'data[Final][]'}));
-				ajax_data_string = $(current_s_table).data('Initial') + '&' + $(current_s_table).data('Final');
-				ajax_url = '/admin/' + $(current_s_table).data('controller') + '/reorder';
-				$.ajax({
-					url:ajax_url,
-					data:ajax_data_string,
-					type:'POST',
-					success:function(d,s,xHR){
-						if(d=='Fail'){
-							window.location.reload();
-						} else {
-							$(current_s_table).data('Initial',$('tbody',current_s_table).sortable('serialize',{key:'data[Initial][]'}));
-						}
-					},
-					fail:function(d,s,xHR) {
-						window.location.reload();
-					}
-				});
-			},
-			helper: function(e,ui) {
-				ui.children().each(function() {$(this).width($(this).width());});
-				return ui;
-			},
-			placeholder: 'sortable-placeholder'
+		editable.bind('click',function(e){});
+		editable.inlineEdit({
+			placeholder: '',
+			save: function(e,i_data){
+				var e_method = this.element.attr('class').split(' ')[1];
+				var post_data = new Object();
+				post_data["data[" + e_controller + "][" + e_method + "]"] = i_data.value;
+				post_data["data[" + e_controller + "][id]"] = e_id;
+				$.ajax({type:'POST',url:editable_url,dataType:'text',data:post_data});
+			}
 		});
-		$(current_s_table).data('Initial',$('tbody',current_s_table).sortable('serialize',{key:'data[Initial][]'}));
-	});
+		editable_form.remove();
+	}
 }

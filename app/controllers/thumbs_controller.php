@@ -1,5 +1,5 @@
 <?php
-App::import('Vendor','phpthumb/phpthumb.class'); 
+App::import('Vendor','phpthumb/phpthumb_class'); 
 class ThumbsController extends AppController {
 	var $name = 'Thumbs';
 	var $uses = null;
@@ -11,7 +11,7 @@ class ThumbsController extends AppController {
 		if(count($this->params['pass'])) {
 			$src = implode('/',array_slice($this->params['pass'],1));
 			$action = $this->params['pass'][0];
-			$phpThumb = new phpThumb();
+			$phpThumb = new phpthumb();
 			$sourceFilename = Configure::read('Resource.media_path').DS.$src;
 			$cacheFilename = md5("$action$src");
 			$phpThumb->src = $sourceFilename;
