@@ -18,6 +18,9 @@ class AppController extends Controller {
 			if(file_exists(APP.'views'.DS.$template_theme_path.DS.Inflector::underscore($this->name).DS.$this->action.".ctp")) {
 				$this->viewPath = $template_theme_path.DS.$this->viewPath;
 			}
+			if($this->layoutPath != 'admin' && file_exists(APP.'views'.DS.'layouts'.DS.$template_theme_path.DS.$this->layout.'.ctp')) {
+				$this->layoutPath = $template_theme_path;
+			}
 		} else {
 			$template_theme_path = '';
 		}
@@ -51,6 +54,11 @@ class AppController extends Controller {
 			$this->set('is_ajax',true);
 			$ajax_view_file = APP.'views'.DS.Inflector::underscore($this->name).DS.'ajax'.DS.$this->action.'.ctp';
 			if(file_exists($ajax_view_file)) $this->viewPath = $this->viewPath.DS.'ajax';
+		}
+		if($this->RequestHandler->isMobile()) {
+			$this->set('is_mobile',true);
+		} else {
+			$this->set('is_mobile',false);
 		}
 	}
 

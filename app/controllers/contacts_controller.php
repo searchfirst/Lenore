@@ -10,6 +10,7 @@ class ContactsController extends AppController {
 	function index() {
 		$this->Contact->loadInfo(false);
 		$contact_content = $this->Section->findBySlug('contact');
+		$this->set('title_for_layout','Contact Us');
 		if(!empty($contact_content['Section']['meta_description']) || !empty($contact_content['Section']['meta_keywords']))
 			$this->set('metadata_for_layout',array('description'=>$contact_content['Section']['meta_description'],'keywords'=>$contact_content['Section']['meta_keywords']));		
 		$this->set('contact_content',$contact_content);

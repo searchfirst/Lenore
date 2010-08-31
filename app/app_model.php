@@ -71,14 +71,20 @@ class AppModel extends Model {
 	
 	/* File Upload Functions */
 	
+	private function validFileArray($file_array) {
+		if(is_array($file_array['file']) && !empty($file_array['file'])) return true;
+		return false;
+	}
+	
 	public function handleFileUploads() {
+		$this->log(var_export($this->data['Resource']));
 		if(!empty($this->data['Resource'])) {
 			$resources['Resource']['Resource'] = $this->getExistingResourceIds();
 			foreach($this->data['Resource'] as $x => $resource) {
 				if($resource['type']==Resource::$types['Decorative'] && $this->alreadyHasDeco()) {
 					$this->fileUploadError('has_deco');
 				} else {
-					if($resource['file']['error']==UPLOAD_ERR_OK) {
+					if($this->validFileArray($resource) && $resource['file']['error']==UPLOAD_ERR_OK) {
 						$this->repairMimeTypes($resource['type'],$resource['name']);
 						$resource['mime_type'] = $resource['file']['type'];
 						$resource['extension'] = $this->getExtension($resource['file']['type'],$resource['file']['name']);
@@ -415,7 +421,11 @@ class AppModel extends Model {
 		// Look for same URL, if so try until we find a unique one
 		
 		$conditions = array($this->name . '.' . $field => 'LIKE ' . $currentUrl . '%');
-		$result = $this->findAll($conditions, $this->name . '.*', null);
+		//$result = $this->findAll($conditions, $this->name . '.*', null);
+		$result = $this->find('all',array(
+			'conditions'=>array(sprintf('%s.%s LIKE',$this->name,$field) => sprintf('%s.%%',$currentUrl)),
+			'recursive'=>0
+		));
 		
 		if ($result !== false && count($result) > 0) {
 			$sameUrls = array();

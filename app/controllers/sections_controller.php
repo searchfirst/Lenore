@@ -58,7 +58,7 @@ class SectionsController extends AppController {
 					$this->redirect('/'.strtolower($this->name).'/manageinline/'.$this->Section->getLastInsertId());
 				} else {
 					$this->Session->setFlash("This item has been saved.");
-					$this->redirect('/'.strtolower($this->name).'/view/'.$this->Section->getLastInsertId());
+					$this->redirect(sprintf('/admin/%s/view/%s','sections',$this->Section->getLastInsertId()));
 				}
 			} else {
 				$this->Session->setFlash('Please correct errors below.');
@@ -81,7 +81,7 @@ class SectionsController extends AppController {
 					$this->redirect("/".strtolower($this->name)."/manageinline/$id");
 				} else {
 					$this->Session->setFlash("This item has been saved.");
-					$this->redirect("/".strtolower($this->name)."/view/$id");
+					$this->redirect(sprintf('/admin/%s/view/%s','sections',$id));
 				}
 			} else {
 				$this->Session->setFlash('Please correct errors below.');

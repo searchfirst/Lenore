@@ -1,6 +1,5 @@
-database.php
-core.php
-bootstap.php
-!core.php.sample
-!database.php.sample
-!bootstrap.php.sample
+*
+!.gitignore
+!acl.ini.php
+!*.sample
+!schema/*
