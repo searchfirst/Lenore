@@ -35,7 +35,7 @@ class AppController extends Controller {
 			'{n}.Section.slug','{n}.Section.title'
 		));
 		$this->set('moonlight_product_list', Set::combine($this->Category->find('all',array(
-			'conditions'=>array('OR'=>array('Category.category_id'=>0,'NULL'=>array('Category.category_id'))),
+			'conditions'=>array('Category.category_id'=>null),
 			'fields'=>array('Category.slug','Category.title'),
 			'order'=>'Category.order_by ASC',
 			'recursive'=>0

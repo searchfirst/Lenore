@@ -72,7 +72,7 @@ class CategoriesController extends AppController {
 					$this->redirect('/'.strtolower($this->name).'/manageinline/'.$this->Category->getLastInsertId());
 				} else {
 					$this->Session->setFlash("This item has been saved.");
-					$this->redirect('/'.strtolower($this->name).'/view/'.$this->Category->getLastInsertId());
+					$this->redirect(sprintf("/admin/%s/view/%s",'categories',$this->Category->getLastInsertId()));
 				}
 			} else {
 				$this->Session->setFlash('Please correct errors below.');
