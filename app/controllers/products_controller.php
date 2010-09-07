@@ -14,16 +14,18 @@ class ProductsController extends AppController
 	}
 	
 	function view($slug=null) {
-		$product = $this->Product->find(array('Product.draft'=>0,'Product.slug'=>$slug));
+		$product = $this->Product->find('first',array(
+			'conditions'=>array('Product.draft'=>0,'Product.slug'=>$slug)
+		));
 		if(!empty($product) && (!isset($this->params['alt_content']) || $this->params['alt_content']!='Rss')) {
 			if($product['Category']['slug']!=$this->params['category']) {
-				$this->redirect("/products/{$product['Category']['slug']}/{$product['Product']['slug']}",301);
+				$this->redirect(sprintf('/%s/%s/%s',Inflector::tableize(Configure::read('Product.alias'))),$product['Category']['slug'],$product['Product']['slug'],301);
 				return true;
 			}
-			$this->pageTitle = $product['Product']['title'].': '.$product['Category']['title'];
-			$this->set('current_parent_section','category-'.$product['Category']['slug']);
+			$this->set('title_for_layout',sprintf('%s | %s',$product['Product']['title'],$product['Category']['title']));
+			//$this->set('current_parent_section','category-'.$product['Category']['slug']);
 			$this->set('product', $product);
-			$this->set('current_page',$product['Category']['slug']);
+			//$this->set('current_page',$product['Category']['slug']);
 			//if(!$this->Session->check('Message.flash') && !empty($this->Session->read('Message.flash'))) $this->set('mod_date_for_layout', $product['Product']['modified']);
 			if(!empty($product['Product']['meta_description']) || !empty($product['Product']['meta_keywords']))
 				$this->set('metadata_for_layout',array('description'=>$product['Product']['meta_description'],'keywords'=>$product['Product']['meta_keywords']));
@@ -33,16 +35,15 @@ class ProductsController extends AppController
 		}
 	}
 
-
 	function admin_index() {
 		$this->Product->recursive = 0;
 		$this->set('products', $this->Product->findAll());
 	}
 
 	function admin_add() {
-		if(empty($this->data) || isset($this->data['Referrer']['category_id'])) {
+		if(empty($this->data)) {
 			$this->data['Product']['category_id'] = $this->data['Referrer']['category_id'];
-			$this->set('category', $this->Product->Category->generateList());
+			$this->set('categories',$this->Product->Category->find('list'));
 		} else {
 			if($this->Product->save($this->data)) {
 				if(isset($GLOBALS['moonlight_inline_count_set'])) {
@@ -55,7 +56,7 @@ class ProductsController extends AppController
 			} else {
 				$this->Session->setFlash('Please correct the errors below');
 				$this->data['Referral']['category_id'] = $this->data['Product']['category_id'];
-				$this->set('category', $this->Product->Category->generateList());
+				$this->set('categories',$this->Product->Category->find('list'));
 			}
 		}
 	}

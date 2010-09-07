@@ -2,7 +2,8 @@
 class AppController extends Controller {
 	var $uses = array('Section','Category');
 	var $helpers = array('Html','Form','Time','TextAssistant','MediaAssistant','Javascript','Session','Menu');
-	var $components = array('RequestHandler','Session','Acl','Auth');
+	var $actionHelpers = array('Time');
+	var $components = array('RequestHandler','Session','Acl','Auth','Helper');
 
 	function beforeFilter() {
 		$this->Auth->allowedActions = array('display','login','logout','index','view','add');
@@ -42,7 +43,7 @@ class AppController extends Controller {
 		)),
 			'{n}.Category.slug','{n}.Category.title'
 		));
-		if(!empty($this->viewVars['mod_date_for_layout'])) $this->header('Last-Modified: '.TimeHelper::toRSS($mod_date_for_layout));
+		if(!empty($this->viewVars['mod_date_for_layout'])) $this->header('Last-Modified: '.$this->Time->toRSS($this->viewVars['mod_date_for_layout']));
 		if(isset($this->params['alt_content']) && $this->params['alt_content']=='Rss') {
 			$this->RequestHandler->renderAs($this,'rss');
 			$this->RequestHandler->respondAs('Content-type: application/rss+xml;charset=UTF-8');

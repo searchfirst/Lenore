@@ -8,18 +8,12 @@ class CategoriesController extends AppController {
 		$this->Auth->allowedActions = array('index', 'view');
 	}
 
-/*	function beforeRender() {
-		AppController::beforeRender();
-		if(!empty($this->viewVars['category']['Category']))
-			$this->set('subcategory_list', $this->Category->findAll("Category.category_id={$this->viewVars['category']['Category']['id']}"));
-	}*/
-	
 	function index() {
 		if(isset($this->params['alt_content']) && $this->params['alt_content']=='Rss') {
 			$this->viewPath = 'errors';
 			$this->render('not_found');
 		}
-		$this->pageTitle = Configure::read('Category.alias');
+		$this->set('title_for_layout',Configure::read('Category.alias'));
 		$this->set('categories',$this->Category->findAll());
 	}
 	
@@ -29,7 +23,7 @@ class CategoriesController extends AppController {
 			$this->render('error');}
 		$get_category_from_db = $this->Category->findBySlug($slug);
 		if(!empty($get_category_from_db)) {
-			$this->pageTitle = $get_category_from_db['Category']['title'];
+			$this->set('title_for_layout',$get_category_from_db['Category']['title']);
 			$this->set('current_page',$slug);
 			$this->set('current_parent_section','category-'.$get_category_from_db['Category']['slug']);
 			$this->set('category', $get_category_from_db);
@@ -52,12 +46,11 @@ class CategoriesController extends AppController {
 			$this->Session->setFlash('Invalid Category.');
 			$this->redirect('/categories/');
 		}
-		$this->data = $this->Category->find('first',array(
+		$category = $this->Category->find('first',array(
 			'conditions' => array('Category.id'=>$id),
 			'recursive'=>2
 		));
-		//$this->set('category', $this->Category->find(array('Category.id'=>$id),null,'Category.id ASC'));
-		$this->set('category', $this->data);
+		$this->set('category', $category);
 	}
 
 	function admin_add() {
@@ -113,11 +106,11 @@ class CategoriesController extends AppController {
 	function admin_delete($id = null) {
 		if(!$id) {
 			$this->Session->setFlash('Invalid id for Category');
-			$this->redirect('/categories/');
+			$this->redirect('/admin/categories/');
 		}
-		if( ($this->data['Category']['id']==$id) && ($this->Category->del($id)) ) {
+		if(!empty($this->data['Category']['id']) && $this->data['Category']['id']==$id && $this->Category->delete($id)) {
 			$this->Session->setFlash('Category successfully deleted');
-			$this->redirect('/categories/');
+			$this->redirect('/admin/categories/');
 		} else {
 			$this->set('id',$id);
 		}

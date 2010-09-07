@@ -15,6 +15,7 @@
 <div class="primary">
 <?php echo $this->element('admin/categories/admin_view/subcategories'); ?> 
 <?php echo $this->element('admin/categories/admin_view/products'); ?> 
+<?php echo $this->element('admin/categories/admin_view/content'); ?> 
 </div>
 <div class="secondary">
 <?php echo $this->element('admin/categories/admin_view/information'); ?> 

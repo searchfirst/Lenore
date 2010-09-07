@@ -7,7 +7,7 @@
 <?php echo $this->element('admin/js');?> 
 <?php echo $this->element('admin/css');?>
 </head>
-<body><div id="main">
+<body><?php if ($session->check('Message.flash')) echo $session->flash();?><?php if($session->check('Message.auth')) echo $session->flash('auth');?><div id="main">
 <header id="header">
 <h1>Moonlight</h1>
 <?php echo $this->element('admin/menu')?> 
@@ -18,7 +18,5 @@ echo $content_for_layout;
 ?> 
 </div>
 </div>
-<?php if ($session->check('Message.flash')) echo $session->flash();?> 
-<?php if($session->check('Message.auth')) echo $session->flash('auth');?> 
 </body>
 </html>

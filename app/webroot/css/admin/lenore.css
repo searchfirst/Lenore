@@ -2,7 +2,6 @@
 
 * {
 cursor: default;
-text-rendering: optimizeLegibility;
 }
 
 * a, * a * {
@@ -14,7 +13,7 @@ min-height: 100%;
 }
 
 body{
-font: normal normal normal 81.25%/1.6 Geneva,Tahoma,sans-serif;
+font: normal normal normal 100%/1.6 Geneva,Tahoma,sans-serif;
 letter-spacing: 0.077em;
 background-color: rgb(255,255,255);
 background-image: url('/img/admin/texture.png'), linear-gradient(top, #f2efe6, #ebe5d3);
@@ -71,16 +70,16 @@ clear: none;
 }
 
 h1{
-font-size: 1.42em;
+font-size: 1.125em;
 margin: 0 0 20px;
 }
 
 h2{
-font: normal normal normal 138.46% MgOpenModerna,'Lucida Sans Unicode','Lucida Grande',sans-serif;
+font: normal normal normal 1.125em MgOpenModerna,'Lucida Sans Unicode','Lucida Grande',sans-serif;
 }
 
 h3{
-font: normal normal normal 108.33% MgOpenModerna,'Lucida Sans Unicode','Lucida Grande',sans-serif;
+font: normal normal normal 1em MgOpenModerna,'Lucida Sans Unicode','Lucida Grande',sans-serif;
 color: rgb(61, 107, 153);
 text-transform: uppercase;
 letter-spacing: 0.167em;
@@ -587,6 +586,7 @@ vertical-align: middle;
 }
 
 input, textarea {
+font-size: 1em;
 display:block;
 width: 100%;
 box-sizing: border-box;
@@ -827,19 +827,28 @@ text-shadow: none;
 
 /* Dialogs */
 
+.message {
+display: none;
+}
+
 .ui-widget-overlay {
 display: block;
-position: fixed;
+position: absolute;
 top: 0;
 left: 0;
+height: 100%;
 background-color: rgba(0,0,0,0.3);
 -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#99000000',EndColorStr='#99000000')";
-
 }
 
 .ui-dialog {
 background-color: rgb(221,221,221);
 border: 1px solid rgb(255,255,255);
+-ms-box-sizing: border-box;
+-moz-box-sizing: border-box;
+-webkit-box-sizing: border-box;
+-o-box-sizing: border-box;
+box-sizing: border-box;
 padding: 5px;
 /*position: fixed !important;*/
 -moz-box-shadow: 0px 0px 4px #000;

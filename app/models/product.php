@@ -28,7 +28,8 @@ class Product extends AppModel {
 	var $recursive = 1;
 
 	function beforeSave() {
-		if(empty($this->id))
+		$this->log(var_export($this->data));
+		if(empty($this->data[$this->name]['id']))
 			$this->data[$this->name]['slug'] = $this->getUniqueSlug($this->data[$this->name]['title']);
 		return true;
 	}

@@ -21,6 +21,10 @@ class TextAssistantHelper extends Helper {
 	}
 	
 	function sanitiseText($text,$clean_entities=true,$force_strip_html=false) {
+		return $this->sanitise($text,$clean_entities,$force_strip_html);
+	}
+	
+	function sanitise($text,$clean_entities=true,$force_strip_html=false) {
 		if(!Configure::read('TextAssistant.allow_html_in_descriptions') || $force_strip_html)
 			$text = strip_tags($text,Configure::read('TextAssistant.permitted_html_elements'));
 		if($clean_entities) $text = htmlspecialchars($text,ENT_COMPAT,'UTF-8');	

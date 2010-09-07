@@ -77,7 +77,6 @@ class AppModel extends Model {
 	}
 	
 	public function handleFileUploads() {
-		$this->log(var_export($this->data['Resource']));
 		if(!empty($this->data['Resource'])) {
 			$resources['Resource']['Resource'] = $this->getExistingResourceIds();
 			foreach($this->data['Resource'] as $x => $resource) {
@@ -85,7 +84,7 @@ class AppModel extends Model {
 					$this->fileUploadError('has_deco');
 				} else {
 					if($this->validFileArray($resource) && $resource['file']['error']==UPLOAD_ERR_OK) {
-						$this->repairMimeTypes($resource['type'],$resource['name']);
+						$this->repairMimeTypes($resource['type'],$resource['file']['name']);
 						$resource['mime_type'] = $resource['file']['type'];
 						$resource['extension'] = $this->getExtension($resource['file']['type'],$resource['file']['name']);
 						$resource['slug'] = $this->Resource->getUniqueSlug($this->getParentTitle($x));
@@ -93,8 +92,8 @@ class AppModel extends Model {
 						$resource['type'] = $resource['file']['type'];
 
 						if($this->moveUpload($resource)) {
-							unset($resource_data['file']);
-							if($this->Resource->save(array('Resource'=>$resource_data))) {
+							unset($resource['file']);
+							if($this->Resource->save(array('Resource'=>$resource))) {
 								$resources['Resource']['Resource'][] = $this->Resource->getLastInsertId();
 							} else {
 								$this->fileUploadError('save_error');
@@ -102,13 +101,10 @@ class AppModel extends Model {
 						} else {
 							$this->fileUploadError('move_file');
 						}
-
-//						if($this->_moveFileuploadFile(0,$resource_data) && $this->Resource->save($resource_data)) {
-//							$this->data['Resource']['Resource'][] = (string) ($last_id = $this->Resource->getLastInsertId());
-						
 					}
 				}
 			}
+			$this->data['Resource'] = $resources['Resource'];
 		}
 	}
 	
@@ -351,6 +347,16 @@ class AppModel extends Model {
 		} else {
 			return (($ext_from_file = pathinfo($filename,PATHINFO_EXTENSION))!='')?$ext_from_file:'';
 		}
+	}
+	
+	function getExtension($mimetype,$filename) {
+		$arr_mimetype = array(
+			'image/jpeg'	=>	'jpg',
+			'image/png'		=>	'png',
+			'image/gif'		=>	'gif'
+		);
+		if(isset($arr_mimetype[$mimetype])) return $arr_mimetype[$mimetype];
+		else return (($ext_from_file = pathinfo($filename,PATHINFO_EXTENSION))!='')?$ext_from_file:'';
 	}
 	
 	function _getUploadExtension($mimetype, $filename) {

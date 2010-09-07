@@ -29,7 +29,7 @@ class MenuHelper extends Helper {
 				if(!in_array($slug,$options['omissions'])) {
 					$output_string .= "<li";
 					if($this->isCurrent($c_slug,$options['current_page'])) $output_string .= " class=\"current\"";
-					$output_string .= ">".$this->TextAssistant->link($title,"/$full_slug")."</li>\n";
+					$output_string .= ">".$this->TextAssistant->link($title,"/$full_slug")."</li>";
 				}
 			}
 			$output_string .= "</ul>";
