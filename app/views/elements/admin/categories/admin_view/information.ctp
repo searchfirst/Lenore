@@ -23,7 +23,7 @@
 <li><b>Description</b> <span class="editable meta_description"><?php echo $textAssistant->sanitiseText($category['Category']['meta_description']); ?></span></li>
 <li><b>Keywords</b> <span class="editable meta_keywords"><?php echo $textAssistant->sanitiseText($category['Category']['meta_keywords']); ?></span></li>
 </ul>
-<?php echo $form->create('Category',array('action'=>'edit')); ?> 
+<?php echo $form->create('Category',array('url'=>sprintf('edit/%s',$category['Category']['id']))); ?> 
 <fieldset>
 <legend>Update Metadata</legend>
 <?php echo $form->input('Category.meta_description',array('value'=>$category['Category']['meta_description']))?> 

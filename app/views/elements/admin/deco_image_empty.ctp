@@ -1,7 +1,7 @@
 <?php $model = isset($model)?$model:$this->params['models'][0];?>
-<form method="post" action="<?php echo $html->url("/".strtolower($this->name)."/edit/".$parent[$model]['id'])?>" enctype="multipart/form-data">
-<?php echo $form->hidden('Fileupload/type][',array('value'=>Resource::$types['Decorative'],'id'=>'FileuploadDecorativeType'))?> 
-<?php //echo $form->file('Fileupload[]',array('name'=>'Fileupload[]'))?>
-<input type="file" name="Fileupload[]" id="Fileupload" />
-<?php echo $form->submit('Upload new image',array('div'=>false))?> 
+<?php echo $form->create($model,array('type'=>'file','url'=>sprintf('/admin/%s/edit/%s',Inflector::tableize($this->name),$parent[$model]['id']))); ?> 
+<?php echo $form->hidden('Resource.1.type',array('value'=>Resource::$types['Decorative']))?> 
+<?php echo $form->input('Resource.1.file',array('label'=>'Thumbnail Image','type'=>'file')) ?> 
+<?php echo $form->input("$model.id",array('value'=>$parent[$model]['id'])); ?> 
+<?php echo $form->end(array('label'=>'Upload new image','div'=>false))?> 
 </form>
