@@ -16,8 +16,10 @@ $(document).ready(function() {
 			$(this).children('div').fadeOut('fast');
 		}
 	});
-
-	$('.message').dialog({modal:true});
+	window.setTimeout(function(){
+		$('.message').dialog({modal:true,autoOpen:false});
+		$('.message').dialog('open');
+	},2500);
 	SvgReplace();
 });
 
