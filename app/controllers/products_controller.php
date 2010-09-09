@@ -42,7 +42,6 @@ class ProductsController extends AppController
 
 	function admin_add() {
 		if(empty($this->data)) {
-			$this->data['Product']['category_id'] = $this->data['Referrer']['category_id'];
 			$this->set('categories',$this->Product->Category->find('list'));
 		} else {
 			if($this->Product->save($this->data)) {
@@ -55,7 +54,7 @@ class ProductsController extends AppController
 				}
 			} else {
 				$this->Session->setFlash('Please correct the errors below');
-				$this->data['Referral']['category_id'] = $this->data['Product']['category_id'];
+				//$this->data['Referral']['category_id'] = $this->data['Product']['category_id'];
 				$this->set('categories',$this->Product->Category->find('list'));
 			}
 		}
@@ -90,14 +89,14 @@ class ProductsController extends AppController
 		$this->set('product', $this->Product->read(null, $id));
 	}
 
-	function admin_delete($id = null) {
+	function admin_delete($id=null) {
 		if(!$id) {
 			$this->Session->setFlash('Invalid id for Product');
 			$this->redirect($this->referer('/categories/'));
 		}
-		if( ($this->data['Product']['id']==$id) && ($this->Product->del($id)) ) {
-			$this->Session->setFlash('Product deleted: id '.$id.'.');
-			$category_id = $this->Product->Category->findByProduct($id);
+		if(!empty($this->data) && $this->data['Product']['id']==$id && $this->Product->delete($id)) {
+			$this->Session->setFlash('Product deleted');
+			//$category_id = $this->Product->Category->findByProduct($id);
 			$this->redirect($this->referer('/categories/'));
 		} else {
 			$this->set('id',$id);

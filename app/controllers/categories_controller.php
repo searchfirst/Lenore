@@ -21,15 +21,18 @@ class CategoriesController extends AppController {
 		if(!$slug) {
 			$this->Session->setFlash('Invalid id for Category.');
 			$this->render('error');}
-		$get_category_from_db = $this->Category->findBySlug($slug);
-		if(!empty($get_category_from_db)) {
-			$this->set('title_for_layout',$get_category_from_db['Category']['title']);
+		$category = $this->Category->find('first',array(
+			'conditions'=>array('Category.slug'=>$slug),
+			'recursive'=>2
+		));
+		if(!empty($category)) {
+			$this->set('title_for_layout',$category['Category']['title']);
 			$this->set('current_page',$slug);
-			$this->set('current_parent_section','category-'.$get_category_from_db['Category']['slug']);
-			$this->set('category', $get_category_from_db);
-			$this->set('mod_date_for_layout', $this->Category->Product->field('modified',"Product.draft=0 AND Product.category_id={$get_category_from_db['Category']['id']}",'Product.modified DESC'));
-			if(!empty($get_category_from_db['Category']['meta_description']) || !empty($get_category_from_db['Category']['meta_keywords']))
-				$this->set('metadata_for_layout',array('description'=>$get_category_from_db['Category']['meta_description'],'keywords'=>$get_category_from_db['Category']['meta_keywords']));
+			$this->set('current_parent_section','category-'.$category['Category']['slug']);
+			$this->set('category', $category);
+			$this->set('mod_date_for_layout', $this->Category->Product->field('modified',"Product.draft=0 AND Product.category_id={$category['Category']['id']}",'Product.modified DESC'));
+			if(!empty($category['Category']['meta_description']) || !empty($category['Category']['meta_keywords']))
+				$this->set('metadata_for_layout',array('description'=>$category['Category']['meta_description'],'keywords'=>$category['Category']['meta_keywords']));
 		} else {
 			$this->viewPath = 'errors';
 			$this->render('not_found');
