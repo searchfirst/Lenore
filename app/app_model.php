@@ -12,7 +12,7 @@ class AppModel extends Model {
 		$resource = new Resource;
 		if(!empty(Resource::$delete_list) && $this->name!='Resource')
 			foreach(Resource::$delete_list as $res)
-				$resource->del($res);
+				$resource->delete($res);
 		return true;
 	}
 	
@@ -108,69 +108,6 @@ class AppModel extends Model {
 		}
 	}
 	
-	function _handleFileUploads() {
-		if(!empty($_FILES['Fileupload']) && !empty($_FILES['Fileupload']['tmp_name'][0])) {
-			$count_uploads = $this->_countUploads(); //count the number of files uploaded
-			if( ($count_uploads==1) && ($this->data['Fileupload']['type'][0]==MOONLIGHT_RESTYPE_DECO) ) {
-				if($this->_alreadyHasDeco()) {
-					$this->_registerFileuploadError('You are uploading a new decorative image when this item already has one');
-				} else {
-					$this->data['Resource']['Resource'] = $this->_prepareExistingResourceIds();
-					if($resource_data = $this->_prepareResourceData(0)) {
-						if($this->_moveFileuploadFile(0,$resource_data) && $this->Resource->save($resource_data)) {
-							$this->data['Resource']['Resource'][] = (string) ($last_id = $this->Resource->getLastInsertId());
-						} else {
-							$this->_registerFileuploadError('Error moving file. Serious error. Contact your system administrator.');
-						}
-					} else {
-						$this->_registerFileuploadError("Error with file. Check it's a valid media file of the correct size and dimensions.");
-					}
-				}
-			} elseif($count_uploads>=1) {
-				$this->data['Resource']['Resource'] = $this->_prepareExistingResourceIds();
-				for($fi=0;$fi<$count_uploads;$fi++) {
-					if($resource_data = $this->_prepareResourceData($fi)) {
-						$new_resource = new Resource;
-						if($this->_moveFileuploadFile($fi,$resource_data) && $new_resource->save($resource_data)) {
-							$this->data['Resource']['Resource'][] = (string) ($last_id = $new_resource->getLastInsertId());
-							$new_resource->create();
-						} else {
-							$this->_registerFileuploadError('Error moving file. Serious error. Contact your system administrator.');
-						}						
-					} else {
-						$this->_registerFileuploadError("Error with file. Check it's a valid media file of the correct size and dimensions.");
-					}
-				}
-			} else {
-				$this->_registerFileuploadError('General file upload error.');
-			}
-		}		
-	}
-	
-	function _prepareResourceData($fi) { //where fi is the index of the _FILES => Fileupload array
-		if($_FILES['Fileupload']['error'][$fi] == UPLOAD_ERR_OK) {
-			$fresh_slug_search = new Resource;
-			//Repair Uknown mimetypes
-			$this->_repairMimeTypes($_FILES['Fileupload']['type'][$fi],$_FILES['Fileupload']['name'][$fi]);
-			$resource_data = array(
-				'mime_type' => $_FILES['Fileupload']['type'][$fi],
-				'extension' => $this->_getUploadExtension($_FILES['Fileupload']['type'][$fi],$_FILES['Fileupload']['name'][$fi]),
-				'slug' => $this->Resource->getUniqueSlug($this->_getParentTitle($fi)),
-				'path' => MOONLIGHT_MEDIA_PATH.Inflector::underscore($this->name).DS,
-				'type' => $this->data['Fileupload']['type'][$fi]
-			);
-			if(isset($this->data['Fileupload']['title'][$fi])) {
-				$resource_data['title'] = $this->data['Fileupload']['title'][$fi];
-			}
-			if(isset($this->data['Fileupload']['description'][$fi])) 
-				$resource_data['description'] = $this->data['Fileupload']['description'][$fi];		
-			if($this->_mimeTypeAcceptable($resource_data['mime_type'],$this->data['Fileupload']['type'][$fi])) //eventually do some image dimensions checking with _imageDimensionsAcceptable($fi)
-				return $resource_data;
-			else return false;
-		}
-		else return false;
-	}
-	
 	function getExistingResourceIds() {
 		$resource_ids = array();
 		if(!empty($this->data[$this->name]['id'])) {
@@ -191,23 +128,6 @@ class AppModel extends Model {
 		return $resource_ids;
 	}
 	
-	function _prepareExistingResourceIds() {
-		$resource_ids = array();
-		if(!empty($this->id)) {
-			$model = $this->findById($this->id);
-			if(isset($model['Decorative']))
-				foreach($model['Decorative'] as $resource_item)
-					$resource_ids[] = $resource_item['id'];
-			if(isset($model['Resource']))
-				foreach($model['Resource'] as $resource_item)
-					$resource_ids[] = $resource_item['id'];
-			if(isset($model['Downloadable']))
-				foreach($model['Downloadable'] as $resource_item)
-					$resource_ids[] = $resource_item['id'];
-		}
-		return $resource_ids;
-	}
-	
 	public function fileUploadError($key) {
 		$upload_errors = array(
 			'has_deco' => 'You are uploading a new decorative image when this item already has one.',
@@ -224,10 +144,6 @@ class AppModel extends Model {
 		}
 	}
 	
-	function _registerFileuploadError($errortype) {
-		$GLOBALS['Fileupload_error'] = $errortype;
-	}
-	
 	public function repairMimeTypes(&$fileupload_type,$filename) {
 		if($fileupload_type=='image/pjpeg') {
 			$fileupload_type = 'image/jpeg';
@@ -242,34 +158,11 @@ class AppModel extends Model {
 			}
 		}
 	}
-	/*
-	function repairMimeTypes(&$fileupload_type,$filename) {
-		//TODO: Parse the mimetype, determine if it is erroneous and change the mimetype
-		//TODO: move the IE handling over to this function
-		if($fileupload_type=='image/pjpeg') {
-			$fileupload_type = 'image/jpeg';
-		} elseif($fileupload_type=='application/octet-stream') {
-			switch(pathinfo($filename,PATHINFO_EXTENSION)) {
-				case 'flv':
-					$fileupload_type = 'video/x-flv';
-					break;
-				default:
-					$fileupload_type = 'application/octet-stream';
-					break;
-			}
-		}
-	}
-	*/
+
 	function moveUpload($resource_data) {
 		$tmp_file = $resource_data['file']['tmp_name'];
 		$new_file = "{$resource_data['path']}{$resource_data['slug']}.{$resource_data['extension']}";
 		return move_uploaded_file($tmp_file,$new_file);
-	}
-	
-	function _moveFileuploadFile($fi,$resource_data) {
-		$uploaded_file = $_FILES['Fileupload']['tmp_name'][$fi];
-		$moved_file = $resource_data['path'].$resource_data['slug'].'.'.$resource_data['extension'];
-		return move_uploaded_file($uploaded_file,$moved_file);
 	}
 	
 	function countUploads() {
@@ -279,17 +172,7 @@ class AppModel extends Model {
 				$upload_count++;
 		return $upload_count;
 	}
-	
-	function _countUploads() {
-		$upload_count = 0;
-		foreach($_FILES['Fileupload']['error'] as $error_code) if($error_code!=4) $upload_count++;
-		return $upload_count;
-	}
-	
-	function _imageDimensionsAcceptable($fi) {
 		
-	}
-	
 	function _mimeTypeAcceptable($mimetype,$resource_type) {
 		$decorative_mime_types = array(
 			'image/jpeg' => 'jpg','image/png' => 'png','image/gif' => 'gif'
@@ -331,14 +214,6 @@ class AppModel extends Model {
 		}
 		return $t;
 	}
-	
-	function _getParentTitle ($uploadindex = 0) {
-		if(isset($this->data['Fileupload']['title'][$uploadindex])  && !empty($this->data['Fileupload']['title'][$uploadindex]))
-			return $this->data['Fileupload']['title'][$uploadindex];
-		elseif(isset($this->data[$this->name]['title'])) return $this->data[$this->name]['title'];
-		elseif($title_from_parent = $this->field('title')) return $this->field('title');
-		else return 'Untitled Media';
-	}
 
 	public function setUploadExtension($mimetype,$filename) {
 		$arr_mimetype = array('image/jpeg'=>'jpg','image/png'=>'png','image/gif'=>'gif');
@@ -359,17 +234,7 @@ class AppModel extends Model {
 		else return (($ext_from_file = pathinfo($filename,PATHINFO_EXTENSION))!='')?$ext_from_file:'';
 	}
 	
-	function _getUploadExtension($mimetype, $filename) {
-		$arr_mimetype = array(
-			'image/jpeg'	=>	'jpg',
-			'image/png'		=>	'png',
-			'image/gif'		=>	'gif'
-		);
-		if(isset($arr_mimetype[$mimetype])) return $arr_mimetype[$mimetype];
-		else return (($ext_from_file = pathinfo($filename,PATHINFO_EXTENSION))!='')?$ext_from_file:'';
-	}
-	
-	public function alreadyHasDeco() {
+	function alreadyHasDeco() {
 		if(empty($this->id)) {
 			return false;
 		} else {
@@ -387,26 +252,6 @@ class AppModel extends Model {
 			}
 		}
 		return false;
-	}
-	
-	function _alreadyHasDeco() {
-		if(empty($this->id))
-			return false;
-		else {
-			$check_for_deco = $this->findById($this->id);
-			foreach($check_for_deco['Decorative'] as $c_resource)
-				if($c_resource['type']==MOONLIGHT_RESTYPE_DECO)
-					return true;
-		}
-		return false;
-	}
-	
-	function _noFileIsDeco($filelist) {
-		$no_deco_file_present = true;
-		foreach($filelist['type'] as $filetype)
-			if($filetype==MOONLIGHT_RESTYPE_DECO)
-				$no_deco_file_present = false;
-		return $no_deco_file_present;
 	}
 	
 	function swapFieldData($rowId1,$rowId2,$fieldname) {

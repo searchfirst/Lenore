@@ -61,6 +61,18 @@ class AppController extends Controller {
 		} else {
 			$this->set('is_mobile',false);
 		}
+		$this->mergeGetDataWithThisData();
+	}
+
+	function mergeGetDataWithThisData() {
+		if(!empty($this->params['url']['data'])) {
+			if(empty($this->data)) {
+				$this->data = $this->params['url']['data'];
+			} else {
+				$this->data = array_merge($this->params['url']['data'],$this->data);
+			}
+			unset($this->paams['url']['data']);
+		}
 	}
 
 	function retrieveGetIdsToData() {
