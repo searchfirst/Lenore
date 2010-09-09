@@ -1,36 +1,36 @@
 <div class="item">
 <h3>Information</h3>
-<dl>
-<dt>Flags</dt>
-<dd><?php if((int)$section['Section']['draft']) echo "Draft item";
-else echo "Public item";?><br />
-<?php if((int)$section['Section']['featured']) echo "Featured item";?></dd>
-<dt>Created</dt>
-<dd><?php echo $time->niceShort($section['Section']['created'])?></dd>
-<dt>Modified</dt>
-<dd><?php echo $time->niceShort($section['Section']['modified'])?></dd>
-</dl>
-<dl>
-<dt>Description</dt>
-<?php if(!empty($section['Section']['meta_description'])):?>
-<dd><?php echo $textAssistant->sanitiseText($section['Section']['meta_description'])?></dd>
-<?php else:?>
-<dd>&lt;Not set&gt;</dd>
-<?php endif;?>
-<dt>Keywords</dt>
-<?php if(!empty($section['Section']['meta_keywords'])):?>
-<dd><?php echo $textAssistant->sanitiseText($section['Section']['meta_keywords'])?></dd>
-<?php else:?>
-<dd>&lt;Not set&gt;</dd>
-<?php endif;?>
-</dl>
-<form method="post" accept-type="UTF-8" action="<?php echo $html->url("/sections/edit/{$section['Section']['id']}")?>">
+<div class="dates">
+<p><b>Created</b> on <?php echo $time->format('d/m/Y',$section['Section']['created'])?> and
+<b>edited</b> on <?php echo $time->format('d/m/Y',$section['Section']['modified'])?></p>
+</div>
+<div class="flags">
+<ul>
+<?php if($section['Section']['draft']==1): ?>
+<li class="draft">Draft</li>
+<?php else: ?>
+<li class="no-draft">Published</li>
+<?php endif; ?>
+<?php if($section['Section']['featured']==1): ?>
+<li class="featured">Featured</li>
+<?php else: ?>
+<li class="no-featured">Not Featured</li>
+<?php endif; ?>
+</ul>
+</div>
+<div class="meta">
+<ul class="Category">
+<li><b>Description</b> <span class="editable meta_description"><?php echo $textAssistant->sanitise($section['Section']['meta_description']); ?></span></li>
+<li><b>Keywords</b> <span class="editable meta_keywords"><?php echo $textAssistant->sanitise($section['Section']['meta_keywords']); ?></span></li>
+</ul>
+<?php echo $form->create('Category',array('url'=>sprintf('edit/%s',$section['Section']['id']))); ?> 
 <fieldset>
 <legend>Update Metadata</legend>
 <?php echo $form->input('Section.meta_description',array('value'=>$section['Section']['meta_description']))?> 
 <?php echo $form->input('Section.meta_keywords',array('value'=>$section['Section']['meta_keywords']))?> 
-<?php echo $form->hidden('Section.id',array('value'=>$section['Section']['id']))?> 
-<?php echo $form->submit('Update')?> 
+<?php echo $form->hidden('Section.id')?> 
+<?php echo $form->end('Update')?> 
 </fieldset>
 </form>
+</div>
 </div>

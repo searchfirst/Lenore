@@ -12,9 +12,11 @@
 </div>
 <?php endif;?>
 <fieldset><legend><?php echo sprintf('%s Options',Configure::read('Product.alias')); ?></legend>
-<?php echo $form->input('Product.category_id',array('options'=>$categories,'label'=>sprintf('%s Category',Configure::read('Category.alias'))))?> 
+<?php if(Configure::read('Product.sales_options')): ?>
 <?php echo $form->input('Product.price',array('size'=>3,'maxlength'=>9)) ?>
 <?php echo $form->input('Product.options',array('cols'=>'40','rows'=>'5','class'=>'plain'))?> 
+<?php endif; ?>
+<?php echo $form->input('Product.category_id',array('options'=>$categories,'label'=>sprintf('%s Category',Configure::read('Category.alias'))))?> 
 </fieldset>
 <fieldset><legend>Flags</legend>
 <?php echo $form->input('Product.draft'); ?>

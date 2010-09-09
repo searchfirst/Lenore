@@ -42,7 +42,7 @@ class Category extends AppModel {
 							)
 	);
 	var $order = 'Category.order_by ASC';
-	var $recursive = 1;
+	var $recursive = 2;
 
 	function beforeSave() {
 		if(empty($this->id)) {
