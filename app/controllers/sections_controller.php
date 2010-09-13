@@ -9,7 +9,7 @@ class SectionsController extends AppController {
 
 	function view($slug = null) {
 		if(!$slug) {
-			$this->Session->setFlash('Invalid id for Section.');
+			//$this->Session->setFlash('Invalid id for Section.');
 			$this->redirect('/');
 		}
 		if($slug=='news')
@@ -42,8 +42,8 @@ class SectionsController extends AppController {
 
 	function admin_view($id=null,$page=1) {
 		if(!$id) {
-			$this->Session->setFlash('Invalid id for Section.');
-			$this->redirect('/admin/sections/');
+			$this->Session->setFlash('Invalid id for Section.<br><pre>'.var_dump($id).'</pre>');
+			$this->redirect('/admin/sections');
 		}
 		$slug = $this->Section->field('slug',array("Section.id"=>$id));
 			$this->set('section', $this->Section->find('first', array('conditions'=>array('Section.id'=>$id))));

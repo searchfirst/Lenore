@@ -3,10 +3,10 @@
 <li><?php echo $this->element('admin/new_form',array('model'=>'Category','controller'=>'categories','l_title'=>'Product Category'));?></li>
 </ul>
 <div class="content">
-<ul class="sortable categories">
 <?php if(empty($categories)):?>
-<li>No <?php echo Inflector::pluralize(Configure::read('Category.alias')); ?></li>
+<p>No <?php echo Inflector::pluralize(Configure::read('Category.alias')); ?></p>
 <?php else:?>
+<ul class="sortable categories">
 <?php foreach ($categories as $category): ?>
 <li id="Category_<?php echo $category['Category']['id']; ?>" class="<?php
 $sortable_categories_flags = array();
@@ -34,6 +34,6 @@ echo implode(" ",$sortable_categories_flags);
 </span>
 </li>
 <?php endforeach; ?>
-<?php endif;?>
 </ul>
+<?php endif;?>
 </div>

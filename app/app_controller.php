@@ -10,8 +10,12 @@ class AppController extends Controller {
 	}
 	
 	function beforeRender() {
-		if(preg_match('/^admin_/',$this->action)) {
+		if($this->actionIsAdmin()) {
 			$this->layoutPath = 'admin';
+		} else {
+			if($custom_layout = Configure::read(sprintf('%s.custom_layout',Inflector::singularize($this->name)))) {
+				$this->layout = $custom_layout;
+			}
 		}
 		$template_theme = Configure::read('Moonlight.template_theme');
 		if(!empty($template_theme)) {
@@ -72,26 +76,6 @@ class AppController extends Controller {
 				$this->data = array_merge($this->params['url']['data'],$this->data);
 			}
 			unset($this->paams['url']['data']);
-		}
-	}
-
-	function retrieveGetIdsToData() {
-		if(!empty($this->params['url']['data'])) {
-			if(empty($this->data)) {
-				$this->data = $this->params['url']['data'];
-				unset($this->params['url']['data']);
-			} else {
-				$newdata = $this->params['url']['data'];
-				$this->data = array_merge($newdata,$this->data);
-				unset($this->params['url']['data']);
-			}
-		}
-		foreach($this->params['url'] as $x=>$params) {
-			if(preg_match('/_id$/i',$x)) {
-				$newdata['Referrer'][$x] = $params;
-				if(empty($this->data)) $this->data = array();
-				$this->data = array_merge($newdata,$this->data);
-			}
 		}
 	}
 
@@ -308,6 +292,14 @@ class AppController extends Controller {
 	    $this->Acl->allow($group, 'controllers/Posts/edit');        
 	    $this->Acl->allow($group, 'controllers/Widgets/add');
 	    $this->Acl->allow($group, 'controllers/Widgets/edit');*/
+	}
+	
+	function actionIsAdmin() {
+		if(!empty($this->params['prefix']) && $this->params['prefix'] == 'admin') {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
 ?>
