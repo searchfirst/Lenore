@@ -6,13 +6,16 @@ class Resource extends AppModel {
 	public static $types = array('Decorative'=>0,'Inline'=>1,'Download'=>2);
 	public static $delete_list = null;
 
-	function beforeValidate() {
-		return true;
-	}
+	function beforeValidate() {return true;}
 	
 	function beforeDelete() {
 		if($resource=$this->findById($this->id))
 			unlink($resource['Resource']['path'].$resource['Resource']['slug'].'.'.$resource['Resource']['extension']);
+		return true;
+	}
+
+	function afterSave() {
+		parent::afterSave();
 		return true;
 	}
 

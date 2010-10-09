@@ -31,7 +31,7 @@ class AppModel extends Model {
 	function beforeValidate() {
 		$this->sanitiseData();
 		$this->setInlineCount();
-		$this->handleFileUploads();
+		if($this->name!='Resource') $this->handleFileUploads();
 		return true;
 	}
 	
@@ -89,12 +89,12 @@ class AppModel extends Model {
 						$resource['extension'] = $this->getExtension($resource['file']['type'],$resource['file']['name']);
 						$resource['slug'] = $this->Resource->getUniqueSlug($this->getParentTitle($x));
 						$resource['path'] = Configure::read('Resource.media_path').DS.Inflector::underscore($this->name).DS;
-						$resource['type'] = $resource['file']['type'];
 
 						if($this->moveUpload($resource)) {
 							unset($resource['file']);
-							if($this->Resource->save(array('Resource'=>$resource))) {
-								$resources['Resource']['Resource'][] = $this->Resource->getLastInsertId();
+							$cResource = new Resource();
+							if($cResource->save(array('Resource'=>$resource))) {
+								$resources['Resource']['Resource'][] = $cResource->getLastInsertId();
 							} else {
 								$this->fileUploadError('save_error');
 							}
