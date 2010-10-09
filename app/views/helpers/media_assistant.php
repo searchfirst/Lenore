@@ -51,8 +51,52 @@ class MediaAssistantHelper extends Helper {
 		$model = ($model)?strtolower($model):strtolower($this->params['models'][0]);
 		$media_filename = $data['slug'].'.'.$data['extension'];
 		$attributes = ($htmlAttributes)?$this->generateHTMLAttributes($htmlAttributes):'';
-		$media_string = "<a href=\"".Configure::read('Resource.web_root')."/$model/$media_filename\" $htmlAttributes>{$data['title']}</a>";
+//		$media_string = "<a href=\"".Configure::read('Resource.web_root')."/$model/$media_filename\" $htmlAttributes>{$data['title']}</a>";
+		$media_string = sprintf('<a href="%s/%s/%s" %s>%s</a>',Configure::read('Resource.web_root'),$model,$media_filename,$attributes,$data['title']);
 		return $media_string;
+	}
+
+	function media($options=array()) {
+		if(is_array($options) && !empty($options) && !empty($options['data'])) {
+			$default_options = array(
+				'html_attributes'=>array(),
+				'conversion_parameter'=>null,
+				'link'=>false,
+				'link_attributes'=>array(),
+				'model'=>null
+			);
+			$options = array_merge($default_options,$options);
+			if(Configure::read('Moonlight.use_html')) {
+				$trailing_slash = ' /';
+			} else {
+				$trailing_slash = '';
+			}
+			$filename = sprintf('%s.%s',$options['data']['slug'],$options['data']['extension']);
+			if($options['conversion_parameter'] && preg_match('/^image/',$options['data']['mime_type']) && in_array($options['conversion_parameter'],array_keys(Configure::read('Thumb.media_parameters')))) {
+				$base_media_path = sprintf('/thumbs/%s/%s/',$options['conversion_parameter'],$options['model']);
+			} else {
+				$base_media_path = sprintf('%s/%s/',Configure::read('Resource.web_root'),$options['model']);
+			}
+			switch($options['data']['mime_type']) {
+				case 'image/jpeg':
+				case 'image/gif':
+				case 'image/png':
+					//Check for ALT
+					if(!isset($options['html_attributes']['alt'])) $options['html_attributes']['alt'] = ''; 
+					$attributes = $this->generateHTMLAttributes($options['html_attributes'],$options['data']);
+					$media_string = sprintf('<img src="%s%s" %s%s>',$base_media_path,$filename,$attributes,$trailing_slash);
+					if($options['link'])
+						$media_string = sprintf('<a href="%s/%s/%s" %s>%s</a>',Configure::read('Resource.web_root'),$model,$filename,$this->generateHTMLAttributes($options['link_attributes'],$options['data']),$media_string);
+				break;
+				case 'video/quicktime':
+				case 'video/mpeg':
+				case 'video/mp4':
+				case 'video/x-ms-wmv':
+					$media_string = sprintf('<video src="%s" controls preload></video>',$filename);
+				break;
+		}
+		return $media_string;
+		} else { trigger_error('Invalid Argument provided to MediaAssistant::media() - Parameter was not an array or resource data was absent'); }
 	}
 
 	function mediaLink($data,$htmlAttributes=null,$conversionParameters=null,$link=false,$linkAttributes=null,$model=null) {
@@ -66,11 +110,11 @@ class MediaAssistantHelper extends Helper {
 		//conversion params is an optional string/integer to specify thumbs controller actions
 		$media_filename = $data['slug'].'.'.$data['extension'];
 		
-		if(in_array($conversionParameters,array_keys(Configure::read('Thumb.media_parameters'))))
-			$base_media_path = "/thumbs/$conversionParameters/$model/";
-		else
-			$base_media_path = Configure::read('Resource.web_root')."/$model/";
-
+		if(in_array($conversionParameters,array_keys(Configure::read('Thumb.media_parameters')))) {
+			$base_media_path = sprintf('/thumbs/%s/%s/',$conversionParameters,$model);
+		} else {
+			$base_media_path = sprintf('%s/%s/',Configure::read('Resource.web_root'),$model);
+		}
 		switch($data['mime_type']) {
 			case 'image/jpeg':
 			case 'image/gif':
