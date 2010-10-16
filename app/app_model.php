@@ -30,8 +30,10 @@ class AppModel extends Model {
 	
 	function beforeValidate() {
 		$this->sanitiseData();
-		$this->setInlineCount();
-		if($this->name!='Resource') $this->handleFileUploads();
+		if($this->name!='Resource') {
+			$this->setInlineCount();
+ 			$this->handleFileUploads();
+		}
 		return true;
 	}
 	
@@ -78,7 +80,7 @@ class AppModel extends Model {
 	
 	public function handleFileUploads() {
 		if(!empty($this->data['Resource'])) {
-			$resources['Resource']['Resource'] = $this->getExistingResourceIds();
+			$resources = $this->getExistingResourceIds();
 			foreach($this->data['Resource'] as $x => $resource) {
 				if($resource['type']==Resource::$types['Decorative'] && $this->alreadyHasDeco()) {
 					$this->fileUploadError('has_deco');
@@ -91,10 +93,12 @@ class AppModel extends Model {
 						$resource['path'] = Configure::read('Resource.media_path').DS.Inflector::underscore($this->name).DS;
 
 						if($this->moveUpload($resource)) {
-							unset($resource['file']);
-							$cResource = new Resource();
-							if($cResource->save(array('Resource'=>$resource))) {
-								$resources['Resource']['Resource'][] = $cResource->getLastInsertId();
+							//unset($resource['file']);
+							//$cResource = new Resource();
+							$this->Resource->create();
+//							if($cResource->save(array('Resource'=>$resource))) {
+							if($this->Resource->save(array('Resource'=>$resource))) {
+								$resources[] = $this->Resource->id;
 							} else {
 								$this->fileUploadError('save_error');
 							}
@@ -104,7 +108,7 @@ class AppModel extends Model {
 					}
 				}
 			}
-			$this->data['Resource'] = $resources['Resource'];
+			$this->data['Resource'] = array('Resource'=>$resources);
 		}
 	}
 	
