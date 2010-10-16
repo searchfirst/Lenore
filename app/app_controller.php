@@ -1,12 +1,23 @@
 <?php
 class AppController extends Controller {
 	var $uses = array('Section','Category');
-	var $helpers = array('Html','Form','Time','TextAssistant','MediaAssistant','Javascript','Session','Menu');
+	var $helpers = array('Html','Form','Time','TextAssistant','MediaAssistant','Javascript','Session','Menu','Minify.MinifyJs');
 	var $actionHelpers = array('Time');
-	var $components = array('RequestHandler','Session','Acl','Auth','Helper');
+	var $components = array('RequestHandler','Session','Acl','Auth','Helper','Minify.Minify');
 
 	function beforeFilter() {
 		$this->Auth->allowedActions = array('display','login','logout','index','view','add');
+		if($this->actionIsAdmin()) {
+			$this->set('min_js_head',$this->Minify->js(array(
+				'js/jquery/jquery.js','js/jquery/ui/core.js','js/jquery/ui/widget.js','js/jquery/ui/mouse.js',
+				'js/jquery/ui/bgiframe.js','js/jquery/ui/sortable.js','js/jquery/ui/dialog.js','js/jquery/ui/position.js',
+				'js/jquery/lib/iphoneui.js','js/jquery/inline_edit.js','js/jquery/hook_menu.js','js/jquery/dux_tabs.js',
+				'js/admin/load_config.js'
+			)));
+			$this->set('min_js_foot',$this->Minify->js(array(
+				'js/lib/svgreplace.js'
+			)));
+		}
 	}
 	
 	function beforeRender() {
@@ -75,7 +86,7 @@ class AppController extends Controller {
 			} else {
 				$this->data = array_merge($this->params['url']['data'],$this->data);
 			}
-			unset($this->paams['url']['data']);
+			unset($this->params['url']['data']);
 		}
 	}
 
