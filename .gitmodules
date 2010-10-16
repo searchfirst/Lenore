@@ -1,3 +1,6 @@
 [submodule "cake"]
 	path = cake
 	url = git://github.com/cakephp/cakephp1x.git
+[submodule "app/plugins/minify"]
+	path = app/plugins/minify
+	url = git@github.com:connrs/minify.git
