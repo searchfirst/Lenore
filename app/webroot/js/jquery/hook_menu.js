@@ -1,74 +1,73 @@
 jQuery.fn.hookMenu = function(settings) {
-	settings = jQuery.extend({
-		'growUp':false,
-		'position':'absolute'		
-	},settings);
-	var hook_menu = new Array();
-	var hook_menu_x = new Array();
-	var hook_menu_xy = new Array();
-	var hook_menu_xc = new Array();
-	var current_hook = new Array();
-	this.each(function(i) {
-		current_hook[i] = jQuery(this);
-		hook_menu[i] = jQuery(this).next('ul.hook_menu');
-		if(hook_menu[i].length) {
-			current_hook[i].append('<span class="hook_menu_x">Expand</span>');
-			hook_menu_x[i] = current_hook[i].find('span.hook_menu_x').eq(0);
-			current_hook[i].wrapInner('<span class="hook_menu_xc"/>');
-			hook_menu_xc[i] = current_hook[i].children().eq(0);
-			hook_menu_xy[i] = {
-				'min-width': hook_menu_xc[i].outerWidth(),
-				'top': current_hook[i].offset().top + current_hook[i].height(),
-				'left': current_hook[i].offset().left
-			};
-			hook_menu[i].recalcCoords = function() {
-				hook_menu[i].css({
-					'left': hook_menu_xc[i].offset().left,
-					'top': hook_menu_xc[i].offset().top + hook_menu_xc[i].height(),
-					'min-width': hook_menu_xc[i].outerWidth()
-				});
+	function toggleVisibility(hook,hook_elem_x,e) {
+		if(e.target.nodeName!='A' || hook.find('a').last().get(0) == e.target) {
+			if(hook.css('display')=='none') {
+				recalcCoords(hook,hook_elem_x);
+				hook.fadeIn('fast');
+			} else {
+				hook.fadeOut('fast');
 			}
-			hook_menu[i].css({
-				'position': settings.position,
-				'display': 'none',
-				'left': hook_menu_xy[i].left,
-				'width': hook_menu_xy[i].width,
-				'top': hook_menu_xy[i].top
-			});
-			hook_menu_x[i].bind({
-				mouseenter: function(e) {
-					jQuery(this).parent().toggleClass('hook_highlight');
-				},
-				mouseleave: function(e) {
-					jQuery(this).parent().removeClass('hook_highlight');
-				},
-				click: function(e) {
-					hook_menu[i].recalcCoords();
-					hook_menu[i].show();
+		}
+	}
+	function recalcCoords(hookMenu,hookElementX) {
+		var hm_corner = hookCorner(hookElementX,hookMenu),hm_bottom = hookBottom(hookElementX);
+		if(hm_corner.label=='left') hookMenu.css({'left':hm_corner.value,'top':hm_bottom});
+		else hookMenu.css({'right':hm_corner.value,'top':hm_bottom});
+	}
+	function hookBottom(hook) {
+		var font_size = parseInt(hook.css('font-size')),
+			mid_font_size = font_size/2,
+			mid_point = hook.height()/2,
+			hook_bottom = hook.offset().top + mid_point + mid_font_size;
+		return hook_bottom;
+	}
+	function hookCorner(hook,popup) {
+		var window_width = document.width,
+			distance_to_right = window_width - hook.offset().left,
+			popup_width = popup.outerWidth();
+		if(distance_to_right > popup_width)
+			return {label:'left',value:hook.offset().left};
+		else
+			return {label:'right',value:(hook.offset().left + hook.outerWidth())};
+	}
+	settings = jQuery.extend({'growUp':false,'position':'absolute'},settings);
+	this.each(function(i) {
+		var ariaHookElementX = 'hook_menu_aria_'+i,
+			hookElement = jQuery(this),
+			hookMenu = hookElement.next('ul.hook_menu'),
+			hookElementX;
+		if(hookMenu.length) {
+			hookMenu.css({position: settings.position,display: 'none','white-space': 'nowrap'})
+					.attr({'id':ariaHookElementX})
+					.find('a')
+					.attr({'tabindex':0});
+			hookElement.append('<span class="hook_menu_x" aria-owns="'+ariaHookElementX+'">Expand</span>');
+			hookElementX = hookElement.find('span.hook_menu_x').eq(0);
+			hookMenu.recalcCoords = function() {
+				var hm_corner = hookCorner(hookElementX,hookMenu),
+					hm_bottom = hookBottom(hookElementX);
+				if(hm_corner.label=='left') {
+					hookMenu.css({'left':hm_corner.value,'top':hm_bottom});
+				} else {
+					hookMenu.css({'right':hm_corner.value,'top':hm_bottom});
 				}
-			});
-			hook_menu[i].bind({
+			}
+			hookElementX.bind({
+				mouseenter: function(e) {jQuery(this).parent().toggleClass('hook_highlight');},
+				mouseleave: function(e) {jQuery(this).parent().removeClass('hook_highlight');},
+				focusin: function(e) {toggleVisibility(hookMenu,hookElementX,e);}
+			}).attr({'tabindex':0,'aria-haspopup':'true'});
+			hookMenu.bind({
 				mouseleave: function(e) {
-					hook_menu[i].fadeOut('fast');
+					toggleVisibility(hookMenu,hookElementX,e);
+					hookElementX.blur();
 				},
-				click: function(e) {
-					hook_menu[i].fadeOut('fast');
-				}
+				focusout: function(e) {toggleVisibility(hookMenu,hookElementX,e);}
 			});
 		}
-		$(hook_menu_xc[i]).css({'-webkit-user-select':'none','-moz-user-select':'none','user-select':'none'});
-		current_hook[i].bind({
-			contextmenu: function(e){
-				e.preventDefault();
-				hook_menu_x[i].click();
-			}
-		});
 	});
 	$(document).bind('scroll',function(){
-		for(x in hook_menu) {
-			$(hook_menu_x[x]).mouseleave();
-			hook_menu[x].mouseleave();
-		}
+		$(this).find('ul.hook_menu').filter(function(i){return $(this).css('display')=='block'}).mouseleave();
 	});
 	return this;
 };
