@@ -86,34 +86,47 @@ class ProductsController extends AppController
 	}
 
 	function admin_view($id) {
-		$this->set('product', $this->Product->read(null, $id));
+		if(!$id) {
+			$this->redirect($this->referer('/admin/categories/'));
+		} else {
+			$product = $this->Product->find('first', array('conditions'=>array('Product.id'=>$id)));
+			if($product) {
+				$this->set('product',$product);
+				$this->set('inline_media',array(
+					'balance' => count($product['Resource']) - $product['Product']['inline_count'],
+					'count' => $product['Product']['inline_count']
+				));
+			} else {
+				$this->viewPath = 'errors';
+				$this->render('not_found');
+			}
+		}
 	}
 
 	function admin_delete($id=null) {
 		if(!$id) {
-			$this->Session->setFlash('Invalid id for Product');
-			$this->redirect($this->referer('/categories/'));
-		}
-		if(!empty($this->data) && $this->data['Product']['id']==$id && $this->Product->delete($id)) {
-			$this->Session->setFlash('Product deleted');
-			//$category_id = $this->Product->Category->findByProduct($id);
-			$this->redirect($this->referer('/categories/'));
+			$this->redirect($this->referer('/admin/categories/'));
 		} else {
-			$this->set('id',$id);
+			if(!empty($this->data) && $this->data['Product']['id']==$id && $this->Product->delete($id)) {
+				$this->Session->setFlash('Product deleted');
+				$this->redirect($this->referer('/categories/'));
+			} else {
+				$this->set('id',$id);
+			}
 		}
 	}
 
 	function admin_moveup() {
 		if(isset($this->data['Product']['id']) && isset($this->data['Product']['prev_id'])) {
 			if($this->Product->swapFieldData($this->data['Product']['id'],$this->data['Product']['prev_id'],'order_by'))
-				$this->redirect($this->referer('/categories/'));
+				$this->redirect($this->referer('/admin/categories/'));
 			else { 
 				$this->Session->setFlash('There was an error swapping the products');
-				$this->redirect($this->referer('/categories/'));
+				$this->redirect($this->referer('/admin/categories/'));
 			}
 		} else {
 			$this->Session->setFlash('Attempt to swap order of invalid products. Check you selected the correct product');
-			$this->redirect($this->referer('/categories/'));
+			$this->redirect($this->referer('/admin/categories/'));
 		}
 	}
 	

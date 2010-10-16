@@ -43,46 +43,45 @@ class SectionsController extends AppController {
 	function admin_view($id=null,$page=1) {
 		if(!$id) {
 			$this->Session->setFlash('Invalid id for Section.<br><pre>'.var_dump($id).'</pre>');
-			$this->redirect('/admin/sections');
+			$this->redirect($this->referer('/admin/sections/'));
+		} else {
+			$section = $this->Section->find('first', array('conditions'=>array('Section.id'=>$id),'recursive'=>2));
+			if($section) {
+				$this->set('section', $section);
+				$this->set('id',$id);
+				$this->set('inline_media',array(
+					'balance' => count($section['Resource']) - $section['Section']['inline_count'],
+					'count' => $section['Section']['inline_count']
+				));
+			} else {
+				$this->viewPath = 'errors';
+				$this->render('not_found');
+			}
 		}
-		$slug = $this->Section->field('slug',array("Section.id"=>$id));
-			$this->set('section', $this->Section->find('first', array('conditions'=>array('Section.id'=>$id))));
 	}
 
 	function admin_add() {
-		if(empty($this->data)) {
-		} else {
+		if(!empty($this->data)) {
 			if($this->Section->save($this->data)) {
-				if(isset($GLOBALS['moonlight_inline_count_set'])) {
-					$this->Session->setFlash("This item has been saved. You need to upload media for this item");
-					$this->redirect('/'.strtolower($this->name).'/manageinline/'.$this->Section->getLastInsertId());
-				} else {
-					$this->Session->setFlash("This item has been saved.");
-					$this->redirect(sprintf('/admin/%s/view/%s','sections',$this->Section->getLastInsertId()));
-				}
+				$this->Session->setFlash("This item has been saved.");
+				$this->redirect(sprintf('/admin/sections/view/%s',$this->Section->id));
 			} else {
 				$this->Session->setFlash('Please correct errors below.');
 			}
 		}
 	}
 
-	function admin_edit($id = null) {
-		if(isset($this->data['Section']['submit']) || empty($this->data)) {
-			if(!$id) {
-				$this->Session->setFlash('Invalid id for Section');
-				$this->redirect('/sections/');
-			}
+	function admin_edit($id=null) {
+		if(empty($this->data) && !$id) {
+			$this->Session->setFlash('Invalid id for Section');
+			$this->redirect('/sections/');
+		} else if(empty($this->data) && $id) {
 			$this->data = $this->Section->find('first',array('conditions'=>array('Section.id'=>$id)));
 			$this->set('section',$this->data);
-		} else {
+		} else if(!empty($this->data) && !$id) {
 			if($this->Section->save($this->data)) {
-				if(isset($GLOBALS['moonlight_inline_count_set'])) {
-					$this->Session->setFlash("This item has been saved. You may need to upload media for this item");
-					$this->redirect("/".strtolower($this->name)."/manageinline/$id");
-				} else {
-					$this->Session->setFlash("This item has been saved.");
-					$this->redirect(sprintf('/admin/%s/view/%s','sections',$id));
-				}
+				$this->Session->setFlash("This item has been saved.");
+				$this->redirect(sprintf('/admin/sections/view/%s',$this->data['Section']['id']));
 			} else {
 				$this->Session->setFlash('Please correct errors below.');
 				$this->set('section', $this->Section->read(null, $id));

@@ -47,18 +47,26 @@ class ArticlesController extends AppController {
 
 
 	function admin_index() {
-		$this->set('articles', $this->Article->find('all',array('recursive'=>0)));
 		$this->viewPath = 'errors';
-		$this->render('not_found');
-		
+		$this->render('not_found');		
 	}
 
 	function admin_view($id = null) {
 		if(!$id) {
-			$this->Session->setFlash('Invalid id for Article.');
-			$this->redirect($this->referer('/sections/'));
+			$this->redirect($this->referer('/admin/sections/'));
+		} else {
+			$article = $this->Article->find('first',array('conditions' => array('Article.id'=>$id),'recursive'=>2));
+			if($article) {
+				$this->set('article',$article);
+				$this->set('inline_media',array(
+					'balance' => count($article['Resource']) - $article['Article']['inline_count'],
+					'count' => $article['Article']['inline_count']
+				));
+			} else {
+				$this->viewPath = 'errors';
+				$this->render('not_found');
+			}
 		}
-		$this->set('article', $this->Article->read(null, $id));
 	}
 
 	function admin_add() {
@@ -82,27 +90,23 @@ class ArticlesController extends AppController {
 		}
 	}
 
-	function admin_edit($id = null) {
+	function admin_edit($id=null) {
 		if(empty($this->data)) {
 			if(!$id) {
-				$this->Session->setFlash('Invalid id for Article');
-				$this->redirect('/articles/');
+				$this->redirect($this->referer('/admin/sections/'));
 			}
+			$article = $this->Article->findById($id);
+			$this->set('article')
 			$this->data = $this->Article->findById($id);
 			$this->set('sections', $this->Article->Section->find('list'));
 		} else {
 			if($this->Article->save($this->data)) {
-				if(isset($GLOBALS['moonlight_inline_count_set'])) {
-					$this->Session->setFlash("This item has been saved. You may need to upload media for this item");
-					$this->redirect("/".strtolower($this->name)."/manageinline/$id");
-				} else {
-					$this->Session->setFlash("This item has been saved.");
-					$this->redirect("/".strtolower($this->name)."/view/$id");
-				}
+				$this->Session->setFlash("This item has been saved.");
+				$this->redirect(sprintf('/admin/%s/view/%s',Inflector::underscore($this->name),$id));
 			} else {
 				$this->Session->setFlash('Please correct errors below.');
-				$this->set('article', $this->Article->read(null, $id));
-				$this->set('sections', $this->Article->Section->generateList());
+				$this->set('article',$this->Article->read(null, $id));
+				$this->set('sections',$this->Article->Section->generateList());
 			}
 		}
 	}

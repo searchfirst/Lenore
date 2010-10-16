@@ -47,13 +47,20 @@ class CategoriesController extends AppController {
 	function admin_view($id = null) {
 		if(!$id) {
 			$this->Session->setFlash('Invalid Category.');
-			$this->redirect('/categories/');
+			$this->redirect('/admin/categories/');
+		} else {
+			$category = $this->Category->find('first',array('conditions' => array('Category.id'=>$id),'recursive'=>2));
+			if($category) {
+				$this->set('category', $category);
+				$this->set('inline_media',array(
+					'balance' => count($category['Resource']) - $category['Category']['inline_count'],
+					'count' => $category['Category']['inline_count']
+				));
+			} else {
+				$this->viewPath = 'errors';
+				$this->render('not_found');
+			}
 		}
-		$category = $this->Category->find('first',array(
-			'conditions' => array('Category.id'=>$id),
-			'recursive'=>2
-		));
-		$this->set('category', $category);
 	}
 
 	function admin_add() {
