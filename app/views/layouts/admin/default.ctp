@@ -19,4 +19,5 @@ echo $content_for_layout;
 </div>
 </div>
 </body>
+<?php echo $this->element('admin/jsfoot');?> 
 </html>

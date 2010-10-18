@@ -75,11 +75,11 @@ margin: 0 0 20px;
 }
 
 h2{
-font: normal normal normal 1.125em MgOpenModerna,'Lucida Sans Unicode','Lucida Grande',sans-serif;
+font: normal normal normal 1.125em 'Lucida Sans Unicode','Lucida Grande',sans-serif;
 }
 
 h3{
-font: normal normal normal 1em MgOpenModerna,'Lucida Sans Unicode','Lucida Grande',sans-serif;
+font: normal normal normal 1em 'Lucida Sans Unicode','Lucida Grande',sans-serif;
 color: rgb(61, 107, 153);
 text-transform: uppercase;
 letter-spacing: 0.167em;
@@ -208,8 +208,8 @@ margin: 0 12px 0;
 display: block;
 content: '';
 background-color: rgb(242, 218, 145);
-background-image: -moz-linear-gradient(top, #f2e6c2, #e5c35c); /* FF3.6 */
-background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #f2e6c2),color-stop(1, #e5c35c)); /* Saf4+, Chrome */
+background-image: -moz-linear-gradient(top, #f2e6c2, #e5c35c);
+background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #f2e6c2),color-stop(1, #e5c35c));
 -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 border-radius: 3px;
 height: 6px;
@@ -549,30 +549,6 @@ color: rgb(204,0,0);
 clear: both;
 }
 
-/*
-#flashMessage {
-background: rgb(255,230,231);
-border: solid 1px rgb(255,204,206);
-color: rgb(153,61,65);
-margin: 0 -10px;
-padding: 15px 10px;
-}
-
-
-.notice {
-color: #656565;
-font-size: 14px;
-background-color: #f4f4f4;
-padding: 0.5em;
-margin: 1em 0;
-display:block;
-}
-
-.tip {
-color: #656565;
-background-color: #ddd;
-}
-*/
 /* Form Styling */
 
 form div {
@@ -839,7 +815,6 @@ border: 1px solid rgb(255,255,255);
 -o-box-sizing: border-box;
 box-sizing: border-box;
 padding: 5px;
-/*position: fixed !important;*/
 -moz-box-shadow: 0px 0px 4px #000;
 -webkit-box-shadow: 0px 0px 4px #000;
 box-shadow: 0px 0px 4px #000;
@@ -868,8 +843,4 @@ background: transparent url('/img/admin/close-button.png') no-repeat center cent
 div.hook_icons {
 display: inline-block;
 margin-left: 6px;
-/*float: right;*/
 }
-
-/* Buttons */
-
