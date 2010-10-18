@@ -29,8 +29,7 @@
 <?php echo $form->input('Category.meta_description',array('value'=>$category['Category']['meta_description']))?> 
 <?php echo $form->input('Category.meta_keywords',array('value'=>$category['Category']['meta_keywords']))?> 
 <?php echo $form->hidden('Category.id')?> 
-<?php echo $form->end('Update')?> 
 </fieldset>
-</form>
+<?php echo $form->end('Update')?> 
 </div>
 </div>

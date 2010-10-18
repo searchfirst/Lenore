@@ -19,7 +19,6 @@ echo implode(" ",$sortable_sections_flags);
 <li><?php echo $this->element('admin/edit_form',array('controller'=>'sections','model'=>'Section','id'=>$section['Section']['id'],'title'=>$section['Section']['title']))?></li>
 <li><?php echo $this->element('admin/delete_form',array('controller'=>'sections','model'=>'Section','id'=>$section['Section']['id'],'title'=>$section['Section']['title']))?></li>
 </ul>
-</td>
 <?php if((integer) $section['Article'] > 0): ?>
 <span class="item_count"><?php echo sprintf("%s %s",count($section['Article']),((integer) $section['Article']>1?'Articles':'Article'))?></span>
 <?php else: ?>

@@ -48,7 +48,7 @@ class ArticlesController extends AppController {
 
 	function admin_index() {
 		$this->viewPath = 'errors';
-		$this->render('not_found');		
+		$this->render('not_found');
 	}
 
 	function admin_view($id = null) {
@@ -96,7 +96,7 @@ class ArticlesController extends AppController {
 				$this->redirect($this->referer('/admin/sections/'));
 			}
 			$article = $this->Article->findById($id);
-			$this->set('article')
+			$this->set('article');
 			$this->data = $this->Article->findById($id);
 			$this->set('sections', $this->Article->Section->find('list'));
 		} else {
