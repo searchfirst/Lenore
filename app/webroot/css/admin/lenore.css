@@ -836,6 +836,7 @@ width: 18px;
 height: 18px;
 text-indent: -10000px;
 background: transparent url('/img/admin/close-button.png') no-repeat center center;
+cursor: pointer;
 }
 
 /* Hook Icons */
