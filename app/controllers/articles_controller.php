@@ -91,23 +91,34 @@ class ArticlesController extends AppController {
 	}
 
 	function admin_edit($id=null) {
-		if(empty($this->data)) {
-			if(!$id) {
-				$this->redirect($this->referer('/admin/sections/'));
-			}
-			$article = $this->Article->findById($id);
-			$this->set('article');
-			$this->data = $this->Article->findById($id);
-			$this->set('sections', $this->Article->Section->find('list'));
-		} else {
-			if($this->Article->save($this->data)) {
-				$this->Session->setFlash("This item has been saved.");
-				$this->redirect(sprintf('/admin/%s/view/%s',Inflector::underscore($this->name),$id));
+		if($id!=null) {
+			if(!empty($this->data)) {
+				if($this->Article->save($this->data)) {
+					if(!$this->RequestHandler->isAjax()) {
+						$this->Session->setFlash("This item has been saved.");
+						$this->redirect(sprintf('/admin/articles/view/%s',$this->data['Article']['id']));
+					} else {
+						$this->set('json_object',array('status'=>'success'));
+						$this->generalAjax();
+					}
+				} else {
+					if(!$this->RequestHandler->isAjax()) {
+						$this->set('title_for_layout',sprintf('Edit %s: %s',Configure::read('Article.alias'),$this->data['Article']['title']));
+						$this->set('sections',$this->Article->Section->find('list'));
+						$this->Session->setFlash('Please correct errors below.');
+					} else {
+						$this->set('json_object',array('status'=>'fail'));
+						$this->generalAjax();
+					}
+				}
 			} else {
-				$this->Session->setFlash('Please correct errors below.');
-				$this->set('article',$this->Article->read(null, $id));
-				$this->set('sections',$this->Article->Section->generateList());
+				$this->data = $this->Article->read(null, $id);
+				$this->set('title_for_layout',sprintf('Edit %s: %s',Configure::read('Article.alias'),$this->data['Article']['title']));
+				$this->set('sections',$this->Article->Section->find('list'));
 			}
+		} else {
+				$this->viewPath = 'errors';
+				$this->render('not_found');
 		}
 	}
 

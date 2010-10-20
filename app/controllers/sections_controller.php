@@ -42,7 +42,7 @@ class SectionsController extends AppController {
 
 	function admin_view($id=null,$page=1) {
 		if(!$id) {
-			$this->Session->setFlash('Invalid id for Section.<br><pre>'.var_dump($id).'</pre>');
+			$this->Session->setFlash('Invalid id for Section.');
 			$this->redirect($this->referer('/admin/sections/'));
 		} else {
 			$section = $this->Section->find('first', array('conditions'=>array('Section.id'=>$id),'recursive'=>2));
@@ -72,20 +72,32 @@ class SectionsController extends AppController {
 	}
 
 	function admin_edit($id=null) {
-		if(empty($this->data) && !$id) {
-			$this->Session->setFlash('Invalid id for Section');
-			$this->redirect('/sections/');
-		} else if(empty($this->data) && $id) {
-			$this->data = $this->Section->find('first',array('conditions'=>array('Section.id'=>$id)));
-			$this->set('section',$this->data);
-		} else if(!empty($this->data) && !$id) {
-			if($this->Section->save($this->data)) {
-				$this->Session->setFlash("This item has been saved.");
-				$this->redirect(sprintf('/admin/sections/view/%s',$this->data['Section']['id']));
+		if($id!=null) {
+			if(!empty($this->data)) {
+				if($this->Section->save($this->data)) {
+					if(!$this->RequestHandler->isAjax()) {
+						$this->Session->setFlash("This item has been saved.");
+						$this->redirect(sprintf('/admin/sections/view/%s',$this->data['Section']['id']));
+					} else {
+						$this->set('json_object',array('status'=>'success'));
+						$this->generalAjax();
+					}
+				} else {
+					if(!$this->RequestHandler->isAjax()) {
+						$this->set('title_for_layout',sprintf('Edit %s: %s',Configure::read('Section.alias'),$this->data['Section']['title']));
+						$this->Session->setFlash('Please correct errors below.');
+					} else {
+						$this->set('json_object',array('status'=>'fail'));
+						$this->generalAjax();
+					}
+				}
 			} else {
-				$this->Session->setFlash('Please correct errors below.');
-				$this->set('section', $this->Section->read(null, $id));
+				$this->data = $this->Section->read(null, $id);
+				$this->set('title_for_layout',sprintf('Edit %s: %s',Configure::read('Section.alias'),$this->data['Section']['title']));
 			}
+		} else {
+				$this->viewPath = 'errors';
+				$this->render('not_found');
 		}
 	}
 

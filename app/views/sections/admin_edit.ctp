@@ -1,4 +1,4 @@
-<h2>Edit <?php echo Configure::read('Section.alias');?>: <?php echo $textAssistant->sanitiseText($section['Section']['title'])?></h2>
+<h2>Edit <?php echo Configure::read('Section.alias');?>: <?php echo $textAssistant->sanitiseText($this->data['Section']['title'])?></h2>
 <div class="content">
 <?php echo $form->create('Section',array('options'=>'file')) ?> 
 <?php echo $form->input('Section.title',array('size'=>'60'))?> 

@@ -19,11 +19,11 @@
 </ul>
 </div>
 <div class="meta">
-<ul class="Category">
+<ul class="Section">
 <li><b>Description</b> <span class="editable meta_description"><?php echo $textAssistant->sanitise($section['Section']['meta_description']); ?></span></li>
 <li><b>Keywords</b> <span class="editable meta_keywords"><?php echo $textAssistant->sanitise($section['Section']['meta_keywords']); ?></span></li>
 </ul>
-<?php echo $form->create('Category',array('url'=>sprintf('edit/%s',$section['Section']['id']))); ?> 
+<?php echo $form->create('Section',array('url'=>sprintf('edit/%s',$section['Section']['id']))); ?> 
 <fieldset>
 <legend>Update Metadata</legend>
 <?php echo $form->input('Section.meta_description',array('value'=>$section['Section']['meta_description']))?> 

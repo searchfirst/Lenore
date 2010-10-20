@@ -54,34 +54,40 @@ class ProductsController extends AppController
 				}
 			} else {
 				$this->Session->setFlash('Please correct the errors below');
-				//$this->data['Referral']['category_id'] = $this->data['Product']['category_id'];
 				$this->set('categories',$this->Product->Category->find('list'));
 			}
 		}
 	}
 
 	function admin_edit($id) {
-		if( (isset($this->data['Product']['submit'])) || (empty($this->data)) ) {
-			if(!$id) {
-				$this->viewPath = 'errors';
-				$this->render('not_found');
-			}
-			$this->data = $this->Product->find('first', array('conditions'=>array('Product.id'=>$id)));
-			$this->set('categories', $this->Product->Category->find('list',array('recursive'=>0)));
-		} else {
-			if($this->Product->save($this->data)) {
-				if(isset($GLOBALS['moonlight_inline_count_set'])) {
-					$this->Session->setFlash("This item has been saved. You now need to upload any media for this item");
-					$this->redirect("/".Inflector::underscore($this->name)."/manageinline/$id");
+		if($id!=null) {
+			if(!empty($this->data)) {
+				if($this->Product->save($this->data)) {
+					if(!$this->RequestHandler->isAjax()) {
+						$this->Session->setFlash("This item has been saved.");
+						$this->redirect(sprintf('/admin/products/view/%s',$this->data['Product']['id']));
+					} else {
+						$this->set('json_object',array('status'=>'success'));
+						$this->generalAjax();
+					}
 				} else {
-					$this->Session->setFlash("This item has been saved. You now need to upload any media for this item");
-					$this->redirect("/admin/products/view/$id");
+					if(!$this->RequestHandler->isAjax()) {
+						$this->set('title_for_layout',sprintf('Edit %s: %s',Configure::read('Product.alias'),$this->data['Product']['title']));
+						$this->set('categories', $this->Product->Category->find('list',array('order'=>'Category.title ASC','recursive'=>0)));
+						$this->Session->setFlash('Please correct errors below.');
+					} else {
+						$this->set('json_object',array('status'=>'fail'));
+						$this->generalAjax();
+					}
 				}
 			} else {
-				$this->Session->setFlash('Please correct errors below.');
-				$this->set('product',$this->data);
-				$this->set('categories', $this->Product->Category->find('list',array('recursive'=>0)));
+				$this->data = $this->Product->read(null, $id);
+				$this->set('title_for_layout',sprintf('Edit %s: %s',Configure::read('Product.alias'),$this->data['Product']['title']));
+				$this->set('categories', $this->Product->Category->find('list',array('order'=>'Category.title ASC','recursive'=>0)));
 			}
+		} else {
+				$this->viewPath = 'errors';
+				$this->render('not_found');
 		}
 	}
 

@@ -84,32 +84,42 @@ class CategoriesController extends AppController {
 	}
 
 	function admin_edit($id = null) {
-		$this->set('categories', $this->Category->find('list',array(
-			'conditions'=>array('Category.category_id'=>null,'NOT'=>array('Category.id'=>$id)),
-			'order'=>'Category.title ASC',
-			'recursive'=>0
-		)));
-		if(empty($this->data)) {
-			if(!$id) {
-				$this->viewPath = 'errors';
-				$this->render('not_found');
-			}
-			$this->data = $this->Category->find('first',array('conditions'=>array('Category.id'=>$id)));
-		} else {
-			if($this->Category->save($this->data)) {
-				if(!$this->RequestHandler->isAjax()) {
-					$this->Session->setFlash("This item has been saved.");
-					$this->redirect("/admin/categories/view/$id");
+		if($id!=null) {
+			if(!empty($this->data)) {
+				if($this->Category->save($this->data)) {
+					if(!$this->RequestHandler->isAjax()) {
+						$this->Session->setFlash("This item has been saved.");
+						$this->redirect(sprintf('/admin/categories/view/%s',$this->data['Category']['id']));
+					} else {
+						$this->set('json_object',array('status'=>'success'));
+						$this->generalAjax();
+					}
 				} else {
-					$this->set('result','Success');
+					if(!$this->RequestHandler->isAjax()) {
+						$this->set('title_for_layout',sprintf('Edit %s: %s',Configure::read('Category.alias'),$this->data['Category']['title']));
+						$this->set('categories', $this->Category->find('list',array(
+							'conditions'=>array('Category.category_id'=>null,'NOT'=>array('Category.id'=>$id)),
+							'order'=>'Category.title ASC',
+							'recursive'=>0
+						)));
+						$this->Session->setFlash('Please correct errors below.');
+					} else {
+						$this->set('json_object',array('status'=>'fail'));
+						$this->generalAjax();
+					}
 				}
 			} else {
-				if(!$this->RequestHandler->isAjax()) {
-					$this->Session->setFlash('Please correct errors below.');
-				} else {
-					$this->set('result','Fail');
-				}
+				$this->data = $this->Category->read(null, $id);
+				$this->set('title_for_layout',sprintf('Edit %s: %s',Configure::read('Category.alias'),$this->data['Category']['title']));
+				$this->set('categories', $this->Category->find('list',array(
+					'conditions'=>array('Category.category_id'=>null,'NOT'=>array('Category.id'=>$id)),
+					'order'=>'Category.title ASC',
+					'recursive'=>0
+				)));
 			}
+		} else {
+				$this->viewPath = 'errors';
+				$this->render('not_found');
 		}
 	}
 
