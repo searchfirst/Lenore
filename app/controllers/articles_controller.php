@@ -98,8 +98,7 @@ class ArticlesController extends AppController {
 						$this->Session->setFlash("This item has been saved.");
 						$this->redirect(sprintf('/admin/articles/view/%s',$this->data['Article']['id']));
 					} else {
-						$this->set('json_object',array('status'=>'success'));
-						$this->generalAjax();
+						$this->generalAjax(array('status'=>'success'));
 					}
 				} else {
 					if(!$this->RequestHandler->isAjax()) {
@@ -107,8 +106,7 @@ class ArticlesController extends AppController {
 						$this->set('sections',$this->Article->Section->find('list'));
 						$this->Session->setFlash('Please correct errors below.');
 					} else {
-						$this->set('json_object',array('status'=>'fail'));
-						$this->generalAjax();
+						$this->generalAjax(array('status'=>'fail'));
 					}
 				}
 			} else {
@@ -126,12 +124,25 @@ class ArticlesController extends AppController {
 		if(!$id) {
 			$this->viewPath = 'errors';
 			$this->render('not_found');
-		}
-		if(!empty($this->data['Article']['id']) && ($this->data['Article']['id']==$id) && ($this->Article->del($id)) ) {
-			$this->Session->setFlash('Article successfully deleted');
-			$this->redirect($this->referer('/admin/'));
 		} else {
 			$this->set('id',$id);
+			if(!empty($this->data['Article']['id'])) {
+				if($this->Article->delete($this->data['Article']['id'])) {
+					if(!$this->RequestHandler->isAjax()) {
+						$this->Session->setFlash(sprintf('%s deleted',Configure::read('Article.alias')));
+						$this->redirect('/admin/sections/');
+					} else {
+						$this->generalAjax(array('status'=>'success','model'=>'article','id'=>$this->data['Article']['id']));	
+					}
+				} else {
+					if(!$this->RequestHandler->isAjax()) {
+						$this->Session->setFlash(sprintf('There was an error deleting this %s',Configure::read('Article.alias')));
+						$this->redirect('/admin/sections/');
+ 					} else {
+						$this->generalAjax(array('status'=>'fail'));
+					}
+				}
+			}
 		}
 	}
 	
@@ -146,25 +157,6 @@ class ArticlesController extends AppController {
 		} else {
 			$this->Session->setFlash('Attempt to swap order of invalid articles. Check you selected the correct article');
 			$this->redirect($this->referer('/sections/'));
-		}
-	}
-	
-	function admin_manageinline($id=null) {
-		if($id && ($this->data = $this->Article->read(null, $id))) {
-			$this->set(strtolower($this->modelClass),$this->data);
-			$this->set('media_data',$this->data['Resource']);
-			$db_inline_count = (int) $this->data[$this->modelClass]['inline_count'];
-			$actual_inline_count = count($this->data['Resource']);
-			if(preg_match('/'.strtolower($this->name)."\\/(add|edit)/",$this->referer()) && ($db_inline_count == $actual_inline_count))
-				$this->redirect('/'.strtolower($this->name).'/view/'.$id);
-			$this->set('inline_data', array('db_count'=>$db_inline_count,'actual_count'=>$actual_inline_count));
-			if(!isset($this->data['Resource'])) {
-				$this->Session->setFlash('No inline media in '.$this->modelClass);
-				$this->redirect('/'.strtolower($this->name).'/view/'.$id);
-			}
-		} else {
-			$this->Session->setFlash('Invalid '.$this->modelClass.'.');
-			$this->redirect('/'.strtolower($this->name).'/');
 		}
 	}
 

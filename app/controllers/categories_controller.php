@@ -91,8 +91,7 @@ class CategoriesController extends AppController {
 						$this->Session->setFlash("This item has been saved.");
 						$this->redirect(sprintf('/admin/categories/view/%s',$this->data['Category']['id']));
 					} else {
-						$this->set('json_object',array('status'=>'success'));
-						$this->generalAjax();
+						$this->generalAjax(array('status'=>'success'));
 					}
 				} else {
 					if(!$this->RequestHandler->isAjax()) {
@@ -104,8 +103,7 @@ class CategoriesController extends AppController {
 						)));
 						$this->Session->setFlash('Please correct errors below.');
 					} else {
-						$this->set('json_object',array('status'=>'fail'));
-						$this->generalAjax();
+						$this->generalAjax(array('status'=>'fail'));
 					}
 				}
 			} else {
@@ -125,14 +123,27 @@ class CategoriesController extends AppController {
 
 	function admin_delete($id = null) {
 		if(!$id) {
-			$this->Session->setFlash('Invalid id for Category');
-			$this->redirect('/admin/categories/');
-		}
-		if(!empty($this->data['Category']['id']) && $this->data['Category']['id']==$id && $this->Category->delete($id)) {
-			$this->Session->setFlash('Category successfully deleted');
-			$this->redirect('/admin/categories/');
+			$this->viewPath = 'errors';
+			$this->render('not_found');
 		} else {
 			$this->set('id',$id);
+			if(!empty($this->data['Category']['id'])) {
+				if($this->Category->delete($this->data['Category']['id'])) {
+					if(!$this->RequestHandler->isAjax()) {
+						$this->Session->setFlash(sprintf('%s deleted',Configure::read('Category.alias')));
+						$this->redirect('/admin/categories/');
+					} else {
+						$this->generalAjax(array('status'=>'success','model'=>'category','id'=>$this->data['Category']['id']));	
+					}
+				} else {
+					if(!$this->RequestHandler->isAjax()) {
+						$this->Session->setFlash(sprintf('There was an error deleting this %s',Configure::read('Category.alias')));
+						$this->redirect('/admin/categories/');
+ 					} else {
+						$this->generalAjax(array('status'=>'fail'));
+					}
+				}
+			}
 		}
 	}
 
@@ -147,25 +158,6 @@ class CategoriesController extends AppController {
 		} else {
 			$this->Session->setFlash('Attempt to swap order of invalid categories. Check you selected the correct category');
 			$this->redirect($this->referer('/categories/'));
-		}
-	}
-	
-	function admin_manageinline($id=null) {
-		if($id && ($this->data = $this->Category->find(array('Category.id'=>$id),null,'Category.id ASC'))) {
-			$this->set(strtolower($this->modelClass),$this->data);
-			$this->set('media_data',$this->data['Resource']);
-			$db_inline_count = (int) $this->data[$this->modelClass]['inline_count'];
-			$actual_inline_count = count($this->data['Resource']);
-			if(preg_match('/'.strtolower($this->name)."\\/(add|edit)/",$this->referer()) && ($db_inline_count == $actual_inline_count))
-				$this->redirect('/'.strtolower($this->name).'/view/'.$id);
-			$this->set('inline_data', array('db_count'=>$db_inline_count,'actual_count'=>$actual_inline_count));
-			if(!isset($this->data['Resource'])) {
-				$this->Session->setFlash('No inline media in '.$this->modelClass);
-				$this->redirect('/'.strtolower($this->name).'/view/'.$id);
-			}
-		} else {
-			$this->Session->setFlash('Invalid '.$this->modelClass.'.');
-			$this->redirect('/'.strtolower($this->name).'/');
 		}
 	}
 

@@ -67,8 +67,7 @@ class ProductsController extends AppController
 						$this->Session->setFlash("This item has been saved.");
 						$this->redirect(sprintf('/admin/products/view/%s',$this->data['Product']['id']));
 					} else {
-						$this->set('json_object',array('status'=>'success'));
-						$this->generalAjax();
+						$this->generalAjax(array('status'=>'success'));
 					}
 				} else {
 					if(!$this->RequestHandler->isAjax()) {
@@ -76,8 +75,7 @@ class ProductsController extends AppController
 						$this->set('categories', $this->Product->Category->find('list',array('order'=>'Category.title ASC','recursive'=>0)));
 						$this->Session->setFlash('Please correct errors below.');
 					} else {
-						$this->set('json_object',array('status'=>'fail'));
-						$this->generalAjax();
+						$this->generalAjax(array('status'=>'fail'));
 					}
 				}
 			} else {
@@ -111,13 +109,26 @@ class ProductsController extends AppController
 
 	function admin_delete($id=null) {
 		if(!$id) {
-			$this->redirect($this->referer('/admin/categories/'));
+			$this->viewPath = 'errors';
+			$this->render('not_found');
 		} else {
-			if(!empty($this->data) && $this->data['Product']['id']==$id && $this->Product->delete($id)) {
-				$this->Session->setFlash('Product deleted');
-				$this->redirect($this->referer('/categories/'));
-			} else {
-				$this->set('id',$id);
+			$this->set('id',$id);
+			if(!empty($this->data['Product']['id'])) {
+				if($this->Product->delete($this->data['Product']['id'])) {
+					if(!$this->RequestHandler->isAjax()) {
+						$this->Session->setFlash(sprintf('%s deleted',Configure::read('Product.alias')));
+						$this->redirect('/admin/categories/');
+					} else {
+						$this->generalAjax(array('status'=>'success','model'=>'product','id'=>$this->data['Product']['id']));	
+					}
+				} else {
+					if(!$this->RequestHandler->isAjax()) {
+						$this->Session->setFlash(sprintf('There was an error deleting this %s',Configure::read('Product.alias')));
+						$this->redirect('/admin/categories/');
+ 					} else {
+						$this->generalAjax(array('status'=>'fail'));
+					}
+				}
 			}
 		}
 	}
@@ -133,25 +144,6 @@ class ProductsController extends AppController
 		} else {
 			$this->Session->setFlash('Attempt to swap order of invalid products. Check you selected the correct product');
 			$this->redirect($this->referer('/admin/categories/'));
-		}
-	}
-	
-	function admin_manageinline($id=null) {
-		if($id && ($this->data = $this->Product->read(null, $id))) {
-			$this->set(strtolower($this->modelClass),$this->data);
-			$this->set('media_data',$this->data['Resource']);
-			$db_inline_count = (int) $this->data[$this->modelClass]['inline_count'];
-			$actual_inline_count = count($this->data['Resource']);
-			if(preg_match('/'.strtolower($this->name)."\\/(add|edit)/",$this->referer()) && ($db_inline_count == $actual_inline_count))
-				$this->redirect('/'.strtolower($this->name).'/view/'.$id);
-			$this->set('inline_data', array('db_count'=>$db_inline_count,'actual_count'=>$actual_inline_count));
-			if(!isset($this->data['Resource'])) {
-				$this->Session->setFlash('No inline media in '.$this->modelClass);
-				$this->redirect('/'.strtolower($this->name).'/view/'.$id);
-			}
-		} else {
-			$this->Session->setFlash('Invalid '.$this->modelClass.'.');
-			$this->redirect('/'.strtolower($this->name).'/');
 		}
 	}
 
@@ -174,7 +166,5 @@ class ProductsController extends AppController
 		}
 		$this->set('ajax_result',$ajax_result?'Success':'Fail');	
 	}
-
-
 }
 ?>

@@ -313,10 +313,11 @@ class AppController extends Controller {
 		}
 	}
 	
-	function generalAjax() {
+	function generalAjax($json_object=array()) {
 		Configure::write('debug', 0);
 		$this->viewPath = 'ajax';
 		header('Content-Type: application/json;charset=UTF-8');
+		$this->set('json_object',$json_object);
 		$this->render('general_ajax');
 	}
 }
