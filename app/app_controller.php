@@ -1,7 +1,7 @@
 <?php
 class AppController extends Controller {
 	var $uses = array('Section','Category');
-	var $helpers = array('Html','Form','Time','TextAssistant','MediaAssistant','Javascript','Session','Menu','Minify.MinifyJs');
+	var $helpers = array('Html','Form','Time','TextAssistant','MediaAssistant','Js','Javascript','Session','Menu','Minify.MinifyJs');
 	var $actionHelpers = array('Time');
 	var $components = array('RequestHandler','Session','Acl','Auth','Helper','Minify.Minify');
 
@@ -311,6 +311,13 @@ class AppController extends Controller {
 		} else {
 			return false;
 		}
+	}
+	
+	function generalAjax() {
+		Configure::write('debug', 0);
+		$this->viewPath = 'ajax';
+		header('Content-Type: application/json;charset=UTF-8');
+		$this->render('general_ajax');
 	}
 }
 ?>
