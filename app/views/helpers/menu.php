@@ -9,7 +9,7 @@ class MenuHelper extends Helper {
 		return ($slug==$cp);
 	}
 
-	private function sluggify($string) {
+	function sluggify($string) {
 		$string = str_replace(array('/','_'),'-',preg_replace('/^\/(.*)/','$1',$string));
 		return $string;
 	}
