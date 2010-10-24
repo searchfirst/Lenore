@@ -1,1 +1,0 @@
-<?php echo $minifyJs->link($min_js_foot);?>

@@ -1,5 +1,5 @@
-ul, ol, p, dd, dt, h1, h2, h3, h4, h5, h6, form {
-margin: 0 0 12px;
-padding: 0;
-list-style: none inside ;
-}
+a img {border: none;}
+html {min-height:100%;}
+body {line-height:1;}
+ul, ol, p, dd, dt, h1, h2, h3, h4, h5, h6, form {margin: 0 0 .75em;padding: 0;list-style: none inside ;font-weight:normal;font-style:normal;font-size:1em;}
+header,section,article,nav,footer,hgroup,aside{display:block;}

@@ -1,0 +1,75 @@
+/* Hook Tabs */
+
+ul.tab_hooks {
+font-size: 80%;
+padding: 1px;
+list-style: none inside;
+margin: -6px 0 3px;
+background: -moz-linear-gradient(top,rgb(153,153,153),rgb(102,102,102));
+background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(153,153,153)), to(rgb(102,102,102)));
+}
+
+ul.tab_hooks li {
+display: inline-block;
+padding: 5px 10px;
+min-width: 7em;
+text-align: center;
+color: rgb(255,255,255);
+text-shadow: -1px -1px 0 rgb(82,92,102);
+}
+
+ul.tab_hooks li.current {
+color: rgb(61,69,77);
+background: rgb(255,255,255);
+text-shadow: none;
+}
+
+ul.tab_hooks li a {
+color: rgb(255,255,255);
+text-decoration: none;
+}
+
+ul.tab_hooks > li.current > a {
+color: rgb(61,69,77) !important;
+}
+
+div.tab_page > h3 {
+display: none;
+}
+
+ul.hook_ajax_pagination {
+line-height: normal;
+text-align: center;
+list-style: none inside;
+margin: 0 0 0;
+padding: 4px 1px;
+background-color: rgb(103,103,103);
+overflow: hidden;
+}
+
+ul.hook_ajax_pagination li {
+display: inline-block;
+padding: 0;
+margin: 0;
+}
+
+ul.hook_ajax_pagination li:first-child {
+float: left;
+}
+
+ul.hook_ajax_pagination li:last-child {
+float: right;
+}
+
+ul.hook_ajax_pagination a {
+padding: 3px 5px;
+text-decoration: none;
+color: rgb(255,255,255);
+text-shadow: -1px -1px 0 rgb(0,0,0);
+}
+
+ul.hook_ajax_pagination a:hover {
+background-color: rgb(255,255,255);
+color: rgb(111,111,111);
+text-shadow: none;
+}

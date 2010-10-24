@@ -1,7 +1,7 @@
 <?php
 class AppController extends Controller {
 	var $uses = array('Section','Category');
-	var $helpers = array('Html','Form','Time','TextAssistant','MediaAssistant','Js','Javascript','Session','Menu','Minify.MinifyJs');
+	var $helpers = array('Html','Form','Time','TextAssistant','MediaAssistant','Js','Javascript','Session','Menu','Minify.Minify');
 	var $actionHelpers = array('Time');
 	var $components = array('RequestHandler','Session','Acl','Auth','Helper','Minify.Minify');
 
@@ -9,14 +9,26 @@ class AppController extends Controller {
 		$this->Auth->allowedActions = array('display','login','logout','index','view','add');
 		if($this->actionIsAdmin()) {
 			$this->set('min_js_head',$this->Minify->js(array(
-				'js/jquery/jquery.js','js/jquery/ui/core.js','js/jquery/ui/widget.js','js/jquery/ui/mouse.js',
+				'js/lib/modernizr.js','js/jquery/jquery.js','js/jquery/ui/core.js','js/jquery/ui/widget.js','js/jquery/ui/mouse.js',
 				'js/jquery/ui/bgiframe.js','js/jquery/ui/sortable.js','js/jquery/ui/dialog.js','js/jquery/ui/position.js',
 				'js/jquery/lib/iphoneui.js','js/jquery/inline_edit.js','js/jquery/hook_menu.js','js/jquery/dux_tabs.js',
 				'js/admin/load_config.js'
 			)));
-			$this->set('min_js_foot',$this->Minify->js(array(
-				'js/lib/svgreplace.js'
-			)));
+			$this->set('min_css',array(
+				'default' => $this->Minify->css(array(
+					'css/admin/reset.css','css/admin/typefaces.css','css/admin/lenore.css','css/admin/widgets/hook_menu.css',
+					'css/admin/widgets/sortable.css'
+				)),
+				'handheld_large' => $this->Minify->css(array(
+					'css/admin/handheld_large.css'
+				)),
+				'tablet_netbooks' => $this->Minify->css(array(
+					'css/admin/tablet_netbooks.css'
+				)),
+				'desktop' => $this->Minify->css(array(
+					'css/admin/desktop.css'
+				))
+			));
 		}
 	}
 	

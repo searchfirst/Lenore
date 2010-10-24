@@ -1,15 +1,1 @@
-<?php echo $minifyJs->link($min_js_head);?> 
-<?php //echo $javascript->link('jquery/jquery');?> 
-<?php //echo $javascript->link('jquery/ui/core');?> 
-<?php //echo $javascript->link('jquery/ui/widget');?> 
-<?php //echo $javascript->link('jquery/ui/mouse');?> 
-<?php //echo $javascript->link('jquery/ui/bgiframe');?> 
-<?php //echo $javascript->link('jquery/ui/sortable');?> 
-<?php //echo $javascript->link('jquery/ui/dialog');?> 
-<?php //echo $javascript->link('jquery/ui/position');?>
-<?php //echo $javascript->link('jquery/lib/iphoneui');?> 
-<?php //echo $javascript->link('jquery/inline_edit');?> 
-<?php //echo $javascript->link('jquery/hook_menu');?> 
-<?php //echo $javascript->link('jquery/dux_tabs');?> 
-<?php //echo $javascript->link('lib/svgreplace');?> 
-<?php //echo $javascript->link('admin/load_config');?>
+<?php echo $minify->js_link($min_js_head);?>
