@@ -1,0 +1,25 @@
+/*.editableText:hover {
+	outline: 1px dashed grey;
+}
+.editableToolbar:hover + * {
+	outline: 1px dashed grey;
+}*/
+.editableToolbar {
+	float: right;
+}
+.editableToolbar a{
+    display: inline-block;
+    width: 17px;
+    height: 15px;
+/*    float: left;*/
+    margin: 2px;
+}
+.editableToolbar .edit {	
+	background: url("/img/admin/widgets/editable_text.png");
+}
+.editableToolbar .save {
+    background: url("/img/admin/widgets/editable_text.png") -16px 0;
+}
+.editableToolbar .cancel {
+    background: url("/img/admin/widgets/editable_text.png") 25px 0;
+}

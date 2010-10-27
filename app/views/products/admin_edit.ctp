@@ -3,13 +3,9 @@
 <?php echo $form->create('Product',array('options'=>'file')); ?> 
 <?php echo $form->input('Product.title',array('size'=>'40','maxlength'=>'150')); ?> 
 <?php echo $form->input('Product.description', array('cols'=>'40','rows'=>'20')); ?> 
-<?php if(empty($product['Decorative'])):?>
-<div>
-<label for="Fileupload">Upload an image</label>
-<?php echo $form->hidden('Fileupload.type][',array('value'=>Resource::$types['Decorative'],'id'=>'FileuploadType'))?> 
-<input type="file" name="Fileupload[]" id="Fileupload" value="" />
-<?php if(isset($GLOBALS['Fileupload_error'])) echo "<div class=\"error_message\">{$GLOBALS['Fileupload_error']}</div>"?> 
-</div>
+<?php if(empty($this->data['Decorative'])):?>
+<?php echo $form->hidden('Resource.1.type',array('value'=>Resource::$types['Decorative']))?> 
+<?php echo $form->input('Resource.1.file',array('label'=>'Thumbnail Image','type'=>'file')); ?> 
 <?php endif;?>
 <fieldset><legend><?php echo sprintf('%s Options',Configure::read('Product.alias')); ?></legend>
 <?php if(Configure::read('Product.sales_options')): ?>

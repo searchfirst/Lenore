@@ -272,15 +272,12 @@ class AppModel extends Model {
 	
 	function getUniqueSlug($string, $field="slug") {
 		// Build URL
-		$currentUrl = $this->_getStringAsSlug($string);
+//		$currentUrl = $this->_getStringAsSlug($string);
+		$currentUrl = Inflector::slug($string,'-');
 		// Look for same URL, if so try until we find a unique one
 		
-		$conditions = array($this->name . '.' . $field => 'LIKE ' . $currentUrl . '%');
-		//$result = $this->findAll($conditions, $this->name . '.*', null);
-		$result = $this->find('all',array(
-			'conditions'=>array(sprintf('%s.%s LIKE',$this->name,$field) => sprintf('%s.%%',$currentUrl)),
-			'recursive'=>0
-		));
+		$conditions = array("{$this->name}.$field LIKE"=>"$currentUrl.%");
+		$result = $this->find('all',array('conditions'=>$conditions,'recursive'=>0));
 		
 		if ($result !== false && count($result) > 0) {
 			$sameUrls = array();

@@ -35,8 +35,10 @@
         
         return this.each(function(){
              // Add jQuery methods to the element
-            var editable = $(this);
-            
+			var editable = $(this);
+			editable
+				.attr({tabindex:0,contentEditable:true,role:'textbox'}).bind('keypress keydown',startEditing)
+				.wrap('<div role="form"></div>');
 			/**
 			 * Save value to restore if user presses cancel
 			 */
@@ -44,34 +46,28 @@
 			
 			// Create edit/save buttons
             var buttons = $(
-				"<div class='editableToolbar'>" +
-            		"<a href='#' class='edit'></a>" +
-            		"<a href='#' class='save'></a>" +
-            		"<a href='#' class='cancel'></a>" +
-            	"</div>")
+				'<div class="editableToolbar">' +
+            		'<a href="#" class="save" role="button" aria-hidden="true"></a>' +
+            		'<a href="#" class="cancel" role="button" aria-hidden="true"></a>' +
+            	'</div>')
 				.insertBefore(editable);
-			
-			// Save references and attach events            
-			var editEl = buttons.find('.edit').click(function() {
-				startEditing();
-				return false;
-			});							
-			
+
+			// Save references and attach events
+
 			buttons.find('.save').click(function(){
 				stopEditing();
 				editable.trigger(options.changeEvent);
 				return false;
 			});
-						
+
 			buttons.find('.cancel').click(function(){
 				stopEditing();
 				editable.html(prevValue);
 				return false;
 			});		
 			
-			// Display only edit button			
+			// Hide controls
 			buttons.children().css('display', 'none');
-			editEl.show();			
 			
 			if (!options.newlinesEnabled){
 				// Prevents user from adding newlines to headers, links, etc.
@@ -84,19 +80,19 @@
 			/**
 			 * Makes element editable
 			 */
-			function startEditing(){               
-                buttons.children().show();
-                editEl.hide();
-				                
-	            editable.attr('contentEditable', true);
+			function startEditing(e){
+				if(!$(this).data('alreadyEditing')) {
+					buttons.children().fadeIn().attr('aria-hidden',false);
+					$(this).data('alreadyEditing',true);
+				}
+				if(e.keyCode == 13) return false;
 			}
 			/**
 			 * Makes element non-editable
 			 */
-			function stopEditing(){
-				buttons.children().hide();
-				editEl.show();				
-                editable.attr('contentEditable', false);
+			function stopEditing(e){
+				buttons.children().fadeOut().attr('aria-hidden',true);
+				editable.data('alreadyEditing',false);
 			}
         });
     }

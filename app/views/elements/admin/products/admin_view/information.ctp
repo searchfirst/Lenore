@@ -1,5 +1,6 @@
 <div class="item">
 <h3>Information</h3>
+<p><?php echo sprintf('%s Category: ',Configure::read('Category.alias')).$html->link($product['Category']['title'],array('admin'=>true,'controller'=>'categories','action'=>'view',$product['Category']['id']));?></p>
 <div class="dates">
 <p><b>Created</b> on <?php echo $time->format('d/m/Y',$product['Product']['created'])?> and
 <b>edited</b> on <?php echo $time->format('d/m/Y',$product['Product']['modified'])?></p>

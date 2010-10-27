@@ -1,5 +1,6 @@
 <div class="item">
 <h3>Information</h3>
+<p><?php echo sprintf('%s: ',Configure::read('Section.alias')).$html->link($article['Section']['title'],array('admin'=>true,'controller'=>'sections','action'=>'view',$article['Section']['id']));?></p>
 <div class="dates">
 <p><b>Created</b> on <?php echo $time->format('d/m/Y',$article['Article']['created'])?> and
 <b>edited</b> on <?php echo $time->format('d/m/Y',$article['Article']['modified'])?></p>

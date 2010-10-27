@@ -14,8 +14,7 @@ class ResourcesController extends AppController
 			$this->Session->setFlash('Invalid Media');
 			$this->redirect($this->referer('/'));
 		}
-		if(	($this->data['Resource']['id']==$id) &&
-			($this->Resource->del($id)) ) {
+		if($this->data['Resource']['id']==$id && $this->Resource->delete($id)) {
 			$this->Session->setFlash('Media deleted');
 			$this->redirect($this->referer('/'));
 		} else {

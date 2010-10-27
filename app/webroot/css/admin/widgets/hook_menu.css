@@ -41,7 +41,7 @@ color: rgb(255,255,255);
 .hook_menu_x {
 display: inline-block;
 cursor: pointer;
-text-indent: -1000px;
+text-indent: -10000px;
 background: url('/img/admin/hook-menu.svg') no-repeat center center;
 background-size: 2em 1em;
 margin-left: .375em;

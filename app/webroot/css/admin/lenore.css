@@ -282,10 +282,10 @@ border-radius: 6px;
 -o-border-radius: 6px;
 background-color: rgba(0,0,0,0.1);
 display: block;
-width: 100%;
-text-overflow: ellipsis;
+/*width: 100%;*/
+/*text-overflow: ellipsis;*/
 white-space: nowrap;
-overflow: hidden;
+overflow: auto;
 padding: 3px 6px;
 box-sizing: border-box;
 -o-box-sizing: border-box;
@@ -599,12 +599,12 @@ text-decoration: none;
 clear: both;
 }
 
-ul.admin_page_links {
+/*ul.admin_page_links {
 width: 95%;
 list-style: none;
 padding: 0;
 margin: 0 10px;
-}
+}*/
 
 /* Dialogs */
 

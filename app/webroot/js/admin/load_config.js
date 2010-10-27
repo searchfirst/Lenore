@@ -91,15 +91,15 @@ var LenoreCore = function($) {return {
 
 			editable
 				.bind('click',function(e){})
-				.inlineEdit({
-					placeholder: '',
-					save: function(e,i_data){
-						var e_method = this.element.attr('class').split(' ')[1];
-						var post_data = new Object();
-						post_data["data[" + e_controller + "][" + e_method + "]"] = i_data.value;
-						post_data["data[" + e_controller + "][id]"] = e_id;
-						$.ajax({type:'POST',url:editable_url,dataType:'text',data:post_data});
-					}
+				.editableText({newlinesEnabled:false})
+				.bind('change',function(e){
+					var eThis = $(this),
+						changedText = eThis.html(),
+						e_method = eThis.attr('class').split(' ')[1],
+						post_data = new Object();
+					post_data["data[" + e_controller + "][" + e_method + "]"] = changedText;
+					post_data["data[" + e_controller + "][id]"] = e_id;
+					$.ajax({type:'POST',url:editable_url,dataType:'text',data:post_data});
 				});
 			editable_form.remove();
 		}
