@@ -45,7 +45,9 @@ class SectionsController extends AppController {
 			$this->Session->setFlash('Invalid id for Section.');
 			$this->redirect($this->referer('/admin/sections/'));
 		} else {
-			$section = $this->Section->find('first', array('conditions'=>array('Section.id'=>$id),'recursive'=>2));
+			$this->Section->recursive = 2;
+			$section = $this->Section->read(null,$id);
+			$this->data = $section;
 			if($section) {
 				$this->set('section', $section);
 				$this->set('id',$id);

@@ -271,71 +271,36 @@ class AppModel extends Model {
 	/* End of File Upload functions*/	
 	
 	function getUniqueSlug($string, $field="slug") {
-		// Build URL
-//		$currentUrl = $this->_getStringAsSlug($string);
-		$currentUrl = Inflector::slug($string,'-');
+		$current_url = strtolower(Inflector::slug($string,'-'));
 		// Look for same URL, if so try until we find a unique one
 		
-		$conditions = array("{$this->name}.$field LIKE"=>"$currentUrl.%");
+		$conditions = array("{$this->name}.$field LIKE"=>"$current_url%");
 		$result = $this->find('all',array('conditions'=>$conditions,'recursive'=>0));
-		
 		if ($result !== false && count($result) > 0) {
-			$sameUrls = array();
+			$matching_slugs = array();
 			foreach($result as $record)
-			    $sameUrls[] = $record[$this->name][$field];
+			    $matching_slugs[] = $record[$this->name][$field];
+			$this->log($matching_slugs);
 		}
 		
-		if(($this->name=='Resource') && isset($GLOBALS['MOONLIGHT_RESOURCE_PREV_SLUGS'])) {
-			if(!isset($sameUrls)) $sameUrls = array();
-			$sameUrls = array_merge($sameUrls,$GLOBALS['MOONLIGHT_RESOURCE_PREV_SLUGS']);
+/*		if(($this->name=='Resource') && isset($GLOBALS['MOONLIGHT_RESOURCE_PREV_SLUGS'])) {
+			if(!isset($matching_slugs)) $matching_slugs = array();
+			$matching_slugs = array_merge($matching_slugs,$GLOBALS['MOONLIGHT_RESOURCE_PREV_SLUGS']);
 			}		
-		
-		if (isset($sameUrls) && count($sameUrls) > 0) {
-			$currentBegginingUrl = $currentUrl;
-			$currentIndex = 1;
-		    while($currentIndex > 0) {
-				if (!in_array($currentBegginingUrl . '-' . $currentIndex, $sameUrls)) {
-				    $currentUrl = $currentBegginingUrl . '-' . $currentIndex;
-				    $currentIndex = -1;
+*/		
+		if (isset($matching_slugs) && count($matching_slugs) > 0) {
+			$stem = $current_url;
+			$x=1;
+		    while($x>0) {
+				if (!in_array("$stem-$x", $matching_slugs)) {
+				    $current_url = "$stem-$x";
+				    $x=-1;
 				}
-				$currentIndex++;
+				$x++;
 			}
 		}
-		if($this->name=='Resource') $GLOBALS['MOONLIGHT_RESOURCE_PREV_SLUGS'][] = $currentUrl;
-		return $currentUrl;
-	}
-
-	function _getStringAsSlug($string) {
-		// Define the maximum number of characters allowed as part of the slug
-		$currentMaximumSlugLength = 100;
-				
-		// Any non valid characters will be treated as _, also remove duplicate _
-		$bad = array('Š','Ž','š','ž','Ÿ','À','Á','Â','Ã','Ä','Å','Ç','È','É','Ê','Ë','Ì','Í','Î','Ï','Ñ',
-		'Ò','Ó','Ô','Õ','Ö','Ø','Ù','Ú','Û','Ü','Ý','à','á','â','ã','ä','å','ç','è','é','ê',
-		'ë','ì','í','î','ï','ñ','ò','ó','ô','õ','ö','ø','ù','ú','û','ü','ý','ÿ',
-		'Þ','þ','Ð','ð','ß','Œ','œ','Æ','æ','µ',
-		'”',"'",'“','”',"\n","\r",'_');
-		$good = array('S','Z','s','z','Y','A','A','A','A','A','A','C','E','E','E','E','I','I','I','I','N',
-		'O','O','O','O','O','O','U','U','U','U','Y','a','a','a','a','a','a','c','e','e','e',
-		'e','i','i','i','i','n','o','o','o','o','o','o','u','u','u','u','y','y',
-		'TH','th','DH','dh','ss','OE','oe','AE','ae','u',
-		'','','','','','','-');
-		$string = trim(str_replace($bad, $good, $string));
-		
-		$bad_reg = array('/\s+/','/[^A-Za-z0-9\-]/');
-		$good_reg = array('-','');
-		$string = preg_replace($bad_reg, $good_reg, $string);
-
-		// Cut at a specified length
-		if (strlen($string) > $currentMaximumSlugLength)
-			$string = substr($string, 0, $currentMaximumSlugLength);
-		
-		// Remove beggining and ending signs
-		$string = preg_replace('/_$/i', '', $string);
-		$string = preg_replace('/^_/i', '', $string);
-		
-		$string = str_replace(array('----','---','--'),array('-','-','-'),$string);
-		return strtolower($string);
+//		if($this->name=='Resource') $GLOBALS['MOONLIGHT_RESOURCE_PREV_SLUGS'][] = $current_url;
+		return $current_url;
 	}
 
 	function fulltext($q=null,$fields=null,$order=null,$limit=null,$page=null) {

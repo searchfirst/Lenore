@@ -49,7 +49,9 @@ class CategoriesController extends AppController {
 			$this->Session->setFlash('Invalid Category.');
 			$this->redirect('/admin/categories/');
 		} else {
-			$category = $this->Category->find('first',array('conditions' => array('Category.id'=>$id),'recursive'=>2));
+			$this->Category->recursive = 2;
+			$category = $this->Category->read(null,$id);
+			$this->data = $category;
 			if($category) {
 				$this->set('category', $category);
 				$this->set('inline_media',array(

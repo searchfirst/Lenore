@@ -93,7 +93,9 @@ class ProductsController extends AppController
 		if(!$id) {
 			$this->redirect($this->referer('/admin/categories/'));
 		} else {
-			$product = $this->Product->find('first', array('conditions'=>array('Product.id'=>$id)));
+			$this->Product->recursive = 2;
+			$product = $this->Product->read(null,$id);
+			$this->data = $product;
 			if($product) {
 				$this->set('product',$product);
 				$this->set('inline_media',array(

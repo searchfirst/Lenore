@@ -55,7 +55,9 @@ class ArticlesController extends AppController {
 		if(!$id) {
 			$this->redirect($this->referer('/admin/sections/'));
 		} else {
-			$article = $this->Article->find('first',array('conditions' => array('Article.id'=>$id),'recursive'=>2));
+			$this->Article->recursive = 2;
+			$article = $this->Article->read(null,$id);
+			$this->data = $article;
 			if($article) {
 				$this->set('article',$article);
 				$this->set('inline_media',array(
