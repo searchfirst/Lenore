@@ -16,8 +16,8 @@ echo implode(" ",$sortable_products_flags);
 ?>">
 <span><?php echo $html->link($product['title'],array('admin'=>true,'controller'=>'products','action'=>'view',$product['id'])); ?></span>
 <ul class="hook_menu">
-<li><?php echo $this->element('admin/edit_form',array('controller'=>'products','id'=>$product['id'],'model'=>'Product','title'=>$product['title']))?></li>
-<li><?php echo $this->element('admin/delete_form',array('controller'=>'products','model'=>'Product','id'=>$product['id'],'title'=>$product['title']))?></li>
+<li><?php echo $this->element('edit_form',array('controller'=>'products','id'=>$product['id'],'model'=>'Product','title'=>$product['title']))?></li>
+<li><?php echo $this->element('delete_form',array('controller'=>'products','model'=>'Product','id'=>$product['id'],'title'=>$product['title']))?></li>
 </ul>
 <span class="mover"></span>
 <span class="dates">

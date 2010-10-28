@@ -11,8 +11,8 @@ echo implode(" ",$sortable_products_flags);
 ?>">
 <span><?php echo $html->link($subcat['title'],array('admin'=>true,'controller'=>'categories','action'=>'view',$subcat['id'])); ?></span>
 <ul class="hook_menu">
-<li><?php echo $this->element('admin/edit_form',array('controller'=>'categories','id'=>$subcat['id'],'model'=>'Category','title'=>$subcat['title']))?></li>
-<li><?php echo $this->element('admin/delete_form',array('controller'=>'categories','model'=>'Category','id'=>$subcat['id'],'title'=>$subcat['title']))?></li>
+<li><?php echo $this->element('edit_form',array('controller'=>'categories','id'=>$subcat['id'],'model'=>'Category','title'=>$subcat['title']))?></li>
+<li><?php echo $this->element('delete_form',array('controller'=>'categories','model'=>'Category','id'=>$subcat['id'],'title'=>$subcat['title']))?></li>
 </ul>
 <?php if(!empty($subcat['Product'])):?>
 <span class="children">

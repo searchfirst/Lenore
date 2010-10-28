@@ -4,6 +4,7 @@ class AppController extends Controller {
 	var $helpers = array('Html','Form','Time','TextAssistant','MediaAssistant','Js','Javascript','Session','Menu','Minify.Minify');
 	var $actionHelpers = array('Time');
 	var $components = array('RequestHandler','Session','Acl','Auth','Helper','Minify.Minify');
+	var $view = 'Theme';
 
 	function beforeFilter() {
 		$this->Auth->allowedActions = array('display','login','logout','index','view','add');
@@ -34,23 +35,12 @@ class AppController extends Controller {
 	
 	function beforeRender() {
 		if($this->actionIsAdmin()) {
-			$this->layoutPath = 'admin';
-		} else {
-			if($custom_layout = Configure::read(sprintf('%s.custom_layout',Inflector::singularize($this->name)))) {
+			$this->theme = 'admin';
+		} elseif($template_theme = Configure::read('Moonlight.template_theme')) {
+			$this->theme = $template_theme;
+			if($custom_layout = Configure::read(Inflector::singularize($this->name).'custom_layout')) {
 				$this->layout = $custom_layout;
 			}
-		}
-		$template_theme = Configure::read('Moonlight.template_theme');
-		if(!empty($template_theme)) {
-			$template_theme_path = "themes".DS."$template_theme";
-			if(file_exists(APP.'views'.DS.$template_theme_path.DS.Inflector::underscore($this->name).DS.$this->action.".ctp")) {
-				$this->viewPath = $template_theme_path.DS.$this->viewPath;
-			}
-			if($this->layoutPath != 'admin' && file_exists(APP.'views'.DS.'layouts'.DS.$template_theme_path.DS.$this->layout.'.ctp')) {
-				$this->layoutPath = $template_theme_path;
-			}
-		} else {
-			$template_theme_path = '';
 		}
 		$this->set('menu_prefix',Configure::read('Menu.prefix'));
 		$this->set('menu_suffix',Configure::read('Menu.suffix'));
