@@ -13,12 +13,12 @@
 </ul>
 <div class="content">
 <div class="primary">
-<?php echo $this->element('admin/categories/admin_view/subcategories'); ?> 
-<?php echo $this->element('admin/categories/admin_view/products'); ?> 
-<?php echo $this->element('admin/categories/admin_view/content'); ?> 
+<?php echo $this->element('categories/admin_view/subcategories'); ?> 
+<?php echo $this->element('categories/admin_view/products'); ?> 
+<?php echo $this->element('categories/admin_view/content'); ?> 
 </div>
 <div class="secondary">
-<?php echo $this->element('admin/categories/admin_view/information'); ?> 
-<?php echo $this->element('admin/categories/admin_view/media'); ?> 
+<?php echo $this->element('categories/admin_view/information'); ?> 
+<?php echo $this->element('categories/admin_view/media'); ?> 
 </div>
 </div>

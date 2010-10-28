@@ -13,10 +13,10 @@
 </ul>
 <div class="content">
 <div class="primary">
-<?php echo $this->element('admin/articles/admin_view/content'); ?> 
+<?php echo $this->element('articles/admin_view/content'); ?> 
 </div>
 <div class="secondary">
-<?php echo $this->element('admin/articles/admin_view/information'); ?> 
-<?php echo $this->element('admin/articles/admin_view/media'); ?> 
+<?php echo $this->element('articles/admin_view/information'); ?> 
+<?php echo $this->element('articles/admin_view/media'); ?> 
 </div>
 </div>
