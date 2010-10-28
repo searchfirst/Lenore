@@ -81,7 +81,7 @@ class SectionsController extends AppController {
 						$this->Session->setFlash("This item has been saved.");
 						$this->redirect(sprintf('/admin/sections/view/%s',$this->data['Section']['id']));
 					} else {
-						$this->generalAjax(array('status'=>'success'));
+						$this->generalAjax($this->Section->ajaxFlagArray($id,'success'));
 					}
 				} else {
 					if(!$this->RequestHandler->isAjax()) {

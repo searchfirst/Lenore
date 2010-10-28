@@ -5,17 +5,17 @@
 <p><b>Created</b> on <?php echo $time->format('d/m/Y',$article['Article']['created'])?> and
 <b>edited</b> on <?php echo $time->format('d/m/Y',$article['Article']['modified'])?></p>
 </div>
-<div class="flags">
+<div class="flags" data-tgl-uri="/admin/articles/edit/<?php echo $article['Article']['id'];?>" data-tgl-mdl="Article" data-tgl-id="<?php echo $article['Article']['id'];?>">
 <ul>
 <?php if($article['Article']['draft']==1): ?>
-<li class="draft">Draft</li>
+<li role="checkbox" aria-checked="true" data-tgl-fld="draft">Draft</li>
 <?php else: ?>
-<li class="no-draft">Published</li>
+<li role="checkbox" aria-checked="false" data-tgl-fld="draft">Published</li>
 <?php endif; ?>
 <?php if($article['Article']['featured']==1): ?>
-<li class="featured">Featured</li>
+<li role="checkbox" aria-checked="true" data-tgl-fld="featured">Featured</li>
 <?php else: ?>
-<li class="no-featured">Not Featured</li>
+<li role="checkbox" aria-checked="false" data-tgl-fld="featured">Not Featured</li>
 <?php endif; ?>
 </ul>
 </div>

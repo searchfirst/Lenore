@@ -1,0 +1,34 @@
+.flags {
+color: rgb(255,255,255);
+}
+
+.flags li {
+display: inline-block;
+border-radius: 6px;
+-moz-border-radius: 6px;
+-o-border-radius: 6px;
+-webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+-moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+-o-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+padding: 0 .375em;
+margin-right: .375em;
+text-shadow: none;
+cursor: pointer;
+}
+
+.flags li[data-tgl-fld=featured][aria-checked=true] {
+background-color: rgb(0,119,204);
+}
+
+.flags li[data-tgl-fld=featured][aria-checked=false] {
+background-color: rgba(0,119,204,0.2);
+}
+
+.flags li[data-tgl-fld=draft][aria-checked=true] {
+background-color: rgba(255,128,0,0.2);
+}
+
+.flags li[data-tgl-fld=draft][aria-checked=false] {
+background-color: rgb(255,128,0);
+}

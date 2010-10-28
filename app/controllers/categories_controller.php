@@ -93,7 +93,7 @@ class CategoriesController extends AppController {
 						$this->Session->setFlash("This item has been saved.");
 						$this->redirect(sprintf('/admin/categories/view/%s',$this->data['Category']['id']));
 					} else {
-						$this->generalAjax(array('status'=>'success'));
+						$this->generalAjax($this->Category->ajaxFlagArray($id,'success'));
 					}
 				} else {
 					if(!$this->RequestHandler->isAjax()) {

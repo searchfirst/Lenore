@@ -4,17 +4,17 @@
 <p><b>Created</b> on <?php echo $time->format('d/m/Y',$section['Section']['created'])?> and
 <b>edited</b> on <?php echo $time->format('d/m/Y',$section['Section']['modified'])?></p>
 </div>
-<div class="flags" data-toggle-uri="/admin/sections/edit/...">
+<div class="flags" data-tgl-uri="/admin/sections/edit/<?php echo $section['Section']['id'];?>" data-tgl-mdl="Section" data-tgl-id="<?php echo $section['Section']['id'];?>">
 <ul>
 <?php if($section['Section']['draft']==1): ?>
-<li class="draft" role="checkbox" aria-checked="true" data-controller="sections" data-id="<?php echo $section['Section']['id'];?>" data-field="draft" data-currentstate="1">Draft</li>
+<li role="checkbox" aria-checked="true" data-tgl-fld="draft">Draft</li>
 <?php else: ?>
-<li class="no-draft" role="checkbox" aria-checked="false" data-controller="sections" data-id="<?php echo $section['Section']['id'];?>" data-field="draft" data-currentstate="0">Published</li>
+<li role="checkbox" aria-checked="false" data-tgl-fld="draft">Published</li>
 <?php endif; ?>
 <?php if($section['Section']['featured']==1): ?>
-<li class="featured" role="checkbox" aria-checked="true" data-controller="sections" data-id="<?php echo $section['Section']['id'];?>" data-field="featured" data-currentstate="1">Featured</li>
+<li role="checkbox" aria-checked="true" data-tgl-fld="featured">Featured</li>
 <?php else: ?>
-<li class="no-featured" role="checkbox" aria-checked="false" data-controller="sections" data-id="<?php echo $section['Section']['id'];?>" data-field="featured" data-currentstate="0">Not Featured</li>
+<li role="checkbox" aria-checked="false" data-tgl-fld="featured">Not Featured</li>
 <?php endif; ?>
 </ul>
 </div>

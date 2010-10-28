@@ -100,7 +100,7 @@ class ArticlesController extends AppController {
 						$this->Session->setFlash("This item has been saved.");
 						$this->redirect(sprintf('/admin/articles/view/%s',$this->data['Article']['id']));
 					} else {
-						$this->generalAjax(array('status'=>'success'));
+						$this->generalAjax($this->Article->ajaxFlagArray($id,'success'));
 					}
 				} else {
 					if(!$this->RequestHandler->isAjax()) {

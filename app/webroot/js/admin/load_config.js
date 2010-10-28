@@ -1,6 +1,7 @@
 $(document).ready(function() {
 	$('#content > h2:first-child, #content h3, span').hookMenu();
 	$('ul.tab_hooks').duxTab();
+	$('div.flags').flagToggle();
 	LenoreCore
 		.loadAJAXDialogLinks()
 		.loadSortableLists()

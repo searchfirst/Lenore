@@ -12,12 +12,12 @@ class AppController extends Controller {
 				'js/lib/modernizr.js','js/jquery/jquery.js','js/jquery/ui/core.js','js/jquery/ui/widget.js','js/jquery/ui/mouse.js',
 				'js/jquery/ui/bgiframe.js','js/jquery/ui/sortable.js','js/jquery/ui/dialog.js','js/jquery/ui/position.js',
 				'js/jquery/lib/iphoneui.js','js/jquery/lib/editable_text.js','js/jquery/hook_menu.js','js/jquery/dux_tabs.js',
-				'js/admin/load_config.js'
+				'js/jquery/lib/flag_toggle.js','js/admin/load_config.js'
 			)));
 			$this->set('min_css',array(
 				'default' => $this->Minify->css(array(
 					'css/admin/reset.css','css/admin/typefaces.css','css/admin/lenore.css','css/admin/widgets/hook_menu.css',
-					'css/admin/widgets/sortable.css','css/admin/widgets/editable_text.css'
+					'css/admin/widgets/sortable.css','css/admin/widgets/editable_text.css','css/admin/widgets/flag_toggle.css'
 				)),
 				'handheld_large' => $this->Minify->css(array(
 					'css/admin/handheld_large.css'

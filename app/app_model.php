@@ -303,6 +303,19 @@ class AppModel extends Model {
 		return $current_url;
 	}
 
+	function ajaxFlagArray($id,$status) {
+		$this->recursive = 0;
+		$model = $this->read(null,$id);
+		return array(
+			'status' => $status,
+			'flag_text' => array(
+				'draft' => $model[$this->name]['draft']?'Draft':'Published',
+				'featured' => $model[$this->name]['featured']?'Featured':'Not Featured'
+			),
+			$this->name => $model[$this->name]
+		);
+	}
+
 	function fulltext($q=null,$fields=null,$order=null,$limit=null,$page=null) {
 		if (is_array($fields))
 			$f = $fields;

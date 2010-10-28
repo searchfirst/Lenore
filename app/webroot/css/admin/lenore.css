@@ -236,6 +236,7 @@ background-color: transparent;
 margin: 0 0 6px;
 }
 
+/*
 #content > div.content > div.secondary > div.item > div.flags ul {
 list-style: none inside;
 padding: 0;
@@ -270,6 +271,7 @@ background-color: rgb(0, 119, 204);
 #content > div.content > div.secondary > div.item > div.flags ul li.no-featured {
 opacity: 0.2;
 }
+*/
 
 #content div.content div.secondary div.meta b {
 display: block;

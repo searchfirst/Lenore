@@ -67,7 +67,7 @@ class ProductsController extends AppController
 						$this->Session->setFlash("This item has been saved.");
 						$this->redirect(sprintf('/admin/products/view/%s',$this->data['Product']['id']));
 					} else {
-						$this->generalAjax(array('status'=>'success'));
+						$this->generalAjax($this->Product->ajaxFlagArray($id,'success'));
 					}
 				} else {
 					if(!$this->RequestHandler->isAjax()) {

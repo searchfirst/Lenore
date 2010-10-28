@@ -5,17 +5,17 @@
 <p><b>Created</b> on <?php echo $time->format('d/m/Y',$product['Product']['created'])?> and
 <b>edited</b> on <?php echo $time->format('d/m/Y',$product['Product']['modified'])?></p>
 </div>
-<div class="flags">
+<div class="flags" data-tgl-uri="/admin/products/edit/<?php echo $product['Product']['id'];?>" data-tgl-mdl="Product" data-tgl-id="<?php echo $product['Product']['id'];?>">
 <ul>
 <?php if($product['Product']['draft']==1): ?>
-<li class="draft">Draft</li>
+<li role="checkbox" aria-checked="true" data-tgl-fld="draft">Draft</li>
 <?php else: ?>
-<li class="no-draft">Published</li>
+<li role="checkbox" aria-checked="false" data-tgl-fld="draft">Published</li>
 <?php endif; ?>
 <?php if($product['Product']['featured']==1): ?>
-<li class="featured">Featured</li>
+<li role="checkbox" aria-checked="true" data-tgl-fld="featured">Featured</li>
 <?php else: ?>
-<li class="no-featured">Not Featured</li>
+<li role="checkbox" aria-checked="false" data-tgl-fld="featured">Not Featured</li>
 <?php endif; ?>
 </ul>
 </div>
