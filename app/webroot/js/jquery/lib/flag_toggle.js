@@ -1,5 +1,5 @@
 (function($){
-	jQuery.fn.flagToggle = function(settings) {
+	$.fn.flagToggle = function(settings) {
 		settings = $.extend({},settings);
 		this.each(function(i) {
 			var tgl_info = {
@@ -16,21 +16,22 @@
 					field_key = 'data['+tgl_info.model+']['+tgl_item.data('tgl-fld')+']',
 					field_state = current_state?0:1,
 					post_data = {};
-					post_data[tgl_info.idKey] = tgl_info.idValue;
-					post_data[field_key] = field_state;
-					$.ajax({
-						data: post_data,
-						type: 'POST',
-						url: tgl_info.postUri,
-						context: tgl_item.get(),
-						success: function(data,status,xHR) {
-							if(data.status=='success' && data[tgl_info.model]) {
-								var checked_state = data[tgl_info.model][field_name]=='1'?'true':'false',
-									new_html = data.flag_text[field_name];
-								$(this).attr('aria-checked',checked_state).html(new_html);
-							} else {/*not sure about this yet*/}
-						}
-					});
+				post_data[tgl_info.idKey] = tgl_info.idValue;
+				post_data[field_key] = field_state;
+				$.ajax({
+					data: post_data,
+					type: 'POST',
+					dataType: 'json',
+					url: tgl_info.postUri,
+					context: tgl_item.get(),
+					success: function(data,status,xHR) {
+						if(data.status=='success' && data[tgl_info.model]) {
+							var checked_state = data[tgl_info.model][field_name]=='1'?'true':'false',
+								new_html = data.flag_text[field_name];
+							$(this).attr('aria-checked',checked_state).html(new_html);
+						} else {}
+					}
+				});
 			});
 		});
 		return this;

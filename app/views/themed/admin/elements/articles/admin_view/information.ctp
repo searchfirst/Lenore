@@ -30,8 +30,7 @@
 <?php echo $form->input('Article.meta_description',array('value'=>$article['Article']['meta_description']))?> 
 <?php echo $form->input('Article.meta_keywords',array('value'=>$article['Article']['meta_keywords']))?> 
 <?php echo $form->hidden('Article.id')?> 
-<?php echo $form->end('Update')?> 
 </fieldset>
-</form>
+<?php echo $form->end('Update')?> 
 </div>
 </div>

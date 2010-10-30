@@ -20,10 +20,6 @@ echo implode(" ",$sortable_products_flags);
 <li><?php echo $this->element('delete_form',array('controller'=>'products','model'=>'Product','id'=>$product['id'],'title'=>$product['title']))?></li>
 </ul>
 <span class="mover"></span>
-<span class="dates">
-<i><?php echo $time->format('d M Y',$product['created']); ?></i>
-<i><?php echo $time->format('d M Y',$product['modified']); ?></i>
-</span>
 </li>
 <?php endforeach;?>
 <?php endif;?>

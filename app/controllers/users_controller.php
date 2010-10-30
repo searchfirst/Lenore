@@ -33,17 +33,19 @@ class UsersController extends AppController {
 		if (!$id && empty($this->data)) {
 			$this->Session->setFlash(__('Invalid user', true));
 			$this->redirect(array('action' => 'index'));
-		}
-		if (!empty($this->data)) {
-			if ($this->User->save($this->data)) {
-				$this->Session->setFlash(__('The user has been saved', true));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The user could not be saved. Please, try again.', true));
+		} else {
+			$this->set('groups',$this->User->Group->find('list'));
+			if (!empty($this->data)) {
+				if ($this->User->save($this->data)) {
+					$this->Session->setFlash(__('The user has been saved', true));
+					$this->redirect(array('action' => 'index'));
+				} else {
+					$this->Session->setFlash(__('The user could not be saved. Please, try again.', true));
+				}
 			}
-		}
-		if (empty($this->data)) {
-			$this->data = $this->User->read(null, $id);
+			if (empty($this->data)) {
+				$this->data = $this->User->read(null, $id);
+			}
 		}
 	}
 

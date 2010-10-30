@@ -85,7 +85,7 @@ class CategoriesController extends AppController {
 		}
 	}
 
-	function admin_edit($id = null) {
+	function admin_edit($id=null) {
 		if($id!=null) {
 			if(!empty($this->data)) {
 				if($this->Category->save($this->data)) {
@@ -145,6 +145,8 @@ class CategoriesController extends AppController {
 						$this->generalAjax(array('status'=>'fail'));
 					}
 				}
+			} else {
+				$this->data = array('Category'=>array('id'=>$id));
 			}
 		}
 	}

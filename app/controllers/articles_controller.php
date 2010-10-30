@@ -144,6 +144,8 @@ class ArticlesController extends AppController {
 						$this->generalAjax(array('status'=>'fail'));
 					}
 				}
+			} else {
+				$this->data = array('Article'=>array('id'=>$id));
 			}
 		}
 	}

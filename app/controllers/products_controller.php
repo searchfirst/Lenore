@@ -131,6 +131,8 @@ class ProductsController extends AppController
 						$this->generalAjax(array('status'=>'fail'));
 					}
 				}
+			} else {
+				$this->data = array('Product'=>array('id'=>$id));
 			}
 		}
 	}

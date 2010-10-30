@@ -123,6 +123,8 @@ class SectionsController extends AppController {
 						$this->generalAjax(array('status'=>'fail'));
 					}
 				}
+			} else {
+				$this->data = array('Section'=>array('id'=>$id));
 			}
 		}
 	}

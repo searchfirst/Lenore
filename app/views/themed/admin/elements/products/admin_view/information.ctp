@@ -30,8 +30,7 @@
 <?php echo $form->input('Product.meta_description',array('value'=>$product['Product']['meta_description']))?> 
 <?php echo $form->input('Product.meta_keywords',array('value'=>$product['Product']['meta_keywords']))?> 
 <?php echo $form->hidden('Product.id')?> 
-<?php echo $form->end('Update')?> 
 </fieldset>
-</form>
+<?php echo $form->end('Update')?> 
 </div>
 </div>

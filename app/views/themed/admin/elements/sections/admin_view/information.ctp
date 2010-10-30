@@ -29,8 +29,7 @@
 <?php echo $form->input('Section.meta_description',array('value'=>$section['Section']['meta_description']))?> 
 <?php echo $form->input('Section.meta_keywords',array('value'=>$section['Section']['meta_keywords']))?> 
 <?php echo $form->hidden('Section.id')?> 
-<?php echo $form->end('Update')?> 
 </fieldset>
-</form>
+<?php echo $form->end('Update')?> 
 </div>
 </div>

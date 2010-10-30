@@ -16,8 +16,8 @@ echo implode(" ",$sortable_categories_flags);
 ?>">
 <span><?php echo $html->link($category['Category']['title'],array('admin'=>true,'controller'=>'categories','action'=>'view',$category['Category']['id'])); ?></span>
 <ul class="hook_menu">
-<li><?php echo $this->element('admin/edit_form',array('id'=>$category['Category']['id'],'title'=>$category['Category']['title'],'controller'=>'categories','model'=>'Category','l_title'=>'Product Category'))?> </li>
-<li><?php echo $this->element('admin/delete_form',array('id'=>$category['Category']['id'],'title'=>$category['Category']['title'],'controller'=>'categories','model'=>'Category','l_title'=>'Product Category'))?> </li>
+<li><?php echo $this->element('edit_form',array('id'=>$category['Category']['id'],'title'=>$category['Category']['title'],'controller'=>'categories','model'=>'Category','l_title'=>'Product Category'))?> </li>
+<li><?php echo $this->element('delete_form',array('id'=>$category['Category']['id'],'title'=>$category['Category']['title'],'controller'=>'categories','model'=>'Category','l_title'=>'Product Category'))?> </li>
 </ul>
 <span class="children">
 <?php if(!empty($category['Product'])): ?>
@@ -28,10 +28,6 @@ echo implode(" ",$sortable_categories_flags);
 <?php endif ?>
 </span>
 <span class="mover"></span>
-<span class="dates">
-<i><?php echo $time->format('d M Y',$category['Category']['created']) ?></i>
-<i><?php echo $time->format('d M Y',$category['Category']['modified']) ?></i>
-</span>
 </li>
 <?php endforeach; ?>
 </ul>

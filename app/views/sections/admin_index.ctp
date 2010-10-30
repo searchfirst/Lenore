@@ -16,8 +16,8 @@ echo implode(" ",$sortable_sections_flags);
 ?>">
 <span><?php echo $html->link($section['Section']['title'],array('admin'=>true,'controller'=>'sections','action'=>'view',$section['Section']['id']))?></span>
 <ul class="hook_menu">
-<li><?php echo $this->element('admin/edit_form',array('controller'=>'sections','model'=>'Section','id'=>$section['Section']['id'],'title'=>$section['Section']['title']))?></li>
-<li><?php echo $this->element('admin/delete_form',array('controller'=>'sections','model'=>'Section','id'=>$section['Section']['id'],'title'=>$section['Section']['title']))?></li>
+<li><?php echo $this->element('edit_form',array('controller'=>'sections','model'=>'Section','id'=>$section['Section']['id'],'title'=>$section['Section']['title']))?></li>
+<li><?php echo $this->element('delete_form',array('controller'=>'sections','model'=>'Section','id'=>$section['Section']['id'],'title'=>$section['Section']['title']))?></li>
 </ul>
 <?php if((integer) $section['Article'] > 0): ?>
 <span class="item_count"><?php echo sprintf("%s %s",count($section['Article']),((integer) $section['Article']>1?'Articles':'Article'))?></span>
@@ -25,10 +25,6 @@ echo implode(" ",$sortable_sections_flags);
 <span></span>
 <?php endif; ?>
 <span class="mover"></span>
-<span class="dates">
-<i><?php echo $time->format('d M Y',$section['Section']['created']);?></i>
-<i><?php echo $time->format('d M Y',$section['Section']['modified']);?></i>
-</span>
 </li>
 <?php endforeach;?>
 <?php endif;?>

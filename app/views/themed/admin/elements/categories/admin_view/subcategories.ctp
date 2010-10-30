@@ -20,10 +20,6 @@ echo implode(" ",$sortable_products_flags);
 </span>
 <?php endif; ?>
 <span class="mover"></span>
-<span class="dates">
-<i><?php echo $time->format('d M Y',$subcat['created']); ?></i>
-<i><?php echo $time->format('d M Y',$subcat['modified']); ?></i>
-</span>
 </li>
 <?php endforeach;?>
 </ul>
