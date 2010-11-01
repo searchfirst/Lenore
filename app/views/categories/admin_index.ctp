@@ -27,7 +27,6 @@ echo implode(" ",$sortable_categories_flags);
 <i class="subcategories"><?php echo sprintf('%s Sub-%s',count($category['Subcategories']),Inflector::pluralize(Configure::read('Category.alias'))); ?></i>
 <?php endif ?>
 </span>
-<span class="mover"></span>
 </li>
 <?php endforeach; ?>
 </ul>

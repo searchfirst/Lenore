@@ -47,6 +47,7 @@ var LenoreCore = function($) {return {
 		var sortable_lists = $('#content ul.sortable');
 		sortable_lists.each(function(i){
 			var current_s_list = $(this);
+			current_s_list.children('li').prepend('<span class="mover"></span>');
 			current_s_list.find('li span.mover').attr('tabindex','0').addTouch();
 			current_s_list.data('controller',current_s_list.attr('class').split(" ")[1])
 			.sortable({

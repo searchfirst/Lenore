@@ -19,7 +19,6 @@ echo implode(" ",$sortable_products_flags);
 <i><?php echo sprintf('%s %s',count($subcat['Product']),Inflector::pluralize(Configure::read('Product.alias'))); ?></i>
 </span>
 <?php endif; ?>
-<span class="mover"></span>
 </li>
 <?php endforeach;?>
 </ul>

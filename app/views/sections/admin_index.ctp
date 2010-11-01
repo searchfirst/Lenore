@@ -24,7 +24,6 @@ echo implode(" ",$sortable_sections_flags);
 <?php else: ?>
 <span></span>
 <?php endif; ?>
-<span class="mover"></span>
 </li>
 <?php endforeach;?>
 <?php endif;?>

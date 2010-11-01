@@ -19,7 +19,6 @@ echo implode(" ",$sortable_products_flags);
 <li><?php echo $this->element('edit_form',array('controller'=>'products','id'=>$product['id'],'model'=>'Product','title'=>$product['title']))?></li>
 <li><?php echo $this->element('delete_form',array('controller'=>'products','model'=>'Product','id'=>$product['id'],'title'=>$product['title']))?></li>
 </ul>
-<span class="mover"></span>
 </li>
 <?php endforeach;?>
 <?php endif;?>

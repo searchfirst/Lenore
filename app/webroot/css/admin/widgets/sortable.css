@@ -27,8 +27,8 @@ background-color: rgba(59,75,91,0.2);
 }
 
 ul.sortable > li > span.mover {
-float: right;
-margin-left: 6px;
+display: inline-block;
+margin-right: .375em;
 height: 2em;
 width: 2em;
 background-image: url('/img/admin/mover.svg');
