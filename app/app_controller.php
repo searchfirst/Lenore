@@ -18,7 +18,8 @@ class AppController extends Controller {
 			$this->set('min_css',array(
 				'default' => $this->Minify->css(array(
 					'css/admin/reset.css','css/admin/typefaces.css','css/admin/lenore.css','css/admin/widgets/hook_menu.css',
-					'css/admin/widgets/sortable.css','css/admin/widgets/editable_text.css','css/admin/widgets/flag_toggle.css'
+					'css/admin/widgets/sortable.css','css/admin/widgets/editable_text.css','css/admin/widgets/flag_toggle.css',
+					'css/admin/widgets/dialog.css','css/admin/widgets/flash_messages.css'
 				)),
 				'handheld_large' => $this->Minify->css(array(
 					'css/admin/handheld_large.css'
@@ -53,7 +54,7 @@ class AppController extends Controller {
 			'{n}.Section.slug','{n}.Section.title'
 		));
 		$this->set('moonlight_product_list', Set::combine($this->Category->find('all',array(
-			'conditions'=>array('Category.category_id'=>null),
+			'conditions'=>array('Category.category_id'=>null,'Category.draft'=>false),
 			'fields'=>array('Category.slug','Category.title'),
 			'order'=>'Category.order_by ASC',
 			'recursive'=>0

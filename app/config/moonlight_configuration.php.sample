@@ -24,7 +24,7 @@ $config = array(
 	'Resource' => array(
 		'alias' => 'Media',
 		'media_path' => ROOT.DS.APP_DIR.DS.'webroot'.DS.'media',
-		'web_root' => '/media',
+		'web_root' => 'media',
 		'accept_types' => array('image/jpeg','image/gif','image/png')
 	),
 	'Rss' => array(

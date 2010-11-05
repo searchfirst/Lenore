@@ -52,7 +52,7 @@ class MediaAssistantHelper extends Helper {
 		$media_filename = $data['slug'].'.'.$data['extension'];
 		$attributes = ($htmlAttributes)?$this->generateHTMLAttributes($htmlAttributes):'';
 //		$media_string = "<a href=\"".Configure::read('Resource.web_root')."/$model/$media_filename\" $htmlAttributes>{$data['title']}</a>";
-		$media_string = sprintf('<a href="%s/%s/%s" %s>%s</a>',Configure::read('Resource.web_root'),$model,$media_filename,$attributes,$data['title']);
+		$media_string = sprintf('<a href="%s/%s/%s" %s>%s</a>',ROOT,$model,$media_filename,$attributes,$data['title']);
 		return $media_string;
 	}
 
@@ -66,6 +66,7 @@ class MediaAssistantHelper extends Helper {
 				'model'=>null
 			);
 			$options = array_merge($default_options,$options);
+			$options['model'] = Inflector::underscore($options['model']);
 			if(Configure::read('Moonlight.use_html')) {
 				$trailing_slash = ' /';
 			} else {
@@ -86,7 +87,7 @@ class MediaAssistantHelper extends Helper {
 					$attributes = $this->generateHTMLAttributes($options['html_attributes'],$options['data']);
 					$media_string = sprintf('<img src="%s%s" %s%s>',$base_media_path,$filename,$attributes,$trailing_slash);
 					if($options['link'])
-						$media_string = sprintf('<a href="%s/%s/%s" %s>%s</a>',Configure::read('Resource.web_root'),$model,$filename,$this->generateHTMLAttributes($options['link_attributes'],$options['data']),$media_string);
+						$media_string = sprintf('<a href="%s/%s/%s" %s>%s</a>',$this->webroot.Configure::read('Resource.webroot'),$model,$filename,$this->generateHTMLAttributes($options['link_attributes'],$options['data']),$media_string);
 				break;
 				case 'video/quicktime':
 				case 'video/mpeg':
@@ -129,7 +130,7 @@ class MediaAssistantHelper extends Helper {
 						$linkAttributes['class'] = 'thickbox';}*/
 				$media_string = "<img src=\"$base_media_path$media_filename\" $attributes$close_tag";
 				if($link)
-					$media_string = "<a href=\"".Configure::read('Resource.media_path')."/$model/$media_filename\" ".$this->generateHTMLAttributes($linkAttributes,$data).">".$media_string."</a>";
+					$media_string = "<a href=\"".$this->webroot."media/$model/$media_filename\" ".$this->generateHTMLAttributes($linkAttributes,$data).">".$media_string."</a>";
 				break;
 			case 'video/x-flv':
 				$media_file_name = Configure::read('Resource.web_root')."/$model/{$data['slug']}.{$data['extension']}";
