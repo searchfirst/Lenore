@@ -1,47 +1,49 @@
-#content h2:first-child:after {
-margin-bottom: 0;
-}
+@media screen and (min-width: 40.0625em) {
+	#content h2:first-child:after {
+	margin-bottom: 0;
+	}
 
-#content > .dashboard, #content .content {
-display: table;
-border-collapse: separate;
-border-spacing: 12px;
-padding: 0;
-table-layout: fixed;
-width: 100%;
-}
+	#content > .dashboard, #content .content {
+	display: table;
+	border-collapse: separate;
+	border-spacing: 12px;
+	padding: 0;
+	table-layout: fixed;
+	width: 100%;
+	}
 
-#content .dashboard .primary, #content .content .primary {
-display: table-cell;
-width: 60%;
-}
+	#content .dashboard .primary, #content .content .primary {
+	display: table-cell;
+	width: 60%;
+	}
 
-#content .dashboard .secondary,  #content .content .secondary {
-display: table-cell;
-width: 40%;
-}
+	#content .dashboard .secondary,  #content .content .secondary {
+	display: table-cell;
+	width: 40%;
+	}
 
-#content div.content div.secondary > div.item {
-padding-left: 12px;
-}
+	#content div.content div.secondary > div.item {
+	padding-left: 12px;
+	}
 
-ul.grid li {
-display: inline-block;
-}
+	ul.grid li {
+	display: inline-block;
+	}
 
-ul.grid li a {
-display: block;
-text-align: center;
-}
+	ul.grid li a {
+	display: block;
+	text-align: center;
+	}
 
-ul.grid li a:hover, ul.grid a:focus {
-}
+	ul.grid li a:hover, ul.grid a:focus {
+	}
 
-ul.grid li img {
-display: block;
-width: auto;
-}
+	ul.grid li img {
+	display: block;
+	width: auto;
+	}
 
-#content ul.sortable > li > span.dates {
-display: block;
+	#content ul.sortable > li > span.dates {
+	display: block;
+	}
 }
