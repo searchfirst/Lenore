@@ -3,82 +3,32 @@ class AppController extends Controller {
 	var $uses = array('Section','Category');
 	var $helpers = array('Html','Form','Time','TextAssistant','MediaAssistant','Js','Javascript','Session','Menu','Minify.Minify');
 	var $actionHelpers = array('Time');
-	var $components = array('RequestHandler','Session','Acl','Auth','Helper','Minify.Minify');
+	var $components = array('RequestHandler','Session','Acl','Auth','Helper','Minify.Minify','Menu');
 	var $view = 'Theme';
 
 	function beforeFilter() {
 		$this->Auth->allowedActions = array('display','login','logout','index','view','add');
 		if($this->actionIsAdmin()) {
 			$this->set('min_js_head',$this->Minify->js(array(
-				'js/lib/modernizr.js','js/jquery/jquery.js','js/jquery/ui/core.js','js/jquery/ui/widget.js','js/jquery/ui/mouse.js',
-				'js/jquery/ui/bgiframe.js','js/jquery/ui/sortable.js','js/jquery/ui/dialog.js','js/jquery/ui/position.js',
-				'js/jquery/lib/iphoneui.js','js/jquery/lib/editable_text.js','js/jquery/hook_menu.js','js/jquery/dux_tabs.js',
+				'js/lib/modernizr.js','js/lib/selectivizr.js','js/lib/flexie.js','js/lib/mediaqueries.js','js/jquery/jquery.js','js/jquery/ui/core.js',
+				'js/jquery/ui/widget.js','js/jquery/ui/mouse.js', 'js/jquery/ui/bgiframe.js','js/jquery/ui/sortable.js','js/jquery/ui/dialog.js',
+				'js/jquery/ui/position.js','js/jquery/lib/iphoneui.js','js/jquery/lib/editable_text.js','js/jquery/hook_menu.js','js/jquery/dux_tabs.js',
 				'js/jquery/lib/flag_toggle.js','js/admin/load_config.js'
 			)));
-			$this->set('min_css',array(
-				'default' => $this->Minify->css(array(
+			$this->set('minify_css',$this->Minify->css(array(
 					'css/admin/reset.css','css/admin/typefaces.css','css/admin/lenore.css','css/admin/widgets/hook_menu.css',
 					'css/admin/widgets/sortable.css','css/admin/widgets/editable_text.css','css/admin/widgets/flag_toggle.css',
-					'css/admin/widgets/dialog.css','css/admin/widgets/flash_messages.css'
-				)),
-				'handheld_large' => $this->Minify->css(array(
-					'css/admin/handheld_large.css'
-				)),
-				'tablet_netbooks' => $this->Minify->css(array(
-					'css/admin/tablet_netbooks.css'
-				)),
-				'desktop' => $this->Minify->css(array(
-					'css/admin/desktop.css'
-				))
-			));
+					'css/admin/widgets/dialog.css','css/admin/widgets/flash_messages.css','css/admin/handheld_large.css',
+					'css/admin/tablet_netbooks.css','css/admin/desktop.css'
+			)));
 		}
 	}
 	
 	function beforeRender() {
-		if($this->actionIsAdmin()) {
-			$this->theme = 'admin';
-		} elseif($template_theme = Configure::read('Moonlight.template_theme')) {
-			$this->theme = $template_theme;
-			if($custom_layout = Configure::read(Inflector::singularize($this->name).'custom_layout')) {
-				$this->layout = $custom_layout;
-			}
-		}
-		$this->set('menu_prefix',Configure::read('Menu.prefix'));
-		$this->set('menu_suffix',Configure::read('Menu.suffix'));
-		$this->set('menu_omissions',Configure::read('Menu.omissions'));
-		$this->set('moonlight_website_menu',Set::combine($this->Section->find('all',array(
-			'fields'=>array('Section.slug','Section.title'),
-			'order'=>'Section.order_by ASC',
-			'recursive'=>0
-		)),
-			'{n}.Section.slug','{n}.Section.title'
-		));
-		$this->set('moonlight_product_list', Set::combine($this->Category->find('all',array(
-			'conditions'=>array('Category.category_id'=>null,'Category.draft'=>false),
-			'fields'=>array('Category.slug','Category.title'),
-			'order'=>'Category.order_by ASC',
-			'recursive'=>0
-		)),
-			'{n}.Category.slug','{n}.Category.title'
-		));
-		if(!empty($this->viewVars['mod_date_for_layout'])) $this->header('Last-Modified: '.$this->Time->toRSS($this->viewVars['mod_date_for_layout']));
-		if(isset($this->params['alt_content']) && $this->params['alt_content']=='Rss') {
-			$this->RequestHandler->renderAs($this,'rss');
-			$this->RequestHandler->respondAs('Content-type: application/rss+xml;charset=UTF-8');
-		} elseif(isset($this->params['alt_content']) && $this->params['alt_content']=='Xml') {
-			$this->RequestHandler->renderAs($this,'xml');
-			$this->RequestHandler->respondAs('xml');
-		}
-		if($this->RequestHandler->isAjax()) {
-			$this->set('is_ajax',true);
-			$ajax_view_file = APP.'views'.DS.Inflector::underscore($this->name).DS.'ajax'.DS.$this->action.'.ctp';
-			if(file_exists($ajax_view_file)) $this->viewPath = $this->viewPath.DS.'ajax';
-		}
-		if($this->RequestHandler->isMobile()) {
-			$this->set('is_mobile',true);
-		} else {
-			$this->set('is_mobile',false);
-		}
+		$this->setCurrentTheme();
+		$this->setModDateHeader();
+		$this->setAltContentViewParams();
+		$this->setRequestHandlerViewVars();
 		$this->mergeGetDataWithThisData();
 	}
 
@@ -308,20 +258,48 @@ class AppController extends Controller {
 	    $this->Acl->allow($group, 'controllers/Widgets/edit');*/
 	}
 	
-	function actionIsAdmin() {
-		if(!empty($this->params['prefix']) && $this->params['prefix'] == 'admin') {
-			return true;
-		} else {
-			return false;
-		}
-	}
+	function actionIsAdmin() {return !empty($this->params['prefix']) && $this->params['prefix'] == 'admin';}
 	
 	function generalAjax($json_object=array()) {
 		Configure::write('debug', 0);
-		$this->viewPath = 'ajax';
 		header('Content-Type: application/json;charset=UTF-8');
 		$this->set('json_object',$json_object);
+		$this->viewPath = 'ajax';
 		$this->render('general_ajax');
+	}
+
+	function setAltContentViewParams() {
+		if(isset($this->params['alt_content']) && $this->params['alt_content']=='Rss') {
+			$this->RequestHandler->renderAs($this,'rss');
+			$this->RequestHandler->respondAs('Content-type: application/rss+xml;charset=UTF-8');
+		} elseif(isset($this->params['alt_content']) && $this->params['alt_content']=='Xml') {
+			$this->RequestHandler->renderAs($this,'xml');
+			$this->RequestHandler->respondAs('xml');
+		}
+	}
+
+	function setRequestHandlerViewVars() {
+		if($this->RequestHandler->isAjax())
+			$this->set('is_ajax',true);
+		if($this->RequestHandler->isMobile())
+			$this->set('is_mobile',true);
+		else
+			$this->set('is_mobile',false);
+	}
+
+	function setModDateHeader() {
+		if(!empty($this->viewVars['mod_date_for_layout'])) $this->header('Last-Modified: '.$this->Time->toRSS($this->viewVars['mod_date_for_layout']));
+	}
+
+	function setCurrentTheme() {
+		if($this->actionIsAdmin()) {
+			$this->theme = 'admin';
+		} elseif($template_theme = Configure::read('Moonlight.template_theme')) {
+			$this->theme = $template_theme;
+			if($custom_layout = Configure::read(Inflector::singularize($this->name).'custom_layout')) {
+				$this->layout = $custom_layout;
+			}
+		}
 	}
 }
 ?>

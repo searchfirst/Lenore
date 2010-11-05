@@ -4,7 +4,7 @@ class HelperComponent extends Object {
 
 	function startup(&$controller) {
 		$this->controller = $controller;
-		if(isset($controller->actionHelpers)) {
+		if(isset($controller->actionHelpers) && empty($controller->plugin)) {
 			$this->pushHelpers();
 		}
 	}

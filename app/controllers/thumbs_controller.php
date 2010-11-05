@@ -2,6 +2,9 @@
 App::import('Vendor','phpthumb/phpthumb_class'); 
 class ThumbsController extends AppController {
 	var $name = 'Thumbs';
+	var $components = null;
+	var $actionHelpers = null;
+	var $helpers = null;
 	var $uses = null;
 	var $layout = null;
 

@@ -97,7 +97,7 @@ class MediaAssistantHelper extends Helper {
 				break;
 		}
 		return $media_string;
-		} else { trigger_error('Invalid Argument provided to MediaAssistant::media() - Parameter was not an array or resource data was absent'); }
+		} elseif(!empty($options['data'])) { trigger_error('Invalid Argument provided to MediaAssistant::media() - Parameter was not an array or resource data was absent'); }
 	}
 
 	function mediaLink($data,$htmlAttributes=null,$conversionParameters=null,$link=false,$linkAttributes=null,$model=null) {
