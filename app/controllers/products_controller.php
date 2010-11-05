@@ -45,15 +45,10 @@ class ProductsController extends AppController
 			$this->set('categories',$this->Product->Category->find('list'));
 		} else {
 			if($this->Product->save($this->data)) {
-				if(isset($GLOBALS['moonlight_inline_count_set'])) {
-					$this->Session->setFlash("This item has been saved. You need to upload media for this item");
-					$this->redirect('/admin/products/manageinline/'.$this->Product->getLastInsertId());
-				} else {
-					$this->Session->setFlash("This item has been saved.");
-					$this->redirect('/admin/products/view/'.$this->Product->getLastInsertId());
-				}
+				$this->Session->setFlash("This item has been saved.",'flash/default',array('class'=>'success'));
+				$this->redirect('/admin/products/view/'.$this->Product->getLastInsertId());
 			} else {
-				$this->Session->setFlash('Please correct the errors below');
+				$this->Session->setFlash('Please correct the errors below','flash/default',array('class'=>'error'));
 				$this->set('categories',$this->Product->Category->find('list'));
 			}
 		}
@@ -64,7 +59,7 @@ class ProductsController extends AppController
 			if(!empty($this->data)) {
 				if($this->Product->save($this->data)) {
 					if(!$this->RequestHandler->isAjax()) {
-						$this->Session->setFlash("This item has been saved.");
+						$this->Session->setFlash("This item has been saved.",'flash/default',array('class'=>'success'));
 						$this->redirect(sprintf('/admin/products/view/%s',$this->data['Product']['id']));
 					} else {
 						$this->generalAjax($this->Product->ajaxFlagArray($id,'success'));
@@ -73,7 +68,7 @@ class ProductsController extends AppController
 					if(!$this->RequestHandler->isAjax()) {
 						$this->set('title_for_layout',sprintf('Edit %s: %s',Configure::read('Product.alias'),$this->data['Product']['title']));
 						$this->set('categories', $this->Product->Category->find('list',array('order'=>'Category.title ASC','recursive'=>0)));
-						$this->Session->setFlash('Please correct errors below.');
+						$this->Session->setFlash('Please correct errors below.','flash/default',array('class'=>'error'));
 					} else {
 						$this->generalAjax(array('status'=>'fail'));
 					}
@@ -118,14 +113,14 @@ class ProductsController extends AppController
 			if(!empty($this->data['Product']['id'])) {
 				if($this->Product->delete($this->data['Product']['id'])) {
 					if(!$this->RequestHandler->isAjax()) {
-						$this->Session->setFlash(sprintf('%s deleted',Configure::read('Product.alias')));
+						$this->Session->setFlash(sprintf('%s deleted',Configure::read('Product.alias')),'flash/default',array('class'=>'success'));
 						$this->redirect('/admin/categories/');
 					} else {
 						$this->generalAjax(array('status'=>'success','model'=>'product','id'=>$this->data['Product']['id']));	
 					}
 				} else {
 					if(!$this->RequestHandler->isAjax()) {
-						$this->Session->setFlash(sprintf('There was an error deleting this %s',Configure::read('Product.alias')));
+						$this->Session->setFlash(sprintf('There was an error deleting this %s',Configure::read('Product.alias')),'flash/default',array('class'=>'error'));
 						$this->redirect('/admin/categories/');
  					} else {
 						$this->generalAjax(array('status'=>'fail'));
@@ -142,11 +137,11 @@ class ProductsController extends AppController
 			if($this->Product->swapFieldData($this->data['Product']['id'],$this->data['Product']['prev_id'],'order_by'))
 				$this->redirect($this->referer('/admin/categories/'));
 			else { 
-				$this->Session->setFlash('There was an error swapping the products');
+				$this->Session->setFlash('There was an error swapping the products','flash/default',array('class'=>'error'));
 				$this->redirect($this->referer('/admin/categories/'));
 			}
 		} else {
-			$this->Session->setFlash('Attempt to swap order of invalid products. Check you selected the correct product');
+			$this->Session->setFlash('Attempt to swap order of invalid products. Check you selected the correct product','flash/default',array('class'=>'error'));
 			$this->redirect($this->referer('/admin/categories/'));
 		}
 	}

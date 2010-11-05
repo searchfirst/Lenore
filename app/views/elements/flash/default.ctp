@@ -1,0 +1,1 @@
+<div class="<?php if(!empty($class)) echo "$class " ?>message"><?php echo $message ?></div>

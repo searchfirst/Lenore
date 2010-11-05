@@ -78,15 +78,10 @@ class ArticlesController extends AppController {
 		} else {
 			if($this->Article->save($this->data)) {
 				$last_id = $this->Article->getLastInsertId();
-				if(isset($GLOBALS['moonlight_inline_count_set'])) {
-					$this->Session->setFlash("This item has been saved. You need to upload media for this item");
-					$this->redirect("/admin/articles/manageinline/$last_id");
-				} else {
-					$this->Session->setFlash("This item has been saved.");
-					$this->redirect("/admin/articles/view/$last_id");
-				}
+				$this->Session->setFlash("This item has been saved.",'flash/default',array('class'=>'success'));
+				$this->redirect("/admin/articles/view/$last_id");
 			} else {
-				$this->Session->setFlash('Please correct the errors.');
+				$this->Session->setFlash('Please correct the errors.','flash/default',array('class'=>'error'));
 				$this->set('sections', $this->Article->Section->find('list',array('conditions'=>array('articles_enabled'=>1))));
 			}
 		}
@@ -97,7 +92,7 @@ class ArticlesController extends AppController {
 			if(!empty($this->data)) {
 				if($this->Article->save($this->data)) {
 					if(!$this->RequestHandler->isAjax()) {
-						$this->Session->setFlash("This item has been saved.");
+						$this->Session->setFlash("This item has been saved.",'flash/default',array('class'=>'success'));
 						$this->redirect(sprintf('/admin/articles/view/%s',$this->data['Article']['id']));
 					} else {
 						$this->generalAjax($this->Article->ajaxFlagArray($id,'success'));
@@ -106,7 +101,7 @@ class ArticlesController extends AppController {
 					if(!$this->RequestHandler->isAjax()) {
 						$this->set('title_for_layout',sprintf('Edit %s: %s',Configure::read('Article.alias'),$this->data['Article']['title']));
 						$this->set('sections',$this->Article->Section->find('list'));
-						$this->Session->setFlash('Please correct errors below.');
+						$this->Session->setFlash('Please correct errors below.','flash/default',array('class'=>'error'));
 					} else {
 						$this->generalAjax(array('status'=>'fail'));
 					}
@@ -131,14 +126,14 @@ class ArticlesController extends AppController {
 			if(!empty($this->data['Article']['id'])) {
 				if($this->Article->delete($this->data['Article']['id'])) {
 					if(!$this->RequestHandler->isAjax()) {
-						$this->Session->setFlash(sprintf('%s deleted',Configure::read('Article.alias')));
+						$this->Session->setFlash(sprintf('%s deleted',Configure::read('Article.alias')),'flash/default',array('class'=>'success'));
 						$this->redirect('/admin/sections/');
 					} else {
 						$this->generalAjax(array('status'=>'success','model'=>'article','id'=>$this->data['Article']['id']));	
 					}
 				} else {
 					if(!$this->RequestHandler->isAjax()) {
-						$this->Session->setFlash(sprintf('There was an error deleting this %s',Configure::read('Article.alias')));
+						$this->Session->setFlash(sprintf('There was an error deleting this %s',Configure::read('Article.alias')),'flash/default',array('class'=>'error'));
 						$this->redirect('/admin/sections/');
  					} else {
 						$this->generalAjax(array('status'=>'fail'));
@@ -155,11 +150,11 @@ class ArticlesController extends AppController {
 			if($this->Article->swapFieldData($this->data['Article']['id'],$this->data['Article']['prev_id'],'order_by'))
 				$this->redirect($this->referer('/sections/'));
 			else { 
-				$this->Session->setFlash('There was an error swapping the articles');
+				$this->Session->setFlash('There was an error swapping the articles','flash/default',array('class'=>'error'));
 				$this->redirect($this->referer('/sections/'));
 			}
 		} else {
-			$this->Session->setFlash('Attempt to swap order of invalid articles. Check you selected the correct article');
+			$this->Session->setFlash('Attempt to swap order of invalid articles. Check you selected the correct article','flash/default',array('class'=>'error'));
 			$this->redirect($this->referer('/sections/'));
 		}
 	}

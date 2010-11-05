@@ -42,7 +42,7 @@ class SectionsController extends AppController {
 
 	function admin_view($id=null,$page=1) {
 		if(!$id) {
-			$this->Session->setFlash('Invalid id for Section.');
+			$this->Session->setFlash('Invalid id for Section.','flash/default',array('class'=>'success'));
 			$this->redirect($this->referer('/admin/sections/'));
 		} else {
 			$this->Section->recursive = 2;
@@ -65,10 +65,10 @@ class SectionsController extends AppController {
 	function admin_add() {
 		if(!empty($this->data)) {
 			if($this->Section->save($this->data)) {
-				$this->Session->setFlash("This item has been saved.");
+				$this->Session->setFlash("This item has been saved.",'flash/default',array('class'=>'success'));
 				$this->redirect(sprintf('/admin/sections/view/%s',$this->Section->id));
 			} else {
-				$this->Session->setFlash('Please correct errors below.');
+				$this->Session->setFlash('Please correct errors below.','flash/default',array('class'=>'error'));
 			}
 		}
 	}
@@ -78,7 +78,7 @@ class SectionsController extends AppController {
 			if(!empty($this->data)) {
 				if($this->Section->save($this->data)) {
 					if(!$this->RequestHandler->isAjax()) {
-						$this->Session->setFlash("This item has been saved.");
+						$this->Session->setFlash("This item has been saved.",'flash/default',array('class'=>'success'));
 						$this->redirect(sprintf('/admin/sections/view/%s',$this->data['Section']['id']));
 					} else {
 						$this->generalAjax($this->Section->ajaxFlagArray($id,'success'));
@@ -86,7 +86,7 @@ class SectionsController extends AppController {
 				} else {
 					if(!$this->RequestHandler->isAjax()) {
 						$this->set('title_for_layout',sprintf('Edit %s: %s',Configure::read('Section.alias'),$this->data['Section']['title']));
-						$this->Session->setFlash('Please correct errors below.');
+						$this->Session->setFlash('Please correct errors below.','flash/default',array('class'=>'error'));
 					} else {
 						$this->generalAjax(array('status'=>'fail'));
 					}
@@ -110,14 +110,14 @@ class SectionsController extends AppController {
 			if(!empty($this->data['Section']['id'])) {
 				if($this->Section->delete($this->data['Section']['id'])) {
 					if(!$this->RequestHandler->isAjax()) {
-						$this->Session->setFlash(sprintf('%s deleted',Configure::read('Section.alias')));
+						$this->Session->setFlash(sprintf('%s deleted',Configure::read('Section.alias')),'flash/default',array('class'=>'success'));
 						$this->redirect('/admin/sections/');
 					} else {
 						$this->generalAjax(array('status'=>'success','model'=>'section','id'=>$this->data['Section']['id']));	
 					}
 				} else {
 					if(!$this->RequestHandler->isAjax()) {
-						$this->Session->setFlash(sprintf('There was an error deleting this %s',Configure::read('Section.alias')));
+						$this->Session->setFlash(sprintf('There was an error deleting this %s',Configure::read('Section.alias')),'flash/default',array('class'=>'error'));
 						$this->redirect('/admin/sections/');
  					} else {
 						$this->generalAjax(array('status'=>'fail'));
@@ -134,11 +134,11 @@ class SectionsController extends AppController {
 			if($this->Section->swapFieldData($this->data['Section']['id'],$this->data['Section']['prev_id'],'order_by'))
 				$this->redirect($this->referer('/sections/'));
 			else { 
-				$this->Session->setFlash('There was an error swapping the sections');
+				$this->Session->setFlash('There was an error swapping the sections','flash/default',array('class'=>'error'));
 				$this->redirect($this->referer('/sections/'));
 			}
 		} else {
-			$this->Session->setFlash('Attempt to swap order of invalid sections. Check you selected the correct section');
+			$this->Session->setFlash('Attempt to swap order of invalid sections. Check you selected the correct section','flash/default',array('class'=>'error'));
 			$this->redirect($this->referer('/sections/'));
 		}
 	}

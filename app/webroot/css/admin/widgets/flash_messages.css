@@ -1,0 +1,17 @@
+.message {
+display: none;
+padding: .5em;
+vertical-align: middle;
+background-color: #ffffff;
+background-image: -moz-linear-gradient(top, #ffffff, #cccccc);
+background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #ffffff),color-stop(1, #cccccc));
+background-image: linear-gradient(top, #ffffff, #cccccc);
+}
+
+.message .msg_close {
+display: block;
+float: right;
+width: 18px;
+height: 18px;
+background: transparent url('/img/admin/close-button.png') no-repeat center center;
+}

@@ -19,7 +19,7 @@ class CategoriesController extends AppController {
 	
 	function view($slug = null) {
 		if(!$slug) {
-			$this->Session->setFlash('Invalid id for Category.');
+			$this->Session->setFlash('Invalid id for Category.','flash/default',array('class'=>'error'));
 			$this->render('error');}
 		$category = $this->Category->find('first',array(
 			'conditions'=>array('Category.slug'=>$slug),
@@ -46,7 +46,7 @@ class CategoriesController extends AppController {
 
 	function admin_view($id = null) {
 		if(!$id) {
-			$this->Session->setFlash('Invalid Category.');
+			$this->Session->setFlash('Invalid Category.','flash/default',array('class'=>'error'));
 			$this->redirect('/admin/categories/');
 		} else {
 			$this->Category->recursive = 2;
@@ -73,14 +73,14 @@ class CategoriesController extends AppController {
 		if(!empty($this->data)) {
 			if($this->Category->save($this->data)) {
 				if(isset($GLOBALS['moonlight_inline_count_set'])) {
-					$this->Session->setFlash("This item has been saved. You need to upload media for this item");
+					$this->Session->setFlash("This item has been saved. You need to upload media for this item",'flash/default',array('class'=>'success'));
 					$this->redirect('/'.strtolower($this->name).'/manageinline/'.$this->Category->getLastInsertId());
 				} else {
-					$this->Session->setFlash("This item has been saved.");
+					$this->Session->setFlash("This item has been saved.",'flash/default',array('class'=>'error'));
 					$this->redirect(sprintf("/admin/%s/view/%s",'categories',$this->Category->getLastInsertId()));
 				}
 			} else {
-				$this->Session->setFlash('Please correct errors below.');
+				$this->Session->setFlash('Please correct errors below.','flash/default',array('class'=>'error'));
 			}
 		}
 	}
@@ -90,7 +90,7 @@ class CategoriesController extends AppController {
 			if(!empty($this->data)) {
 				if($this->Category->save($this->data)) {
 					if(!$this->RequestHandler->isAjax()) {
-						$this->Session->setFlash("This item has been saved.");
+						$this->Session->setFlash("This item has been saved.",'flash/default',array('class'=>'success'));
 						$this->redirect(sprintf('/admin/categories/view/%s',$this->data['Category']['id']));
 					} else {
 						$this->generalAjax($this->Category->ajaxFlagArray($id,'success'));
@@ -103,7 +103,7 @@ class CategoriesController extends AppController {
 							'order'=>'Category.title ASC',
 							'recursive'=>0
 						)));
-						$this->Session->setFlash('Please correct errors below.');
+						$this->Session->setFlash('Please correct errors below.','flash/default',array('class'=>'error'));
 					} else {
 						$this->generalAjax(array('status'=>'fail'));
 					}
@@ -132,14 +132,14 @@ class CategoriesController extends AppController {
 			if(!empty($this->data['Category']['id'])) {
 				if($this->Category->delete($this->data['Category']['id'])) {
 					if(!$this->RequestHandler->isAjax()) {
-						$this->Session->setFlash(sprintf('%s deleted',Configure::read('Category.alias')));
+						$this->Session->setFlash(sprintf('%s deleted',Configure::read('Category.alias')),'flash/default',array('class'=>'success'));
 						$this->redirect('/admin/categories/');
 					} else {
 						$this->generalAjax(array('status'=>'success','model'=>'category','id'=>$this->data['Category']['id']));	
 					}
 				} else {
 					if(!$this->RequestHandler->isAjax()) {
-						$this->Session->setFlash(sprintf('There was an error deleting this %s',Configure::read('Category.alias')));
+						$this->Session->setFlash(sprintf('There was an error deleting this %s',Configure::read('Category.alias')),'flash/default',array('class'=>'error'));
 						$this->redirect('/admin/categories/');
  					} else {
 						$this->generalAjax(array('status'=>'fail'));
@@ -156,11 +156,11 @@ class CategoriesController extends AppController {
 			if($this->Category->swapFieldData($this->data['Category']['id'],$this->data['Category']['prev_id'],'order_by'))
 				$this->redirect($this->referer('/categories/'));
 			else { 
-				$this->Session->setFlash('There was an error swapping the categories');
+				$this->Session->setFlash('There was an error swapping the categories','flash/default',array('class'=>'error'));
 				$this->redirect($this->referer('/categories/'));
 			}
 		} else {
-			$this->Session->setFlash('Attempt to swap order of invalid categories. Check you selected the correct category');
+			$this->Session->setFlash('Attempt to swap order of invalid categories. Check you selected the correct category','flash/default',array('class'=>'error'));
 			$this->redirect($this->referer('/categories/'));
 		}
 	}
