@@ -4,6 +4,7 @@ $(document).ready(function() {
 	$('div.flags').flagToggle();
 	LenoreCore
 		.loadAJAXDialogLinks()
+		.loadFlashMessages()
 		.loadSortableLists()
 		.loadEditableMeta();
 	
@@ -18,15 +19,21 @@ $(document).ready(function() {
 			$(this).children('div').fadeOut('fast');
 		}
 	});
-	window.setTimeout(function(){
-		$('.message').dialog({modal:true,autoOpen:false});
-		$('.message').dialog('open');
-	},2500);
 });
 
 var LenoreCore = function($) {return {
+	loadFlashMessages: function() {
+		$('.message')
+			.css('display','block')
+			.prepend('<span class="msg_close"></span>');
+		$('.message').find('span.msg_close').bind('click',function(e){
+				$(this).parent('div.message').slideUp('fast');
+		});
+		return this;
+	},
 	loadAJAXDialogLinks: function() {
 		$('a.ajax-modal').click(function(e) {
+			e.preventDefault();
 			var uri = $(this).attr('href'),
 				dialog_title = $(this).attr('title'),
 				dialog;
@@ -39,7 +46,6 @@ var LenoreCore = function($) {return {
 			dialog.load(uri,{},function(r,s,xHR){
 				dialog.dialog({modal:true,minHeight:0,title:dialog_title});
 			});
-			e.preventDefault();
 		});
 		return this;
 	},
@@ -48,38 +54,39 @@ var LenoreCore = function($) {return {
 		sortable_lists.each(function(i){
 			var current_s_list = $(this);
 			current_s_list.children('li').prepend('<span class="mover"></span>');
-			current_s_list.find('li span.mover').attr('tabindex','0').addTouch();
-			current_s_list.data('controller',current_s_list.attr('class').split(" ")[1])
-			.sortable({
-				stop: function(e,ui){
-					current_s_list.data('Final',$(this).sortable('serialize',{key:'data[Final][]'}));
-					ajax_data_string = current_s_list.data('Initial') + '&' + current_s_list.data('Final');
-					ajax_url = '/admin/' + current_s_list.data('controller') + '/reorder';
-					$.ajax({
-						url:ajax_url,
-						data:ajax_data_string,
-						type:'POST',
-						success:function(d,s,xHR){
-							if(d=='Fail'){
+			current_s_list.find('li span.mover').disableSelection().attr('tabindex','0').addTouch();
+			current_s_list
+				.data('controller',current_s_list.attr('class').split(" ")[1])
+				.sortable({
+					stop: function(e,ui){
+						current_s_list.data('Final',$(this).sortable('serialize',{key:'data[Final][]'}));
+						ajax_data_string = current_s_list.data('Initial') + '&' + current_s_list.data('Final');
+						ajax_url = '/admin/' + current_s_list.data('controller') + '/reorder';
+						$.ajax({
+							url:ajax_url,
+							data:ajax_data_string,
+							type:'POST',
+							success:function(d,s,xHR){
+								if(d=='Fail'){
+									window.location.reload();
+								} else {
+									current_s_list.data('Initial',current_s_list.sortable('serialize',{key:'data[Initial][]'}));
+								}
+							},
+							fail:function(d,s,xHR) {
 								window.location.reload();
-							} else {
-								current_s_list.data('Initial',current_s_list.sortable('serialize',{key:'data[Initial][]'}));
 							}
-						},
-						fail:function(d,s,xHR) {
-							window.location.reload();
-						}
-					});
-				},
-				helper: function(e,ui) {
-					ui.children().each(function(){$(this).width($(this).width());});
-					return ui;
-				},
-				placeholder: 'sortable-placeholder',
-				handle: 'span.mover',
-				axis: 'y'
-			})
-			.data('Initial',current_s_list.sortable('serialize',{key:'data[Initial][]'}));
+						});
+					},
+					helper: function(e,ui) {
+						ui.children().each(function(){$(this).width($(this).width());});
+						return ui;
+					},
+					placeholder: 'sortable-placeholder',
+					handle: 'span.mover',
+					axis: 'y'
+				})
+				.data('Initial',current_s_list.sortable('serialize',{key:'data[Initial][]'}));
 		});
 		return this;
 	},

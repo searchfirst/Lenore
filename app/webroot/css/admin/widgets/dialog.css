@@ -1,0 +1,43 @@
+.ui-widget-overlay {
+display: block;
+position: absolute;
+top: 0;
+left: 0;
+height: 100%;
+background-color: rgba(0,0,0,0.1);
+-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#80000000',EndColorStr='#80000000')";
+}
+
+.ui-dialog {
+background-color: rgb(255,255,255);
+border: 1px solid rgb(255,255,255);
+-ms-box-sizing: border-box;
+-moz-box-sizing: border-box;
+-webkit-box-sizing: border-box;
+-o-box-sizing: border-box;
+box-sizing: border-box;
+padding: 5px;
+margin: 0 auto;
+-moz-box-shadow: 0px 0px .375em rgba(0,0,0,0.3);
+-webkit-box-shadow: 0px 0px .375em rgba(0,0,0,0.3);
+box-shadow: 0px 0px .375em rgba(0,0,0,0.3);
+}
+
+.ui-dialog-titlebar {
+background-color: rgb(187,187,187);
+padding: 5px;
+margin: -5px -5px 6px;
+line-height: 18px;
+vertical-align: 50%;
+font-size: 83.33%;
+}
+
+.ui-dialog-titlebar-close {
+float: right;
+display: inline-block;
+width: 18px;
+height: 18px;
+text-indent: -10000px;
+background: transparent url('/img/admin/close-button.png') no-repeat center center;
+cursor: pointer;
+}
