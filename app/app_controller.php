@@ -16,10 +16,10 @@ class AppController extends Controller {
 				'js/jquery/lib/flag_toggle.js','js/admin/load_config.js'
 			)));
 			$this->set('minify_css',$this->Minify->css(array(
-					'css/admin/reset.css','css/admin/typefaces.css','css/admin/lenore.css','css/admin/widgets/hook_menu.css',
-					'css/admin/widgets/sortable.css','css/admin/widgets/editable_text.css','css/admin/widgets/flag_toggle.css',
-					'css/admin/widgets/dialog.css','css/admin/widgets/flash_messages.css','css/admin/handheld_large.css',
-					'css/admin/tablet_netbooks.css','css/admin/desktop.css'
+				'css/admin/reset.css','css/admin/typefaces.css','css/admin/lenore.css','css/admin/widgets/hook_menu.css',
+				'css/admin/widgets/sortable.css','css/admin/widgets/editable_text.css','css/admin/widgets/flag_toggle.css',
+				'css/admin/widgets/dialog.css','css/admin/widgets/flash_messages.css','css/admin/handheld_large.css',
+				'css/admin/tablet_netbooks.css','css/admin/desktop.css'
 			)));
 		}
 	}
@@ -29,6 +29,7 @@ class AppController extends Controller {
 		$this->setModDateHeader();
 		$this->setAltContentViewParams();
 		$this->setRequestHandlerViewVars();
+		$this->customControllerViewData();
 		$this->mergeGetDataWithThisData();
 	}
 
@@ -266,6 +267,26 @@ class AppController extends Controller {
 		$this->set('json_object',$json_object);
 		$this->viewPath = 'ajax';
 		$this->render('general_ajax');
+	}
+
+	function customControllerViewData() {
+		$this_model = Inflector::singularize($this->name);
+		$this_action = $this->action;
+		if(($action_data=Configure::read("$this_model.action_data.$this_action")) && is_array($action_data)) {
+			foreach($action_data as $key=>$action) {
+				$set = $key;
+				$model = $action['model'];
+				$type = $action['type'];
+				$query['conditions'] = $action['conditions'];
+				if(!empty($action['order'])) $query['order'] = $action['order'];
+				if(!empty($action['limit'])) $query['limit'] = $action['limit'];
+				if(!empty($action['fields'])) $query['fields'] = $action['fields'];
+				if(!empty($action['recursive'])) $query['recursive'] = $action['recursive'];
+				if($this->loadModel($model)) {
+					$this->set($set,$this->{$model}->find($type,$query));
+				}
+			}
+		}
 	}
 
 	function setAltContentViewParams() {
