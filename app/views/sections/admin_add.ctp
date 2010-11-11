@@ -6,7 +6,8 @@
 	'cols'=>'60',
 	'rows'=>'20',
 	'value'=>$this->element('admin/item_templates/new_section'),
-	'label'=>'Content'
+	'label'=>'Content',
+	'class'=>'rich'
 ))?> 
 <?php echo $form->hidden('Resource.1.type',array('value'=>Resource::$types['Decorative']))?> 
 <?php echo $form->input('Resource.1.file',array('type'=>'file','label'=>'Thumbnail Image')); ?> 

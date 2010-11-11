@@ -6,10 +6,11 @@
 	'cols'=>'40',
 	'rows'=>'20',
 	'value'=>$this->element('admin/item_templates/new_product'),
-	'label'=>'Content'
+	'label'=>'Content',
+	'class'=>'rich'
 ));?> 
-<?php echo $form->hidden('Resource.1.type',array('value'=>Resource::$types['Decorative']))?> 
-<?php echo $form->input('Resource.1.file',array('label'=>'Thumbnail Image','type'=>'file')); ?> 
+<?php echo $form->hidden('Resource.1.type',array('value'=>Resource::$types['Decorative']));?> 
+<?php echo $form->input('Resource.1.file',array('label'=>'Thumbnail Image','type'=>'file'));?> 
 <fieldset><legend><?php echo sprintf('%s Options',Configure::read('Product.alias')); ?></legend>
 <?php if(Configure::read('Product.sales_options')): ?>
 <?php echo $form->input('Product.price',array('size'=>3,'maxlength'=>9));?>

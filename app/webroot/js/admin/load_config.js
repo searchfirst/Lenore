@@ -24,7 +24,7 @@ $(document).ready(function() {
 
 var LenoreCore = function($) {return {
 	ckEditorInit: function() {
-		$('textarea[name*="description"]').ckeditor({
+		$('textarea.rich').ckeditor({
 			customConfig:'/js/lib/ckeditor/config.js'
 		});
 		return this;

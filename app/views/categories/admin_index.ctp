@@ -1,6 +1,6 @@
 <h2><?php echo sprintf('%s Categories',Configure::read('Category.alias')); ?></h2>
 <ul class="hook_menu">
-<li><?php echo $this->element('admin/new_form',array('model'=>'Category','controller'=>'categories','l_title'=>'Product Category'));?></li>
+<li><?php echo $this->element('new_form',array('model'=>'Category','controller'=>'categories','l_title'=>'Product Category'));?></li>
 </ul>
 <div class="content">
 <?php if(empty($categories)):?>

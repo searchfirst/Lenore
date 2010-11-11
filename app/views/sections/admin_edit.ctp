@@ -5,7 +5,8 @@
 <?php echo $form->input('Section.description',array(
 	'cols'=>'60',
 	'rows'=>'20',
-	'label'=>'Content'
+	'label'=>'Content',
+	'class'=>'rich'
 ));?>  
 <?php if(empty($section['Decorative'][0])):?>
 <?php echo $form->hidden('Resource.1.type',array('value'=>Resource::$types['Decorative']))?> 

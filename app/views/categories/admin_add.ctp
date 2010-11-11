@@ -6,7 +6,8 @@
 	'cols'=>'60',
 	'rows'=>'20',
 	'value'=>$this->element('admin/item_templates/new_category'),
-	'label'=>'Content'
+	'label'=>'Content',
+	'class'=>'rich'
 ));?> 
 <?php if(Configure::read('Category.use_subcategories') && !empty($categories)):?>
 <?php echo $form->input("Category.category_id",array(
