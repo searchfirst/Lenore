@@ -8,20 +8,8 @@ class AppController extends Controller {
 
 	function beforeFilter() {
 		$this->Auth->allowedActions = array('display','login','logout','index','view','add');
-		if($this->actionIsAdmin()) {
-			$this->set('min_js_head',$this->Minify->js(array(
-				'js/lib/modernizr.js','js/lib/selectivizr.js','js/lib/flexie.js','js/lib/mediaqueries.js','js/jquery/jquery.js','js/jquery/ui/core.js',
-				'js/jquery/ui/widget.js','js/jquery/ui/mouse.js', 'js/jquery/ui/bgiframe.js','js/jquery/ui/sortable.js','js/jquery/ui/dialog.js',
-				'js/jquery/ui/position.js','js/jquery/lib/iphoneui.js','js/jquery/lib/editable_text.js','js/jquery/hook_menu.js','js/jquery/dux_tabs.js',
-				'js/jquery/lib/flag_toggle.js','js/admin/load_config.js'
-			)));
-			$this->set('minify_css',$this->Minify->css(array(
-				'css/admin/reset.css','css/admin/typefaces.css','css/admin/lenore.css','css/admin/widgets/hook_menu.css',
-				'css/admin/widgets/sortable.css','css/admin/widgets/editable_text.css','css/admin/widgets/flag_toggle.css',
-				'css/admin/widgets/dialog.css','css/admin/widgets/flash_messages.css','css/admin/handheld_large.css',
-				'css/admin/tablet_netbooks.css','css/admin/desktop.css'
-			)));
-		}
+		$this->minifyJs();
+		$this->minifyCss();
 	}
 	
 	function beforeRender() {
@@ -286,6 +274,28 @@ class AppController extends Controller {
 					$this->set($set,$this->{$model}->find($type,$query));
 				}
 			}
+		}
+	}
+
+	function minifyCss() {
+		if($this->actionIsAdmin()) {
+			$this->set('minify_css',$this->Minify->css(array(
+				'css/admin/reset.css','css/admin/typefaces.css','css/admin/lenore.css','css/admin/widgets/hook_menu.css',
+				'css/admin/widgets/sortable.css','css/admin/widgets/editable_text.css','css/admin/widgets/flag_toggle.css',
+				'css/admin/widgets/dialog.css','css/admin/widgets/flash_messages.css','css/admin/handheld_large.css',
+				'css/admin/tablet_netbooks.css','css/admin/desktop.css'
+			)));
+		}
+	}
+
+	function minifyJs() {
+		if($this->actionIsAdmin()) {
+			$this->set('min_js_head',$this->Minify->js(array(
+				'js/lib/modernizr.js','js/lib/selectivizr.js','js/lib/flexie.js','js/lib/mediaqueries.js','js/jquery/jquery.js','js/jquery/ui/core.js',
+				'js/jquery/ui/widget.js','js/jquery/ui/mouse.js', 'js/jquery/ui/bgiframe.js','js/jquery/ui/sortable.js','js/jquery/ui/dialog.js',
+				'js/jquery/ui/position.js','js/jquery/lib/iphoneui.js','js/jquery/lib/editable_text.js','js/jquery/hook_menu.js','js/jquery/dux_tabs.js',
+				'js/jquery/lib/flag_toggle.js','js/lib/ckeditor/lenore_load.js','dontpack1'=>'js/lib/ckeditor/ckeditor.js','dontpack2'=>'js/lib/ckeditor/adapters/jquery.js','js/admin/load_config.js'
+			)));
 		}
 	}
 

@@ -3,6 +3,7 @@ $(document).ready(function() {
 	$('ul.tab_hooks').duxTab();
 	$('div.flags').flagToggle();
 	LenoreCore
+		.ckEditorInit()
 		.loadAJAXDialogLinks()
 		.loadFlashMessages()
 		.loadSortableLists()
@@ -22,6 +23,12 @@ $(document).ready(function() {
 });
 
 var LenoreCore = function($) {return {
+	ckEditorInit: function() {
+		$('textarea[name*="description"]').ckeditor({
+			customConfig:'/js/lib/ckeditor/config.js'
+		});
+		return this;
+	},
 	loadFlashMessages: function() {
 		$('.message')
 			.css('display','block')
