@@ -23,3 +23,39 @@
 .editableToolbar .cancel {
     background: url("/img/admin/widgets/editable_text.png") 25px 0;
 }
+
+.editable {
+min-height: 2em;
+background-color: rgba(0,0,0,0.1);
+display: block;
+white-space: nowrap;
+overflow: auto;
+padding: 3px 6px;
+-webkit-border-radius: 6px;
+-moz-border-radius: 6px;
+-o-border-radius: 6px;
+border-radius: 6px;
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+-o-box-sizing: border-box;
+box-sizing: border-box;
+-webkit-box-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+-moz-box-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+-o-box-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+box-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+}
+
+.editable:hover {
+background-color: rgba(59,75,91,0.2);
+-webkit-transition: background .2s linear;
+-moz-transition: background .2s linear;
+-o-transition: background .2s linear;
+transition: background .2s linear;
+}
+
+.editable input {
+background-color: transparent;
+border: none;
+font-size: 1em;
+text-indent: 0;
+}

@@ -1,17 +1,23 @@
 .message {
 display: none;
-padding: .5em;
+line-height: 2;
 vertical-align: middle;
 background-color: #ffffff;
 background-image: -moz-linear-gradient(top, #ffffff, #cccccc);
 background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #ffffff),color-stop(1, #cccccc));
 background-image: linear-gradient(top, #ffffff, #cccccc);
+padding-left: .75em;
 }
 
 .message .msg_close {
 display: block;
 float: right;
 width: 18px;
-height: 18px;
-background: transparent url('/img/admin/close-button.png') no-repeat center center;
+height: 2em;
+padding-right: .75em;
+background: transparent url('/img/admin/widgets/close-button.svg') no-repeat center center;
+}
+
+.no-svg .message .msg_close {
+background-image: url('/img/admin/widgets/close-button.png');
 }

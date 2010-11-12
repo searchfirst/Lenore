@@ -38,6 +38,10 @@ display: inline-block;
 width: 18px;
 height: 18px;
 text-indent: -10000px;
-background: transparent url('/img/admin/close-button.png') no-repeat center center;
+background: transparent url('/img/admin/widgets/close-button.svg') no-repeat center center;
 cursor: pointer;
+}
+
+.no-svg .ui-dialog-titlebar-close {
+background-image: url('/img/admin/widgets/close-button.png');
 }
