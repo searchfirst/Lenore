@@ -1,13 +1,16 @@
-﻿/*
-Copyright (c) 2003-2010, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see LICENSE.html or http://ckeditor.com/license
-*/
-
-CKEDITOR.editorConfig = function( config )
+﻿CKEDITOR.editorConfig = function( config )
 {
-	// Define changes to default configuration here. For example:
-	// config.language = 'fr';
-	// config.uiColor = '#AADC6E';
-//	config.baseHref = '/js/lib/ckeditor/';
 	config.skin = 'ob';
+	config.toolbar = 'Lenore';
+	config.toolbar_Lenore =
+	[
+		['Cut','Copy','Paste'],
+		['Bold','Italic','-','Subscript','Superscript'],
+		['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+		['NumberedList','BulletedList','Blockquote','CreateDiv'],
+		['Link','Unlink','Anchor'],
+		['Image','Table','HorizontalRule'],
+		['Format'],['Font'],['FontSize'],['TextColor'],
+		['Source']
+	];
 };

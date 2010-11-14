@@ -42,8 +42,8 @@ $config = array(
 		)
 	),
 	'TextAssistant' => array(
-		'allow_html_in_descriptions' => false,
-		'permitted_html_elements' => '' //'<p><div><span><blockquote><dd><dl><dt><ul><li><ol><h4><h3><h2><pre><code><kbd><tt><q><cite>'
+		'allow_html_in_descriptions' => true,
+		'permitted_html_elements' => '<p><div><span><blockquote><dd><dl><dt><ul><li><ol><h4><h3><h2><pre><code><kbd><tt><q><cite><section><article><hgroup><aside><footer><header>'
 	),
 	'Moonlight' => array(
 		'webmaster_email' => '',
