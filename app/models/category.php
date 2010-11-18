@@ -45,16 +45,10 @@ class Category extends AppModel {
 	var $recursive = 2;
 
 	function beforeSave() {
-		if(empty($this->id)) {
-			$this->data['Category']['slug'] = $this->getUniqueSlug($this->data['Category']['title']);
-		}
-//		if(!isset($this->data[$this->name]['category_id'])) {
-//			$this->data[$this->name]['category_id'] = $this->field('category_id','Category.id = '.$this->id);
-//		}
+		parent::beforeSave();
 		if(isset($this->data['Category']['category_id']) && $this->data['Category']['category_id']==='') {
 			$this->data['Category']['category_id'] = null;
 		}
 		return true;
 	}
 }
-?>

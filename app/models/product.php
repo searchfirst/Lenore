@@ -26,11 +26,4 @@ class Product extends AppModel {
 	);
 	var $belongsTo = array("Category");
 	var $recursive = 1;
-
-	function beforeSave() {
-		if(empty($this->data[$this->name]['id']))
-			$this->data[$this->name]['slug'] = $this->getUniqueSlug($this->data[$this->name]['title']);
-		return true;
-	}
 }
-?>

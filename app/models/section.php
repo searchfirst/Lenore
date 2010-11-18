@@ -31,11 +31,4 @@ class Section extends AppModel {
 		)
 	);
 	var $recursive = 2;
-
-	function beforeSave() {
-		if(empty($this->data[$this->name]['id']))
-			$this->data[$this->name]['slug'] = $this->getUniqueSlug($this->data[$this->name]['title']);
-		return true;
-	}
 }
-?>
