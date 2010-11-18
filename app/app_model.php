@@ -1,6 +1,5 @@
 <?php
 class AppModel extends Model {
-
 	function afterSave() {
 		if(($order_id = $this->getLastInsertId()) && (!isset($this->already_saved))) {
 			$this->already_saved = true;
@@ -15,14 +14,20 @@ class AppModel extends Model {
 				$resource->delete($res);
 		return true;
 	}
-	
+
+	function beforeSave() {
+		if(empty($this->data[$this->name]['id']) && $this->hasField('slug'))
+			$this->data[$this->name]['slug'] = $this->getUniqueSlug($this->data[$this->name]['title']);
+		return true;
+	}
+
 	function beforeDelete() {
 		if($this->name!=='Resource') {
 			$model = $this->findById($this->id);
 			$delete_list = array();
-			foreach($model['Resource'] as $resource) $delete_list[] = $resource['id'];
-			foreach($model['Decorative'] as $resource) $delete_list[] = $resource['id'];
-			foreach($model['Downloadable'] as $resource) $delete_list[] = $resource['id'];
+			if(!empty($model['Resource'])) foreach($model['Resource'] as $resource) $delete_list[] = $resource['id'];
+			if(!empty($model['Resource'])) foreach($model['Decorative'] as $resource) $delete_list[] = $resource['id'];
+			if(!empty($model['Resource'])) foreach($model['Downloadable'] as $resource) $delete_list[] = $resource['id'];
 			Resource::setDeleteList($delete_list);
 		}
 		return true;
@@ -93,10 +98,7 @@ class AppModel extends Model {
 						$resource['path'] = Configure::read('Resource.media_path').DS.Inflector::underscore($this->name).DS;
 
 						if($this->moveUpload($resource)) {
-							//unset($resource['file']);
-							//$cResource = new Resource();
 							$this->Resource->create();
-//							if($cResource->save(array('Resource'=>$resource))) {
 							if($this->Resource->save(array('Resource'=>$resource))) {
 								$resources[] = $this->Resource->id;
 							} else {
@@ -272,7 +274,6 @@ class AppModel extends Model {
 	
 	function getUniqueSlug($string, $field="slug") {
 		$current_url = strtolower(Inflector::slug($string,'-'));
-		// Look for same URL, if so try until we find a unique one
 		
 		$conditions = array("{$this->name}.$field LIKE"=>"$current_url%");
 		$result = $this->find('all',array('conditions'=>$conditions,'recursive'=>0));
@@ -280,14 +281,8 @@ class AppModel extends Model {
 			$matching_slugs = array();
 			foreach($result as $record)
 			    $matching_slugs[] = $record[$this->name][$field];
-			$this->log($matching_slugs);
 		}
 		
-/*		if(($this->name=='Resource') && isset($GLOBALS['MOONLIGHT_RESOURCE_PREV_SLUGS'])) {
-			if(!isset($matching_slugs)) $matching_slugs = array();
-			$matching_slugs = array_merge($matching_slugs,$GLOBALS['MOONLIGHT_RESOURCE_PREV_SLUGS']);
-			}		
-*/		
 		if (isset($matching_slugs) && count($matching_slugs) > 0) {
 			$stem = $current_url;
 			$x=1;
@@ -299,7 +294,6 @@ class AppModel extends Model {
 				$x++;
 			}
 		}
-//		if($this->name=='Resource') $GLOBALS['MOONLIGHT_RESOURCE_PREV_SLUGS'][] = $current_url;
 		return $current_url;
 	}
 
@@ -333,4 +327,3 @@ class AppModel extends Model {
 		return isset($results)?$results:array();
 	}
 }
-?>

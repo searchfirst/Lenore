@@ -282,8 +282,8 @@ class AppController extends Controller {
 			$this->set('minify_css',$this->Minify->css(array(
 				'css/admin/reset.css','css/admin/typefaces.css','css/admin/lenore.css','css/admin/widgets/hook_menu.css',
 				'css/admin/widgets/sortable.css','css/admin/widgets/editable_text.css','css/admin/widgets/flag_toggle.css',
-				'css/admin/widgets/dialog.css','css/admin/widgets/flash_messages.css','css/admin/handheld_large.css',
-				'css/admin/tablet_netbooks.css','css/admin/desktop.css'
+				'css/admin/widgets/dialog.css','css/admin/widgets/flash_messages.css','css/admin/widgets/resource_list.css',
+				'css/admin/handheld_large.css','css/admin/tablet_netbooks.css','css/admin/desktop.css'
 			)));
 		}
 	}
