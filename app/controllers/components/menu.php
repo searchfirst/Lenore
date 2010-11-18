@@ -15,7 +15,12 @@ class MenuComponent extends Object {
 	}
 
 	function setAdminMenu() {
-		
+		$admin_menu = array('admin' => 'Dashboard');
+		$enabled_modules = Configure::read('Admin.active_modules');
+		foreach($enabled_modules as $x=>$module) $admin_menu['admin/'.Inflector::tableize($x)] = Inflector::pluralize($module['alias']);
+		$admin_menu['admin/snippets'] = 'Snippets';
+		$admin_menu['http://moonlight-project.co.uk/help'] = 'Help';
+		$this->controller->set('admin_menu',$admin_menu);
 	}
 
 	function setMenus() {
