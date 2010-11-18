@@ -4,7 +4,7 @@ class AppController extends Controller {
 	var $helpers = array('Html','Form','Time','TextAssistant','MediaAssistant','Js','Javascript','Session','Menu','Minify.Minify');
 	var $actionHelpers = array('Time');
 	var $components = array('RequestHandler','Session','Acl','Auth','Helper','Minify.Minify','Menu');
-	var $view = 'Theme';
+	var $view = 'Mustache';
 
 	function beforeFilter() {
 		$this->Auth->allowedActions = array('display','login','logout','index','view','add');
