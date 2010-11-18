@@ -1,5 +1,5 @@
-*
+*.php
 !.gitignore
 !acl.ini.php
 !*.sample
-!schema/*
+!/schema/
