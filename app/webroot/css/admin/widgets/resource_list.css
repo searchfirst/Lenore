@@ -1,0 +1,46 @@
+.resource_list {
+list-style: none;
+padding: 0;
+margin: 0 0 10px;
+}
+
+.resource_list li {
+display: block;
+}
+
+.resource_list .resource_download {
+display: block;
+padding-left: 53px;
+min-height: 48px;
+_height: 48px;
+background-color: transparent;
+background-repeat: no-repeat;
+}
+
+.resource_list a {
+display: block;
+}
+
+.resource_list .resource_image {
+background-image: url('/media/resource/image-icon.png');
+}
+
+.resource_list .resource_pdf {
+background-image: url('/media/resource/pdf-icon.png');
+}
+
+.resource_list .resource_word {
+background-image: url('/media/resource/word-icon.png');
+}
+
+.resource_list .resource_video {
+background-image: url('/media/resource/movie-icon.png');
+}
+
+.resource_list .resource_archive {
+background-image: url('/media/resource/zip-icon.png');
+}
+
+.resource_list .resource_unknown {
+background-image: url('/media/resource/unknown-icon.png');
+}
