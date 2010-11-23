@@ -53,6 +53,9 @@ $config = array(
 		'template_theme' => '',
 		'use_html' => true
 	),
+	'Lenore' => array(
+		'i18n' => array('country_code'=>'Uk')
+	),
 	'Menu' => array(
 		'prefix' => array(''=>'Home'),
 		'suffix' => array('contact'=>'Contact Us'),
