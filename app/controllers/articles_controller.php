@@ -1,6 +1,5 @@
 <?php
 class ArticlesController extends AppController {
-
 	var $name = 'Articles';
 	var $uses = array('Article');
 
@@ -8,7 +7,7 @@ class ArticlesController extends AppController {
 		parent::beforeFilter();
 		$this->Auth->allowedActions = array('index', 'view');
 	}
-	
+
 	function index() {
 		if( isset($this->params['alt_content']) && ($this->params['alt_content']=='Rss') &&
 		($articles = $this->Article->findAll('Article.draft=0',null,'Article.modified DESC',20)) &&
@@ -19,7 +18,7 @@ class ArticlesController extends AppController {
 			$this->render('not_found');
 		}
 	}
-	
+
 	function view($slug = null) {
 		$slug = $this->params['slug'];
 		if(!$slug || (isset($this->params['alt_content']) && $this->params['alt_content']=='Rss')) {
@@ -33,9 +32,11 @@ class ArticlesController extends AppController {
 				$this->redirect("/{$article['Section']['slug']}/{$article['Article']['slug']}",301);
 				return true;
 			}
-			$this->set('title_for_layout',$article['Article']['title']." – ".$article['Section']['title']);
+			$this->set('title_for_layout',$article['Article']['title']." | ".$article['Section']['title']);
 			$this->set('article', $article);
-			$this->set('current_page',$article['Section']['slug']);
+			$this->set('breadcrumb',array(
+				''=>'Home',$article['Section']['slug']=>$article['Section']['title']
+			));
 			$this->set('mod_date_for_layout', $article['Article']['modified']);
 			if(!empty($article['Article']['meta_description']) || !empty($article['Article']['meta_keywords']))
 				$this->set('metadata_for_layout',array('description'=>$article['Article']['meta_description'],'keywords'=>$article['Article']['meta_keywords']));
@@ -44,7 +45,6 @@ class ArticlesController extends AppController {
 			$this->render('not_found');
 		}
 	}
-
 
 	function admin_index() {
 		$this->viewPath = 'errors';
@@ -143,7 +143,7 @@ class ArticlesController extends AppController {
 			}
 		}
 	}
-	
+
 	function admin_moveup() {
 		if(isset($this->data['Article']['id']) && isset($this->data['Article']['prev_id'])) {
 			if($this->Article->swapFieldData($this->data['Article']['id'],$this->data['Article']['prev_id'],'order_by'))
@@ -178,4 +178,3 @@ class ArticlesController extends AppController {
 		$this->set('ajax_result',$ajax_result?'Success':'Fail');	
 	}
 }
-?>

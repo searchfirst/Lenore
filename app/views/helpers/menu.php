@@ -19,10 +19,11 @@ class MenuHelper extends Helper {
 			$d_options = array(
 				'omissions'=>array(),
 				'current_page'=>$this->sluggify($this->params['url']['url']),
-				'slug_prefix'=>''
+				'slug_prefix'=>'',
+				'class'=>''
 			);
 			$options = array_merge($d_options,$options);
-			$output_string = "<ul>\n";
+			$output_string = sprintf('<ul%s>%s',!empty($options['class'])?" class=\"{$options['class']}\"":'',"\n");
 			foreach($menu_array as $slug=>$title) {
 				$full_slug = "{$options['slug_prefix']}/{$slug}";
 				$c_slug = $this->sluggify($full_slug);

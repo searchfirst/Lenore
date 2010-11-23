@@ -285,6 +285,12 @@ class AppController extends Controller {
 				'css/admin/widgets/dialog.css','css/admin/widgets/flash_messages.css','css/admin/widgets/resource_list.css',
 				'css/admin/handheld_large.css','css/admin/tablet_netbooks.css','css/admin/desktop.css'
 			)));
+		} elseif($css_paths = Configure::read('Minify.public.css')) {
+			$pub_minify_css = array();
+			foreach($css_paths as $t=>$css) {
+				$pub_minify_css[$t] = $this->Minify->css($css);
+			}
+			$this->set('pub_minify_css',$pub_minify_css);
 		}
 	}
 
@@ -296,6 +302,12 @@ class AppController extends Controller {
 				'js/jquery/ui/position.js','js/jquery/lib/iphoneui.js','js/jquery/lib/editable_text.js','js/jquery/hook_menu.js','js/jquery/dux_tabs.js',
 				'js/jquery/lib/flag_toggle.js','js/lib/ckeditor/lenore_load.js','dontpack1'=>'js/lib/ckeditor/ckeditor.js','dontpack2'=>'js/lib/ckeditor/adapters/jquery.js','js/admin/load_config.js'
 			)));
+		} elseif($js_paths = Configure::read('Minify.public.js')) {
+			$pub_minify_js = array();
+			foreach($js_paths as $t=>$js) {
+				$pub_minify_js[$t] = $this->Minify->js($js);
+			}
+			$this->set('pub_minify_js',$pub_minify_js);
 		}
 	}
 
@@ -333,4 +345,3 @@ class AppController extends Controller {
 		}
 	}
 }
-?>

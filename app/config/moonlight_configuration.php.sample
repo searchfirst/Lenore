@@ -64,5 +64,16 @@ $config = array(
 			'Section'=>array('dashboard_icon'=>'/img/admin/section_module.png','alias'=>'Page')
 		)
 	)
+	'Minify' => array(
+		'public' => array(
+			'js' => array(
+				'core' => array(
+					'js/lib/mediaqueries.js','js/lib/modernizr.js','js/lib/selectivizr.js','js/lib/flexie.js'
+				)
+			),
+			'css' => array(
+				'core' => array()
+			)
+		)
+	)
 );
-?>

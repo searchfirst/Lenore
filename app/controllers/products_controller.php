@@ -15,7 +15,7 @@ class ProductsController extends AppController
 	
 	function view($slug=null) {
 		$product = $this->Product->find('first',array(
-			'conditions'=>array('Product.draft'=>0,'Product.slug'=>$slug)
+			'conditions'=>array('Product.draft'=>false,'Product.slug'=>$slug)
 		));
 		if(!empty($product) && (!isset($this->params['alt_content']) || $this->params['alt_content']!='Rss')) {
 			if($product['Category']['slug']!=$this->params['category']) {
@@ -23,10 +23,10 @@ class ProductsController extends AppController
 				return true;
 			}
 			$this->set('title_for_layout',sprintf('%s | %s',$product['Product']['title'],$product['Category']['title']));
-			//$this->set('current_parent_section','category-'.$product['Category']['slug']);
 			$this->set('product', $product);
-			//$this->set('current_page',$product['Category']['slug']);
-			//if(!$this->Session->check('Message.flash') && !empty($this->Session->read('Message.flash'))) $this->set('mod_date_for_layout', $product['Product']['modified']);
+			$this->set('breadcrumb',array(
+				''=>'Home',sprintf('%s/%s',Inflector::tableize(Configure::read('Category.alias')),$product['Category']['slug'])=>$product['Category']['title']
+			));
 			if(!empty($product['Product']['meta_description']) || !empty($product['Product']['meta_keywords']))
 				$this->set('metadata_for_layout',array('description'=>$product['Product']['meta_description'],'keywords'=>$product['Product']['meta_keywords']));
 		} else {

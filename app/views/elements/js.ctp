@@ -1,1 +1,1 @@
-<!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+<?php echo $this->Minify->js_link($pub_minify_js['core']); ?>

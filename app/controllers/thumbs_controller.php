@@ -9,6 +9,7 @@ class ThumbsController extends AppController {
 	var $layout = null;
 
 	function beforeRender() {}
+	function beforeFilter() {}
 	
 	function index() {
 		if(count($this->params['pass'])) {
@@ -39,7 +40,7 @@ class ThumbsController extends AppController {
 					$phpThumb->setParameter($ti,$thumb_var);
 				}
 				
-				if(	file_exists($phpThumb->cache_filename) && (filemtime($phpThumb->src) < filemtime($phpThumb->cache_filename)) ) {
+				if(file_exists($phpThumb->cache_filename) && filemtime($phpThumb->src)<filemtime($phpThumb->cache_filename)) {
 					$phpThumb->useRawIMoutput = true;
 					$phpThumb->IMresizedData = file_get_contents($phpThumb->cache_filename);
 					$this->set('phpthumb',$phpThumb);
@@ -50,7 +51,7 @@ class ThumbsController extends AppController {
 					die('Error caching thumbnail <pre>'.print_r($phpThumb,true).'</pre>');
 				}
 			} else {
-				$this->redirect(Configure::read('Resource.media_path')."/$src");
+				$this->redirect("/".Configure::read('Resource.web_root')."/$src");
 			}
 		} else {
 			$this->viewPath = 'errors';
