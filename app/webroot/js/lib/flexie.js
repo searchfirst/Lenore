@@ -2,7 +2,7 @@
 File: flexie.js
 
 About: Version
-	0.5
+	0.6
 
 Project: Flexie
 
@@ -223,7 +223,7 @@ var Flexie = (function (win, doc) {
 				handler();
 			}
 			
-			FLX.updateInstances();
+			FLX.updateInstance();
 		});
 	}
 	
@@ -681,6 +681,64 @@ var Flexie = (function (win, doc) {
 		});
 	}
 	
+	function createMatchMatrix(matches, children, type) {
+		var groups = {}, keys = [], totalRatio = 0,
+		    group, order = "ordinal-group";
+
+		forEach(children, function (i, kid) {
+			forEach(matches, function (i, x) {
+				if (type) {
+					// If no value declared, it's the default.
+					group = x[order] || "1";
+
+					if (x.match === kid) {
+						groups[group] = groups[group] || [];
+						groups[group].push(x);
+					}
+				} else {
+					// If no value declared, it's the default.
+					group = x.flex || "0";
+
+					if (x.match === kid && (!x[group] || (x[group] && parseInt(x[group], 10) <= 1))) {
+						totalRatio += parseInt(group, 10);
+
+						groups[group] = groups[group] || [];
+						groups[group].push(x);
+					}
+				}
+			});
+		});
+
+		forEach(groups, function (key) {
+			keys.push(key);
+		});
+
+		keys.sort(function (a, b) {
+			return b - a;
+		});
+
+		return {
+			keys : keys,
+			groups : groups,
+			total : totalRatio
+		};
+	}
+	
+	function floatDropFix(target, params, instance) {
+		// Float drop fix
+		// Test offset values. If different, let's bring the widow back
+		var offsetProp = "offset" + (params.orient === HORIZONTAL ? "Top" : "Left"),
+		    offset;
+		
+		forEach(target.childNodes, function (i, kid) {
+			offset = offset || kid[offsetProp] - getComputedStyle(kid, instance.anti.pos, TRUE);
+		
+			while ((kid[offsetProp] - getComputedStyle(kid, instance.anti.pos, TRUE)) !== offset) {
+				kid.style[instance.props.dim] = getComputedStyle(kid, instance.props.dim, TRUE) - 1;
+			}
+		});
+	}
+	
 	function attachResizeListener(construct, params) {
 		FLEX_INSTANCES.push({
 			construct : construct,
@@ -700,7 +758,7 @@ var Flexie = (function (win, doc) {
 				currentHeight = win[innerHeight] || docEl[innerHeight] || docEl[clientHeight] || docBody[clientHeight];
 				
 				if (storedWidth !== currentWidth || storedHeight !== currentHeight) {
-					FLX.updateInstances();
+					FLX.updateInstance();
 					
 					storedWidth = currentWidth;
 					storedHeight = currentHeight;
@@ -900,6 +958,18 @@ var Flexie = (function (win, doc) {
 				}
 			},
 
+			boxDirection : function (target, children, params) {
+				if (params.direction === "reverse" && !params.reversed) {
+					children = children.reverse();
+
+					forEach(children, function (i, kid) {
+						target.appendChild(kid);
+					});
+
+					params.reversed = TRUE;
+				}
+			},
+
 			boxOrient : function (target, children, params) {
 				var self = this,
 				    wide, high,
@@ -925,18 +995,16 @@ var Flexie = (function (win, doc) {
 
 				forEach(children, function (i, kid) {
 					kid.style.cssFloat = kid.style.styleFloat = "left";
-					// kid.style[wide.dim] = getComputedStyle(kid, wide.dim, NULL);
 
 					if (params.orient === VERTICAL) {
 						// Margins collapse on a normal box
 						// But not on flexbox
 						// So we hack away...
-						if (i !== 0 && i !== (children.length - 1)) {
-							combinedMargin = getComputedStyle(kid, high.pos, TRUE) + getComputedStyle(kid, high.opp, TRUE);
-
-							kid.style[high.pos] = combinedMargin;
-							kid.style[high.opp] = combinedMargin;
+						if (i) {
+							combinedMargin = getComputedStyle(kid, high.pos, TRUE) + getComputedStyle(children[i - 1], high.opp, TRUE);
+							kid.style[high.pos] = combinedMargin + "px";
 						}
+						
 						kid.style.cssFloat = kid.style.styleFloat = EMPTY_STRING;
 					}
 				});
@@ -958,8 +1026,13 @@ var Flexie = (function (win, doc) {
 
 			boxAlign : function (target, children, params) {
 				var self = this,
-				    targetDimension = self.anti.func(target),
+				    targetDimension = target[self.anti.out],
 				    kidDimension;
+				
+				// Remove padding / border from target dimension
+				forEach(self.anti.pad, function (i, pad) {
+					targetDimension -= getComputedStyle(target, pad, TRUE);
+				});
 
 				switch (params.align) {
 				case "stretch" :
@@ -974,6 +1047,7 @@ var Flexie = (function (win, doc) {
 							kidDimension -= getComputedStyle(kid, pad, TRUE);
 						});
 
+						kidDimension -= getComputedStyle(kid, self.anti.opp, TRUE);
 						kidDimension = Math.max(0, kidDimension);
 						
 						switch (kid.nodeName.toLowerCase()) {
@@ -1000,27 +1074,10 @@ var Flexie = (function (win, doc) {
 
 				case "center":
 					forEach(children, function (i, kid) {
-						kidDimension = (targetDimension - self.anti.func(kid)) / 2;
-						kidDimension -= getComputedStyle(kid, self.anti.pad[0], TRUE) / 2;
-						kidDimension -= getComputedStyle(kid, self.anti.pos, TRUE) / 2;
-
+						kidDimension = (targetDimension - kid[self.anti.out]) / 2;
 						kid.style[self.anti.pos] = kidDimension + "px";
 					});
 					break;
-				}
-			},
-
-			boxDirection : function (target, children, params) {
-				var reversedChildren;
-
-				if (params.direction === "reverse" && !params.reversed) {
-					reversedChildren = children.reverse();
-
-					forEach(reversedChildren, function (i, kid) {
-						target.appendChild(kid);
-					});
-
-					params.reversed = TRUE;
 				}
 			},
 
@@ -1042,11 +1099,16 @@ var Flexie = (function (win, doc) {
 				});
 
 				if (params.orient === VERTICAL) {
-					groupDimension += getComputedStyle(children[children.length - 1], self.props.opp, TRUE) * ((params.pack === "end") ? 2 : 1);
+					groupDimension += getComputedStyle(children[children.length - 1], self.props.opp, TRUE);
 				}
 
 				firstComputedMargin = getComputedStyle(children[0], self.props.pos, TRUE);
-				totalDimension = self.props.func(target) - groupDimension;
+				totalDimension = target[self.props.out] - groupDimension;
+				
+				// Remove padding / border from target dimension
+				forEach(self.props.pad, function (i, pad) {
+					totalDimension -= getComputedStyle(target, pad, TRUE);
+				});
 				
 				// IE6 double float margin bug
 				// http://www.positioniseverything.net/explorer/doubled-margin.html
@@ -1064,28 +1126,72 @@ var Flexie = (function (win, doc) {
 					break;
 
 				case "justify" :
-					fractionedDimension = Math.ceil(totalDimension / length);
+					fractionedDimension = Math.floor(totalDimension / length);
 					remainder = (fractionedDimension * length) - totalDimension;
-
-					children = children.reverse();
-
-					forEach(children, function (i, kid) {
+					
+					var i = children.length - 1;
+					while (i) {
+						kid = children[i];
 						currentDimension = fractionedDimension;
 
 						if (remainder) {
-							currentDimension--;
-							remainder--;
+							currentDimension++;
+							remainder++;
 						}
-
+						
 						kid.style[self.props.pos] = getComputedStyle(kid, self.props.pos, TRUE) + currentDimension + "px";
-					});
+						
+						i--;
+					}
 					break;
+				}
+				
+				// Float drop fix
+				// Test offset values. If different, let's bring the widow back
+				floatDropFix(target, params, self);
+			},
+			
+			boxOrdinalGroup : function (target, children, params) {
+				var self = this,
+				    saveMarginOffset, organizeChildren, resetMarginOffset,
+				    matrix, first, firstComputedMargin;
+
+				if (!children.length) {
+					return;
+				}
+				
+				saveMarginOffset = function (matrix, children) {
+					firstComputedMargin = getComputedStyle(children[0], self.props.pos, TRUE);
+				};
+				
+				organizeChildren = function (matrix) {
+					var keys = matrix.keys,
+					    ordinals = matrix.groups;
+					
+					forEach(keys, function (i, key) {
+						forEach(ordinals[key].reverse(), function (i, x) {
+							target.insertBefore(x.match, target.firstChild);
+						});
+					});
+				};
+				
+				resetMarginOffset = function (matrix, children) {
+					appendPixelValue(children, self.props.pos, NULL);
+					appendPixelValue(children[0], self.props.pos, firstComputedMargin);
+					firstComputedMargin = NULL;
+				};
+
+				matrix = createMatchMatrix(params.children, children, true);
+
+				if (matrix.keys.length > 1) {
+					saveMarginOffset(matrix, target.childNodes);
+					organizeChildren(matrix);
+					resetMarginOffset(matrix, target.childNodes);
 				}
 			},
 
 			boxFlex : function (target, children, params) {
 				var self = this,
-				    createMatchMatrix,
 				    testForRestrictiveProperties,
 				    findTotalWhitespace,
 				    distributeRatio,
@@ -1097,41 +1203,8 @@ var Flexie = (function (win, doc) {
 					return;
 				}
 				
-				createMatchMatrix = function (matches) {
-					var totalRatio = 0,
-					    flexers = {}, keys = [];
-
-					forEach(children, function (i, kid) {
-						forEach(matches, function (i, x) {
-							if (x.match === kid && (!x[group] || (x[group] && parseInt(x[group], 10) <= 1))) {
-								// If no value declared, it's the default.
-								x.flex = x.flex || "0";
-								
-								totalRatio += parseInt(x.flex, 10);
-
-								flexers[x.flex] = flexers[x.flex] || [];
-								flexers[x.flex].push(x);
-							}
-						});
-					});
-
-					forEach(flexers, function (key) {
-						keys.push(key);
-					});
-
-					keys.sort(function (a, b) {
-						return b - a;
-					});
-
-					return {
-						keys : keys,
-						flexers : flexers,
-						total : totalRatio
-					};
-				};
-				
 				testForRestrictiveProperties = function (matrix) {
-					var flexers = matrix.flexers,
+					var flexers = matrix.groups,
 					    keys = matrix.keys, max;
 					
 					forEach(keys, function (i, key) {
@@ -1177,29 +1250,29 @@ var Flexie = (function (win, doc) {
 				};
 
 				distributeRatio = function (matrix, whitespace) {
-					var flexers = matrix.flexers,
+					var flexers = matrix.groups,
 					    keys = matrix.keys,
 					    ration = whitespace.ration,
-					    w, flexWidths = {},
 					    widthRation, trueDim, newWidth;
 
 					forEach(keys, function (i, key) {
 						widthRation = (ration * key);
-						flexWidths[key] = widthRation;
 
 						forEach(flexers[key], function (i, x) {
-							w = flexWidths[key];
-
 							if (x.match) {
 								trueDim = getComputedStyle(x.match, self.props.dim, TRUE);
-								newWidth = Math.max(0, (trueDim + w));
+								newWidth = Math.max(0, (trueDim + widthRation));
 								x.match.style[self.props.dim] = newWidth + "px";
 							}
 						});
+						
+						// Float drop fix
+						// Test offset values. If different, let's bring the widow back
+						floatDropFix(target, params, self);
 					});
 				};
 
-				matrix = createMatchMatrix(params.children);
+				matrix = createMatchMatrix(params.children, children);
 
 				if (matrix.total) {
 					restrict = testForRestrictiveProperties(matrix);
@@ -1207,62 +1280,6 @@ var Flexie = (function (win, doc) {
 				
 					// Distribute the calculated ratios among the children
 					distro = distributeRatio(matrix, whitespace);
-				}
-			},
-			
-			boxOrdinalGroup : function (target, children, params) {
-				var createMatchMatrix,
-				    organizeChildren,
-				    matrix;
-
-				if (!children.length) {
-					return;
-				}
-				
-				createMatchMatrix = function (matches) {
-					var ordinals = {}, keys = [],
-					    ordinal, order = "ordinal-group";
-
-					forEach(children, function (i, kid) {
-						forEach(matches, function (i, x) {
-							ordinal = x[order];
-							
-							if (x.match === kid && ordinal) {
-								ordinals[ordinal] = ordinals[ordinal] || [];
-								ordinals[ordinal].push(x);
-							}
-						});
-					});
-
-					forEach(ordinals, function (key) {
-						keys.push(key);
-					});
-
-					keys.sort(function (a, b) {
-						return b - a;
-					});
-
-					return {
-						keys : keys,
-						ordinals : ordinals
-					};
-				};
-				
-				organizeChildren = function (matrix) {
-					var keys = matrix.keys,
-					    ordinals = matrix.ordinals;
-					
-					forEach(keys, function (i, key) {
-						forEach(ordinals[key].reverse(), function (i, x) {
-							target.insertBefore(x.match, target.firstChild);
-						});
-					});
-				};
-
-				matrix = createMatchMatrix(params.children);
-
-				if (matrix.keys.length) {
-					organizeChildren(matrix);
 				}
 			}
 		},
@@ -1337,10 +1354,31 @@ var Flexie = (function (win, doc) {
 		}
 	};
 	
-	FLX.updateInstances = function () {
+	FLX.updateInstance = function (target) {
 		forEach(FLEX_INSTANCES, function (i, instance) {
-			instance.construct.updateModel(instance.params);
+			if (!target || (instance && instance.params && instance.params.target === target)) {
+				instance.construct.updateModel(instance.params);
+			}
 		});
+	};
+	
+	FLX.destroyInstance = function (target) {
+		var instances = FLEX_INSTANCES;
+		
+		forEach(FLEX_INSTANCES, function (i, instance) {
+			if (instance && instance.params && instance.params.target === target) {
+				instance.params.target.FLX_DOM_ID = null;
+				instance.params.target.style.cssText = "";
+				
+				forEach(instance.params.children, function (i, x) {
+					x.match.style.cssText = "";
+				});
+				
+				instances = FLEX_INSTANCES.splice(i, 1);
+			}
+		});
+		
+		FLEX_INSTANCES = instances;
 	};
 
 	FLX.flexboxSupported = (function () {
@@ -1350,7 +1388,7 @@ var Flexie = (function (win, doc) {
 	}());
 	
 	// Flexie Version
-	FLX.version = 0.5;
+	FLX.version = 0.6;
 
 	(function init() {
 		SUPPORT = FLX.flexboxSupported;
@@ -1371,5 +1409,6 @@ var Flexie = (function (win, doc) {
 /*jslint sub: true */
 window["Flexie"] = Flexie;
 Flexie["version"] = Flexie.version;
-Flexie["updateInstances"] = Flexie.updateInstances;
+Flexie["updateInstance"] = Flexie.updateInstance;
+Flexie["destroyInstance"] = Flexie.destroyInstance;
 Flexie["flexboxSupported"] = Flexie.flexboxSupported;
