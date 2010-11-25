@@ -36,4 +36,3 @@ class MenuComponent extends Object {
 		)));
 	}
 }
-?>
