@@ -1,10 +1,8 @@
 <?php 
 /* SVN FILE: $Id$ */
-/* App schema generated on: 2010-11-22 22:11:10 : 1290465550*/
-class V091Lenore extends CakeSchema {
-	var $name = 'V091Lenore';
-
-	var $file = 'v091_lenore.php';
+/* App schema generated on: 2010-11-17 16:11:02 : 1290012002*/
+class AppSchema extends CakeSchema {
+	var $name = 'App';
 
 	function before($event = array()) {
 		return true;
@@ -70,8 +68,8 @@ class V091Lenore extends CakeSchema {
 		'inline_count' => array('type' => 'integer', 'null' => true, 'default' => NULL, 'length' => 3),
 		'draft' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
 		'featured' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
-		'meta_description' => array('type' => 'text', 'null' => true, 'default' => NULL),
-		'meta_keywords' => array('type' => 'text', 'null' => true, 'default' => NULL),
+		'meta_description' => array('type' => 'string', 'null' => true, 'default' => NULL),
+		'meta_keywords' => array('type' => 'string', 'null' => true, 'default' => NULL),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'MyISAM')
 	);
@@ -88,18 +86,6 @@ class V091Lenore extends CakeSchema {
 		'modified' => array('type' => 'datetime', 'null' => true, 'default' => NULL),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'MyISAM')
-	);
-	var $messages = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10, 'key' => 'primary'),
-		'name' => array('type' => 'string', 'null' => true, 'default' => NULL, 'length' => 150),
-		'email' => array('type' => 'string', 'null' => true, 'default' => NULL),
-		'phone' => array('type' => 'string', 'null' => true, 'default' => NULL, 'length' => 50),
-		'subject' => array('type' => 'string', 'null' => false, 'default' => '[No Subject]', 'length' => 150),
-		'content' => array('type' => 'text', 'null' => false, 'default' => NULL),
-		'additional_parameters' => array('type' => 'text', 'null' => true, 'default' => NULL),
-		'created' => array('type' => 'datetime', 'null' => true, 'default' => NULL),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'MyISAM')
 	);
 	var $products = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10, 'key' => 'primary'),
@@ -172,7 +158,7 @@ class V091Lenore extends CakeSchema {
 		'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10, 'key' => 'primary'),
 		'title' => array('type' => 'string', 'null' => false, 'length' => 150),
 		'slug' => array('type' => 'string', 'null' => false, 'length' => 150),
-		'description' => array('type' => 'text', 'null' => false, 'default' => NULL),
+		'description' => array('type' => 'string', 'null' => false),
 		'type' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 2),
 		'mime_type' => array('type' => 'string', 'null' => false, 'length' => 50),
 		'extension' => array('type' => 'string', 'null' => false, 'length' => 10),
@@ -185,7 +171,7 @@ class V091Lenore extends CakeSchema {
 	);
 	var $resources_sections = array(
 		'section_id' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 10, 'key' => 'primary'),
-		'resource_id' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1, 'key' => 'primary'),
+		'resource_id' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 10, 'key' => 'primary'),
 		'indexes' => array('PRIMARY' => array('column' => array('section_id', 'resource_id'), 'unique' => 1)),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'MyISAM')
 	);
@@ -203,16 +189,6 @@ class V091Lenore extends CakeSchema {
 		'meta_description' => array('type' => 'string', 'null' => true, 'default' => NULL),
 		'meta_keywords' => array('type' => 'string', 'null' => true, 'default' => NULL),
 		'articles_enabled' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'MyISAM')
-	);
-	var $snippets = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'key' => 'primary'),
-		'title' => array('type' => 'string', 'null' => true, 'default' => NULL, 'length' => 50),
-		'slug' => array('type' => 'string', 'null' => true, 'default' => NULL, 'length' => 50),
-		'content' => array('type' => 'text', 'null' => true, 'default' => NULL),
-		'created' => array('type' => 'datetime', 'null' => true, 'default' => NULL),
-		'modified' => array('type' => 'datetime', 'null' => true, 'default' => NULL),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'MyISAM')
 	);
