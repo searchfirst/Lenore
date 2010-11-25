@@ -66,7 +66,17 @@ $config = array(
 			'Category'=>array('dashboard_icon'=>'/img/admin/category_module.png','alias'=>'Product'),
 			'Section'=>array('dashboard_icon'=>'/img/admin/section_module.png','alias'=>'Page')
 		)
-	)
+	),
+	'Message' => array(
+		'Notify' => array(
+			'to' => ''
+		),
+		'options' => array(
+			'contact-us' => array(
+				'subject' => 'Contact Us'
+			)
+		)
+	),
 	'Minify' => array(
 		'public' => array(
 			'js' => array(
