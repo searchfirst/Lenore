@@ -63,14 +63,14 @@ class TextAssistantHelper extends Helper {
 		 * Other options:
 		 *	media_options
 		 */
-		if(is_array($options) && !empty($options) && !empty($options['media']) && !empty($options['model'])) {
+		if(is_array($options) && !empty($options) && !empty($options['model'])) {
 			$default_options = array('media_options'=>array());
 			$options = array_merge($default_options,$options);
 			$media = $options['media'];
 			$model = $options['model'];
 			$media_options = $options['media_options'];
 			$text = $options['text'];
-			$text = $this->sanitiseText($text,false);
+			$text = $this->sanitise($text,false);
 			$text = SmartyPants(Markdown($text));
 			if($media && count($media))
 				$text = $this->formatTextFragments($text,$media,$model,$media_options);
