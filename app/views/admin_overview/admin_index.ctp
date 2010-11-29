@@ -15,7 +15,7 @@
 <?php endif;?>
 </div>
 <div class="secondary">
-<h3>Inbox</h3>
+<?php echo $this->element('admin_overview/inbox'); ?> 
 <h3>Cart</h3>
 </div>
 </div>

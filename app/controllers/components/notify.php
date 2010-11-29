@@ -16,9 +16,11 @@ class NotifyComponent extends Object {
 		 * Optional:
 		 *	additional_parameters
 		 */
+		print_r($options);
 		if(!empty($options)) {
 			$default_options = array(
 				'to' => $this->settings['to'],
+				'email' => 'unknownsender@example.com',
 				'subject' => '[No Subject]',
 				'template' => 'notify',
 				'send_as' => 'text'
@@ -28,6 +30,7 @@ class NotifyComponent extends Object {
 			$this->Email->subject = $options['subject'];
 			$this->Email->from = $options['email'];
 			$this->Email->template = $options['template'];
+			$this->Email->sendAs = $options['send_as'];
 			$this->controller->set('email',$options);
 			return $this->Email->send();
 		} else {trigger_error('No data array passed to Notify::send()');}

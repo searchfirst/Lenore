@@ -1,6 +1,5 @@
 <?php
-class AdminOverviewController extends AppController
-{
+class AdminOverviewController extends AppController {
 	var $name = 'AdminOverview';
 	var $uses = array('Section','Category');
 	
@@ -30,4 +29,3 @@ class AdminOverviewController extends AppController
 		}
 	}
 }
-?>

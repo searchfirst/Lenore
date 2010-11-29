@@ -6,19 +6,19 @@ class Message extends AppModel {
 			'rule'=>'notEmpty',
 			'message'=>"You must give a name."
 		),
-		'email' => array(
+/*		'email' => array(
 			'rule'=>'email',
 			'message'=>"You must give a valid email address"
 		),
-/*		'phone' => array(
+		'phone' => array(
 			'phone' => array(
 				'rule' => array('phone',null,$this->cc)
 			)
-		),*/
+		),
 		'content' => array(
 			'rule'=>'notEmpty',
 			'message'=>"You must include a message."
-		)
+		)*/
 	);
 
 	function __construct($id=false,$table=null,$ds=null) {
@@ -39,13 +39,20 @@ class Message extends AppModel {
 	}
 
 	function afterFind($results,$primary) {
-		parent::afterFind();
-		if(!empty($results[0]['Message'])) {
-			if(!empty($results[0]['Message']['additional_parameters'])) {
-				$results[0]['Message']['additional_parameters'] = unserialize($results[0]['Message']['additional_parameters']);
-			}
-		}
-		return true;
+		$results = parent::afterFind($results,$primary);
+		foreach($results as $x=>$result) if(!empty($result['Message']['additional_parameters']))
+			$results[$x]['Message']['additional_parameters'] = unserialize($result['Message']['additional_parameters']);
+		return $results;
+	}
+
+	function afterSave($created) {
+		parent::afterSave();
+		$this->clearViewCache();
+	}
+
+	function afterDelete() {
+		parent::afterDelete();
+		$this->clearViewCache();
 	}
 
 	function getOptions(&$options,$type) {
@@ -57,6 +64,10 @@ class Message extends AppModel {
 	function isValidType($type) {
 		$type = str_replace('-','_',$type);
 		return (bool) Configure::read("Message.options.{$type}");
+	}
+
+	function clearViewCache() {
+		Cache::delete('messages_a');
 	}
 }
 ?>

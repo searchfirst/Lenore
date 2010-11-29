@@ -250,7 +250,7 @@ padding: 0;
 margin: 6px 0 12px;
 }
 
-#content .content > ul > li {
+#content .content > ul > li, #content .admin_list > li {
 display: block;
 clear: both;
 line-height: 1.25em;
@@ -272,7 +272,7 @@ box-shadow: 1px 1px 0 rgba(255,255,255,0.3);
 overflow: hidden;
 }
 
-#content .content > ul > li:hover, #content .content > ul > li:focus {
+#content .content > ul > li:hover, #content .content > ul > li:focus, #content .admin_list > li:hover, #content .admin_list > li:focus {
 background-color: rgba(59,75,91,0.2);
 }
 

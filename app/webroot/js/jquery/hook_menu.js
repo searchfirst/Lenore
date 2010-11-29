@@ -30,6 +30,9 @@ jQuery.fn.hookMenu = function(settings) {
 		else
 			return {label:'right',value:(hook.offset().left + hook.outerWidth())};
 	}
+	function preventParentClickBubble(h,x) {
+		h.click(function(e){if(e.target==x.get(0)) return false});
+	}
 	settings = jQuery.extend({'growUp':false,'position':'absolute'},settings);
 	this.each(function(i) {
 		var ariaHookElementX = 'hook_menu_aria_'+i,
@@ -43,6 +46,7 @@ jQuery.fn.hookMenu = function(settings) {
 					.attr({'tabindex':0});
 			hookElement.append('<span class="hook_menu_x" aria-owns="'+ariaHookElementX+'">Expand</span>');
 			hookElementX = hookElement.find('span.hook_menu_x').eq(0);
+			preventParentClickBubble(hookElement,hookElementX);
 			hookMenu.recalcCoords = function() {
 				var hm_corner = hookCorner(hookElementX,hookMenu),
 					hm_bottom = hookBottom(hookElementX);
@@ -55,7 +59,7 @@ jQuery.fn.hookMenu = function(settings) {
 			hookElementX.bind({
 				mouseenter: function(e) {jQuery(this).parent().toggleClass('hook_highlight');},
 				mouseleave: function(e) {jQuery(this).parent().removeClass('hook_highlight');},
-				focusin: function(e) {toggleVisibility(hookMenu,hookElementX,e);}
+				focusin: function(e) {toggleVisibility(hookMenu,hookElementX,e);return false;}
 			}).attr({'tabindex':0,'aria-haspopup':'true'});
 			hookMenu.bind({
 				mouseleave: function(e) {

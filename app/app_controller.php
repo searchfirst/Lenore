@@ -1,9 +1,23 @@
 <?php
 class AppController extends Controller {
-	var $uses = array('Section','Category');
-	var $helpers = array('Html','Form','Time','TextAssistant','MediaAssistant','Js','Javascript','Session','Menu','Minify.Minify');
-	var $actionHelpers = array('Time');
-	var $components = array('RequestHandler','Session','Acl','Auth','Helper','Minify.Minify','Menu');
+	var $uses = array(
+		'Section','Category','Snippet','Message'
+	);
+	var $helpers = array(
+		'Html','Form','Time','TextAssistant','MediaAssistant','Js','Javascript','Session','Menu','Minify.Minify','Paginator'
+	);
+	var $actionHelpers = array(
+		'Time'
+	);
+	var $components = array(
+		'RequestHandler','Session','Acl','Auth','Helper','Minify.Minify','Menu'
+	);
+	var $paginate = array(
+		'Message' => array(
+			'limit' => 5,
+			'order' => array('Message.created' => 'desc')
+		)
+	);
 	var $view = 'Mustache';
 
 	function beforeFilter() {
@@ -19,6 +33,8 @@ class AppController extends Controller {
 		$this->setRequestHandlerViewVars();
 		$this->customControllerViewData();
 		$this->mergeGetDataWithThisData();
+		$this->setSnippets();
+		$this->getInboxMessages();
 	}
 
 	function mergeGetDataWithThisData() {
@@ -283,7 +299,7 @@ class AppController extends Controller {
 				'css/admin/reset.css','css/admin/typefaces.css','css/admin/lenore.css','css/admin/widgets/hook_menu.css',
 				'css/admin/widgets/sortable.css','css/admin/widgets/editable_text.css','css/admin/widgets/flag_toggle.css',
 				'css/admin/widgets/dialog.css','css/admin/widgets/flash_messages.css','css/admin/widgets/resource_list.css',
-				'css/admin/handheld_large.css','css/admin/tablet_netbooks.css','css/admin/desktop.css'
+				'css/admin/widgets/paginate.css','css/admin/handheld_large.css','css/admin/tablet_netbooks.css','css/admin/desktop.css'
 			)));
 		} elseif($css_paths = Configure::read('Minify.public.css')) {
 			$pub_minify_css = array();
@@ -339,9 +355,33 @@ class AppController extends Controller {
 			$this->theme = 'admin';
 		} elseif($template_theme = Configure::read('Moonlight.template_theme')) {
 			$this->theme = $template_theme;
-			if($custom_layout = Configure::read(Inflector::singularize($this->name).'custom_layout')) {
+			if($custom_layout = Configure::read(Inflector::singularize($this->name).'.custom_layout')) {
 				$this->layout = $custom_layout;
 			}
+		}
+	}
+
+	function setSnippets() {
+		if(!$this->actionIsAdmin()) {
+			if(false===($snippets=Cache::read('snippets_f'))) {
+				$snippets = $this->Snippet->find('list',array('fields'=>array('Snippet.slug','Snippet.content')));
+				Cache::write('snippets_f',$snippets);
+			}
+			$this->set('snippets',$snippets);
+		}
+	}
+	
+	function getInboxMessages() {
+		if($this->actionIsAdmin()) {
+			if(false===($msg_cache=Cache::read('messages_a'))) {
+				$messages = $this->paginate('Message');
+				$msg_cache = array('results' => $messages,'paging' => $this->params['paging']['Message']);
+				Cache::write('messages_a',$msg_cache);
+			} else {
+				$messages = $msg_cache['results'];
+				$this->params['paging']['Message'] = $msg_cache['paging'];
+			}
+			$this->set('messages_a',$messages);
 		}
 	}
 }

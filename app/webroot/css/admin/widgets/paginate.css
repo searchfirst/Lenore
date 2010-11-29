@@ -1,0 +1,21 @@
+.paginate li {
+display: inline-block;
+line-height: 2;
+color: rgb(102,102,102);
+padding: 0 .5em;
+}
+
+.paginate li a {
+display: inline-block;
+padding: 0 .5em;
+margin: 0 -.5em;
+background-color: rgba(0,0,0,0.1);
+-moz-border-radius: .5em;
+-webkit-border-radius: .5em;
+-o-border-radius: .5em;
+border-radius: .5em;
+-moz-box-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+-webkit-box-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+-o-box-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+box-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+}
