@@ -1,4 +1,6 @@
 <?php
+Router::mapResources('messages');
+Router::parseExtensions();
 Router::connect('/', array('controller' => 'Facades', 'action' => 'index'));
 Router::connect('/admin', array('controller' => 'AdminOverview', 'action' => 'index', 'admin' => true));
 Router::connect('/products',array('controller'=>'Categories','action'=>'index'));
@@ -7,7 +9,6 @@ Router::connect('/products/*',array('controller'=>'Categories','action'=>'view')
 Router::connect('/thumbs/*', array('controller'=>'Thumbs','action'=>'index'));
 Router::connect('/rss/:controller/', array('alt_content'=>'Rss','action'=>'index'));
 Router::connect('/rss/:controller/*', array('alt_content'=>'Rss','action'=>'view'));
-//Router::connect('/ajax/:controller/:action/*',array('alt_content'=>'Ajax'));
 Router::connect('/contact/*', array('controller' => 'Messages', 'action' => 'index'),array('type'=>'.*'));
 Router::connect('/cart/:action',array('controller'=>'Carts'));
 Router::connect('/search',array('controller'=>'Searches','action'=>'index'));
