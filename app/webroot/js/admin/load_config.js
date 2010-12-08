@@ -39,7 +39,7 @@ var LenoreCore = function($) {return {
 		return this;
 	},
 	loadAJAXDialogLinks: function() {
-		$('a.ajax-modal').click(function(e) {
+		$('a.ajax-modal').live('click',function(e) {
 			e.preventDefault();
 			var uri = $(this).attr('href'),
 				dialog_title = $(this).attr('title'),

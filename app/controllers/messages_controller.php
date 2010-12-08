@@ -41,7 +41,11 @@ class MessagesController extends AppController {
 	}
 
 	function admin_index() {
-		$this->set('messages',$this->paginate('Message'));
+		if($this->RequestHandler->isAjax()) {
+			$this->generalAjax($this->restfulPaginate('Message'));
+		} else {
+			$this->set('messages',$this->paginate('Message'));
+		}
 	}
 
 	function admin_view($id=null) {

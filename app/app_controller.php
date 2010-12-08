@@ -316,7 +316,9 @@ class AppController extends Controller {
 				'js/lib/modernizr.js','js/lib/selectivizr.js','js/lib/flexie.js','js/lib/mediaqueries.js','js/jquery/jquery.js','js/jquery/ui/core.js',
 				'js/jquery/ui/widget.js','js/jquery/ui/mouse.js', 'js/jquery/ui/bgiframe.js','js/jquery/ui/sortable.js','js/jquery/ui/dialog.js',
 				'js/jquery/ui/position.js','js/jquery/lib/iphoneui.js','js/jquery/lib/editable_text.js','js/jquery/hook_menu.js','js/jquery/dux_tabs.js',
-				'js/jquery/lib/flag_toggle.js','js/lib/ckeditor/lenore_load.js','dontpack1'=>'js/lib/ckeditor/ckeditor.js','dontpack2'=>'js/lib/ckeditor/adapters/jquery.js','js/admin/load_config.js'
+				'js/jquery/lib/flag_toggle.js','js/lib/ckeditor/lenore_load.js','dontpack1'=>'js/lib/ckeditor/ckeditor.js','dontpack2'=>'js/lib/ckeditor/adapters/jquery.js','js/admin/load_config.js',
+				'js/lib/underscore.js','js/lib/backbone.js','js/lib/paginatedcollection.backbone.js',
+				'js/admin/app.js','js/admin/models/message.js','js/admin/collections/message_collection.js','js/admin/views/message_view.js'
 			)));
 		} elseif($js_paths = Configure::read('Minify.public.js')) {
 			$pub_minify_js = array();
@@ -383,5 +385,21 @@ class AppController extends Controller {
 			}
 			$this->set('messages_a',$messages);
 		}
+	}
+
+	function restfulPaginate($model) {
+		$results = $this->paginate($model);
+		$r_results = array();
+		foreach($results as $result)
+			if(!empty($result[$model]))
+				$r_results['models'][] = $result[$model];
+		if(!empty($this->params['paging'][$model])) {
+			$params =& $this->params['paging'][$model];
+			$options = array_merge($params['defaults'],!empty($params['options'])?$params['options']:array());
+			$r_results['total'] = $params['count'];
+			$r_results['per_page'] = $options['limit'];
+			$r_results['page'] = $options['page'];
+		}
+		return $r_results;
 	}
 }
