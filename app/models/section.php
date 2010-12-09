@@ -1,6 +1,7 @@
 <?php
 class Section extends AppModel {
     var $name = 'Section';
+		var $actsAs = array('Ordered');
     var $validate = array(
 		'title' => array('rule'=>'notEmpty','message'=>"An Article/Post/Entry must have a title."),
 //		'description' => array('rule'=>'notEmpty','message'=>'An Article/Post/Entry must have some content.')

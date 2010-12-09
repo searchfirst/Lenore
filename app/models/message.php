@@ -6,19 +6,9 @@ class Message extends AppModel {
 			'rule'=>'notEmpty',
 			'message'=>"You must give a name."
 		),
-/*		'email' => array(
-			'rule'=>'email',
-			'message'=>"You must give a valid email address"
-		),
-		'phone' => array(
-			'phone' => array(
-				'rule' => array('phone',null,$this->cc)
-			)
-		),
-		'content' => array(
-			'rule'=>'notEmpty',
-			'message'=>"You must include a message."
-		)*/
+	);
+	var $actsAs = array(
+		'Cacher' => array('register_caches'=>array('messages_a'))
 	);
 
 	function __construct($id=false,$table=null,$ds=null) {
@@ -32,27 +22,24 @@ class Message extends AppModel {
 
 	function beforeSave() {
 		parent::beforeSave();
-		if(!empty($this->data['Message']['additional_parameters']) && is_array($this->data['Message']['additional_parameters'])) {
-			$this->data['Message']['additional_parameters'] = serialize($this->data['Message']['additional_parameters']);
-		}
+		$this->serializeAdditionalParameters();
 		return true;
 	}
 
 	function afterFind($results,$primary) {
 		$results = parent::afterFind($results,$primary);
-		foreach($results as $x=>$result) if(!empty($result['Message']['additional_parameters']))
-			$results[$x]['Message']['additional_parameters'] = unserialize($result['Message']['additional_parameters']);
+		$this->unserializeAdditionalParameters($results);
 		return $results;
 	}
 
-	function afterSave($created) {
-		parent::afterSave();
-		$this->clearViewCache();
+	function unserializeAdditionalParameters(&$data) {
+		foreach($data as $x=>$message) if(!empty($message['Message']['additional_parameters']))
+			$data[$x]['Message']['additional_parameters'] = unserialize($message['Message']['additional_parameters']);
 	}
 
-	function afterDelete() {
-		parent::afterDelete();
-		$this->clearViewCache();
+	function serializeAdditionalParameters() {
+		if(!empty($this->data['Message']['additional_parameters']) && is_array($this->data['Message']['additional_parameters']))
+			$this->data['Message']['additional_parameters'] = serialize($this->data['Message']['additional_parameters']);
 	}
 
 	function getOptions(&$options,$type) {
@@ -65,9 +52,4 @@ class Message extends AppModel {
 		$type = str_replace('-','_',$type);
 		return (bool) Configure::read("Message.options.{$type}");
 	}
-
-	function clearViewCache() {
-		Cache::delete('messages_a');
-	}
 }
-?>

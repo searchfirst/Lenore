@@ -1,6 +1,7 @@
 <?php
 class Product extends AppModel {
     var $name = 'Product';
+		var $actsAs = array('Ordered');
     var $validate = array(
 		'title'			=>	array('rule'=>'notEmpty','message'=>"Products must have a title."),
 		'description'	=>	array('rule'=>'notEmpty','message'=>"Products must have some content.")

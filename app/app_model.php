@@ -1,10 +1,10 @@
 <?php
 class AppModel extends Model {
-	function afterSave() {
-		if(($order_id = $this->getLastInsertId()) && (!isset($this->already_saved))) {
-			$this->already_saved = true;
-			$this->saveField('order_by',$order_id);
-		}
+	function afterSave($created) {
+		//if(($order_id = $this->getLastInsertId()) && (!isset($this->already_saved))) {
+		//	$this->already_saved = true;
+		//	$this->saveField('order_by',$order_id);
+		//}
 	}
 	
 	function afterDelete() {
@@ -16,12 +16,12 @@ class AppModel extends Model {
 	}
 
 	function beforeSave() {
-		if(empty($this->data[$this->name]['id']) && $this->hasField('slug'))
+		if($this->name!='Resource' && empty($this->data[$this->name]['id']) && $this->hasField('slug'))
 			$this->data[$this->name]['slug'] = $this->getUniqueSlug($this->data[$this->name]['title']);
 		return true;
 	}
 
-	function beforeDelete() {
+	function beforeDelete($cascade) {
 		if($this->name!=='Resource') {
 			$model = $this->findById($this->id);
 			$delete_list = array();
@@ -78,8 +78,8 @@ class AppModel extends Model {
 	
 	/* File Upload Functions */
 	
-	private function validFileArray($file_array) {
-		if(is_array($file_array['file']) && !empty($file_array['file'])) return true;
+	private function validFileArray(&$file_array) {
+		if(!empty($file_array['file']) && is_array($file_array['file'])) return true;
 		return false;
 	}
 	
@@ -87,10 +87,10 @@ class AppModel extends Model {
 		if(!empty($this->data['Resource'])) {
 			$resources = $this->getExistingResourceIds();
 			foreach($this->data['Resource'] as $x => $resource) {
-				if($resource['type']==Resource::$types['Decorative'] && $this->alreadyHasDeco()) {
-					$this->fileUploadError('has_deco');
-				} else {
-					if($this->validFileArray($resource) && $resource['file']['error']==UPLOAD_ERR_OK) {
+				if($this->validFileArray($resource) && $resource['file']['error']==UPLOAD_ERR_OK) {
+					if($resource['type']==Resource::$types['Decorative'] && $this->alreadyHasDeco()) {
+						$this->fileUploadError('has_deco');
+					} else {
 						$this->repairMimeTypes($resource['type'],$resource['file']['name']);
 						$resource['mime_type'] = $resource['file']['type'];
 						$resource['extension'] = $this->getExtension($resource['file']['type'],$resource['file']['name']);
@@ -110,7 +110,11 @@ class AppModel extends Model {
 					}
 				}
 			}
-			$this->data['Resource'] = array('Resource'=>$resources);
+			if(!empty($resources)) {
+				$this->data['Resource'] = array('Resource'=>$resources);
+			} else {
+				unset($this->data['Resource']);
+			}
 		}
 	}
 	
@@ -146,6 +150,7 @@ class AppModel extends Model {
 			Session::setFlash($upload_errors[$key]);
 			return true;
 		} else {
+			Session::setFlash($upload_errors['unknown']);
 			return false;
 		}
 	}

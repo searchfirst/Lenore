@@ -3,24 +3,19 @@ class Resource extends AppModel {
 	var $name = 'Resource';
 	var $validate = array();
 	var $hasAndBelongsToMany = array("Article","Section","Product","Category");
+	var $actsAs = array('Ordered');
 	public static $types = array('Decorative'=>0,'Inline'=>1,'Download'=>2);
 	public static $delete_list = null;
 
 	function beforeValidate() {
 		return true;
 	}
-	
-	function beforeDelete() {
+	function beforeDelete($cascade) {
+		parent::beforeDelete($cascade);
 		if($resource=$this->findById($this->id))
 			unlink($resource['Resource']['path'].$resource['Resource']['slug'].'.'.$resource['Resource']['extension']);
 		return true;
 	}
-
-	function afterSave() {
-		parent::afterSave();
-		return true;
-	}
-
 	public static function setDeleteList($list) {
 		if(is_array($list)) {
 			self::$delete_list = $list;
@@ -29,6 +24,4 @@ class Resource extends AppModel {
 			return false;
 		}
 	}
-
 }
-?>

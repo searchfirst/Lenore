@@ -1,6 +1,7 @@
 <?php
 class Article extends AppModel {
 	var $name = 'Article';
+	var $actsAs = array('Ordered');
 	var $validate = array(
 		'title' => array('rule'=>'notEmpty','message'=>"An Article/Post/Entry must have a title."),
 		'description' => array('rule'=>'notEmpty','message'=>'An Article/Post/Entry must have some content.')

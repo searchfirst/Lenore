@@ -5,7 +5,7 @@
 <?php echo $form->input('Product.description',array(
 	'cols'=>'40',
 	'rows'=>'20',
-	'value'=>$this->element('admin/item_templates/new_product'),
+	'value'=>$this->element('item_templates/new_product'),
 	'label'=>'Content',
 	'class'=>'rich'
 ));?> 
