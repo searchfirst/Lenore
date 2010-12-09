@@ -3,12 +3,12 @@
 <li><?php echo $html->link(
 	sprintf('Edit %s',Configure::read('Product.alias')),
 	array('admin'=>true,'controller'=>'products','action'=>'edit',$product['Product']['id']),
-	array('class'=>'edit button')
+	array('class'=>'edit button ajax-modal')
 ); ?></li>
 <li><?php echo $html->link(
 	sprintf('Delete %s',Configure::read('Product.alias')),
 	array('admin'=>true,'controller'=>'products','action'=>'delete',$product['Product']['id']),
-	array('class'=>'delete button')
+	array('class'=>'delete button ajax-modal')
 ); ?></li>
 </ul>
 <div class="content">
