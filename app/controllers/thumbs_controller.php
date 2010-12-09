@@ -13,7 +13,7 @@ class ThumbsController extends AppController {
 	
 	function index() {
 		if(count($this->params['pass'])) {
-			$src = implode('/',array_slice($this->params['pass'],1));
+			$src = implode('/',array_slice($this->params['pass'],1)).'.'.$this->params['url']['ext'];
 			$action = $this->params['pass'][0];
 			$phpThumb = new phpthumb();
 			$sourceFilename = Configure::read('Resource.media_path').DS.$src;
