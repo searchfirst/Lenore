@@ -24,6 +24,12 @@ $(document).ready(function() {
 
 var LenoreCore = function($) {return {
 	ckEditorInit: function() {
+		CKEDITOR.on('instanceReady', function(ev) {
+			var tags = ['p','ol','ul','li','div','span','td','th','dd','dt','blockquote','pre','article','section','aside','footer','header','hgroup'];
+			for (var key in tags) {
+				ev.editor.dataProcessor.writer.setRules(tags[key],{indent:false,breakBeforeOpen:true,breakAfterOpen:false,breakBeforeClose:false,breakAfterClose:true});
+			}
+		});
 		$('textarea.rich').ckeditor({
 			customConfig:'/js/lib/ckeditor/config.js'
 		});
