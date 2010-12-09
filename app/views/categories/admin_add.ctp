@@ -5,7 +5,7 @@
 <?php echo $form->input('Category.description',array(
 	'cols'=>'60',
 	'rows'=>'20',
-	'value'=>$this->element('admin/item_templates/new_category'),
+	'value'=>$this->element('item_templates/new_category'),
 	'label'=>'Content',
 	'class'=>'rich'
 ));?> 

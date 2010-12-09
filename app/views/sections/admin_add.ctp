@@ -5,7 +5,7 @@
 <?php echo $form->input('Section.description',array(
 	'cols'=>'60',
 	'rows'=>'20',
-	'value'=>$this->element('admin/item_templates/new_section'),
+	'value'=>$this->element('item_templates/new_section'),
 	'label'=>'Content',
 	'class'=>'rich'
 ))?> 
