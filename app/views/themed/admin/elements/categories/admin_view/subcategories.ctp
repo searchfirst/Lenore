@@ -1,7 +1,7 @@
 <?php if(!empty($category['Subcategories'])):?>
 <div class="item">
 <h3><?php echo sprintf('%s Subcategories',Configure::read('Category.alias')); ?></h3>
-<ul class="sortable categories">
+<ul class="sortable categories admin_list">
 <?php foreach($category['Subcategories'] as $subcat):?>
 <li id="Category_<?php echo $subcat['id']; ?>" class="<?php
 $sortable_products_flags = array();

@@ -3,7 +3,7 @@
 <ul class="hook_menu">
 <li><?php echo $html->link(sprintf('Add %s',Configure::read('Product.alias')),array('admin'=>true,'controller'=>'products','action'=>'add','?'=>array('data[Product][category_id]'=>$category['Category']['id']))); ?></li>
 </ul>
-<ul class="sortable products">
+<ul class="sortable products admin_list">
 <?php if(empty($category['Product'])):?>
 <li>No Products</li>
 <?php else:?>

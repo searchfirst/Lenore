@@ -7,7 +7,7 @@
 <?php if(empty($section['Article'])):?>
 <p>No <?php echo Inflector::pluralize(Configure::read('Article.alias'));?></p>
 <?php else:?>
-<ul class="sortable articles">
+<ul class="sortable articles admin_list">
 <?php foreach($section['Article'] as $article):?>
 <li id="Article_<?php echo $article['order_by']; ?>">
 <span><?php echo $html->link($article['title'],array('admin'=>true,'controller'=>'articles','action'=>'view',$article['id']))?></span>
