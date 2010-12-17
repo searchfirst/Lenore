@@ -15,6 +15,29 @@ var AppView = Backbone.View.extend({
 	}
 });
 
+var AppController = Backbone.Controller.extend({
+	routes: {
+		"^$":"app_index"
+	},
+	initialize: function() {
+		this.messages = new MessageList;
+		this.messagesPageView = new MessagePageView({
+			el: $('.messages ul.paginate').get(0),
+			collection: this.messages
+		});
+		this.messagesView = new MessageView({
+			el: $('.messages ul:first-of-type').get(0),
+			collection: this.messages,
+			pageView: this.messagesPageView
+		});
+		this.messages.bind('fetched',_.bind(this.messagesView.render,this.messagesView));
+	},
+	app_index: function() {
+		this.messages.fetch();
+	}
+});
 $(function(){
-	var LenoreApp = new AppView;
+	var LenoreApp = new AppView,
+			LenoreAppController = new AppController;
+	Backbone.history.start();
 });

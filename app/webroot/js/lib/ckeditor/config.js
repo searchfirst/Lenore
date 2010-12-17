@@ -13,4 +13,6 @@
 		['Format'],['Font'],['FontSize'],['TextColor'],
 		['Source']
 	];
+	config.htmlEncodeOutput = false;
+	config.entities = false;
 };

@@ -26,7 +26,8 @@ var MessageView = Backbone.View.extend({
 	events: {
 		'click a':'viewModal'
 	},
-	render: function(messages) {
+	render: function() {
+		console.log('render');
 		this.redrawLists();
 	},
 	redrawLists: function() {
