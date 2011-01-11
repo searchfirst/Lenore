@@ -65,7 +65,7 @@ var MessageView = Backbone.View.extend({
 				$(item_tpl(msg)).dialog({
 					title:msg.subject,
 					modal:true,
-					close: function(e,u){console.log(e);console.log(u);console.log($(this).dialog('destroy').remove())}
+					close: function(e,u){$(this).dialog('destroy').remove()}
 				});
 				return false;
 			}

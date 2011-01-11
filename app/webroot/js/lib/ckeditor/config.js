@@ -15,4 +15,7 @@
 	];
 	config.htmlEncodeOutput = false;
 	config.entities = false;
+	config.entities_additional = '';
+	config.entities_greek = false;
+	config.entities_latin = false;
 };

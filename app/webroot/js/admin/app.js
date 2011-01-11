@@ -10,8 +10,8 @@ var AppView = Backbone.View.extend({
 				collection: messages,
 				pageView: msg_page_view
 			});
-		messages.bind('fetched',function(en){view.render(this)});
-		messages.fetch();
+		//messages.bind('fetched',function(en){view.render(this)});
+		//messages.fetch();
 	}
 });
 
@@ -37,7 +37,8 @@ var AppController = Backbone.Controller.extend({
 	}
 });
 $(function(){
-	var LenoreApp = new AppView,
-			LenoreAppController = new AppController;
+//	var LenoreApp = new AppView,
+//			LenoreAppController = new AppController;
+	var LenoreAppController = new AppController;
 	Backbone.history.start();
 });

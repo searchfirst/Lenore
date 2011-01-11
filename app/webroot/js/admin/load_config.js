@@ -25,7 +25,7 @@ $(document).ready(function() {
 var LenoreCore = function($) {return {
 	ckEditorInit: function() {
 		CKEDITOR.on('instanceReady', function(ev) {
-			var tags = ['p','ol','ul','li','div','span','td','th','dd','dt','blockquote','pre','article','section','aside','footer','header','hgroup'];
+			var tags = ['p','ol','ul','li','div','span','td','th','dd','dt','blockquote','pre','article','section','aside','footer','header','hgroup','h1','h2','h3','h4','h5','h6'];
 			for (var key in tags) {
 				ev.editor.dataProcessor.writer.setRules(tags[key],{indent:false,breakBeforeOpen:true,breakAfterOpen:false,breakBeforeClose:false,breakAfterClose:true});
 			}
