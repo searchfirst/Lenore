@@ -3,7 +3,7 @@
 <li><?php echo $html->link(
 	sprintf('Edit %s',Configure::read('Product.alias')),
 	array('admin'=>true,'controller'=>'products','action'=>'edit',$product['Product']['id']),
-	array('class'=>'edit button ajax-modal')
+	array('class'=>'edit')
 ); ?></li>
 <li><?php echo $html->link(
 	sprintf('Delete %s',Configure::read('Product.alias')),

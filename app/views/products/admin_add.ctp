@@ -15,6 +15,9 @@
 <?php if(Configure::read('Product.sales_options')): ?>
 <?php echo $form->input('Product.price',array('size'=>3,'maxlength'=>9));?>
 <?php echo $form->input('Product.options',array('cols'=>'40','rows'=>'5','class'=>'plain'))?> 
+<?php if(Configure::read('Product.brands')): ?>
+<?php echo $form->input('Product.brand') ?> 
+<?php endif ?>
 <?php endif; ?>
 <?php echo $form->input('Product.category_id',array('label'=>'Category'));?> 
 </fieldset>

@@ -9,9 +9,15 @@
 <td>N/A</td>
 <?php endif; ?>
 </tr>
+<?php if(Configure::read('Product.brands') && !empty($product['Product']['brand'])): ?>
+<tr>
+<th>Brand</th>
+<td><?php echo $product['Product']['brand'] ?>
+</tr>
+<?php endif ?>
 <tr>
 <th>Options</th>
-<td>s </td>
+<td>s</td>
 </tr>
 </table>
 </div>
