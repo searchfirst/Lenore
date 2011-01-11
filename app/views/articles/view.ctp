@@ -15,4 +15,3 @@
 		'html_parameters'=>array()
 	)
 ));?> 
-</div>
