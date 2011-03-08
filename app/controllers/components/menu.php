@@ -28,11 +28,13 @@ class MenuComponent extends Object {
 		$this->Controller->set('menu_suffix',Configure::read('Menu.suffix'));
 		$this->Controller->set('menu_omissions',Configure::read('Menu.omissions'));
 		$this->Controller->set('moonlight_website_menu',$this->Controller->Section->find('list',array(
-			'fields'=>array('Section.slug','Section.title')
+			'fields'=>array('Section.slug','Section.title'),
+			'order'=>'Section.order_by ASC'
 		)));
 		$this->Controller->set('moonlight_product_list',$this->Controller->Category->find('list',array(
 			'fields'=>array('Category.slug','Category.title'),
-			'conditions'=>array('Category.category_id'=>null,'Category.draft'=>false)
+			'conditions'=>array('Category.category_id'=>null,'Category.draft'=>false),
+			'order'=>'Category.order_by ASC'
 		)));
 	}
 }

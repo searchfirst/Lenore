@@ -73,7 +73,7 @@ $config = array(
 			'to' => ''
 		),
 		'options' => array(
-			'contact-us' => array(
+			'contact_us' => array(
 				'subject' => 'Contact Us'
 			)
 		)

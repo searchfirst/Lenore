@@ -63,7 +63,7 @@ AddType application/x-chrome-extension crx
 	#ExpiresByType application/javascript    "access plus 1 month"
 	#ExpiresByType text/javascript           "access plus 1 month"
 </IfModule>
-#FileETag None
+FileETag None
 Options -MultiViews 
 AddDefaultCharset utf-8
 AddCharset utf-8 .html .css .js .xml .json .rss
