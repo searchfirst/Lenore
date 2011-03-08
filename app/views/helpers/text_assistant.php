@@ -70,12 +70,12 @@ class TextAssistantHelper extends Helper {
 			$model = $options['model'];
 			$media_options = $options['media_options'];
 			$text = $options['text'];
-			$text = $this->sanitise($text,false);
-			$text = SmartyPants(Markdown($text));
 			if(!empty($media))
 				$text = $this->formatTextFragments($text,$media,$model,$media_options);
 			else
 				$text = $this->stripTextFragments($text);
+			$text = $this->sanitise($text,false);
+			$text = SmartyPants(Markdown($text));
 			return $text;
 		}
 	}
@@ -91,8 +91,8 @@ class TextAssistantHelper extends Helper {
 			$this->callbackData['link'] = $media_options['link'];
 		if(!empty($media_options['link_attributes']))
 			$this->callbackData['link_attributes'] = $media_options['link_attributes'];
-		$this->fragmentMatches = preg_match_all('/\{\[media\]([^\[\]{}]*)\}(\[[a-zA-Z]+\])?/',$text, $matches);
-		$text = preg_replace_callback('/\{\[media\]([^\[\]{}]*)\}(\[[a-zA-Z]+\])?/',array($this,'mediaFragment'),$text,-1);
+		$this->fragmentMatches = preg_match_all('/\{\[media\]([^\[\]{}]*)\}(\[\w+\])?/',$text);
+		$text = preg_replace_callback('/\{\[media\]([^\[\]{}]*)\}(\[\w+\])?/i',array($this,'mediaFragment'),$text);
 		return $text;
 	}
 
