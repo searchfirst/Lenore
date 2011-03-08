@@ -91,8 +91,8 @@ class TextAssistantHelper extends Helper {
 			$this->callbackData['link'] = $media_options['link'];
 		if(!empty($media_options['link_attributes']))
 			$this->callbackData['link_attributes'] = $media_options['link_attributes'];
-		$this->fragmentMatches = preg_match_all('/\{\[media\]([^\[\]{}]*)\}(\[\w+\])?/',$text);
-		$text = preg_replace_callback('/\{\[media\]([^\[\]{}]*)\}(\[\w+\])?/i',array($this,'mediaFragment'),$text);
+		$this->fragmentMatches = preg_match_all('/\{\[media\]([^\[\]{}]*)\}(\[\w+\])?/',$text,$fM);
+		$text = preg_replace_callback('/\{\[media\]([^\[\]{}]*)\}(\[\w+\])?/',array($this,'mediaFragment'),$text);
 		return $text;
 	}
 
