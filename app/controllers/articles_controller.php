@@ -72,7 +72,7 @@ class ArticlesController extends AppController {
 	}
 
 	function admin_add() {
-		if(empty($this->data)) {
+		if (!$this->RequestHandler->isPost()) {
 			$this->set('sections', $this->Article->Section->find('list',array('conditions'=>array('articles_enabled'=>1))));
 		} else {
 			if($this->Article->save($this->data)) {
