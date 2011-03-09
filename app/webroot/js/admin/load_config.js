@@ -29,6 +29,7 @@ var LenoreCore = function($) {return {
 			for (var key in tags) {
 				ev.editor.dataProcessor.writer.setRules(tags[key],{indent:false,breakBeforeOpen:true,breakAfterOpen:false,breakBeforeClose:false,breakAfterClose:true});
 			}
+			ev.editor.dataProcessor.writer.selfClosingEnd = '/>';
 		});
 		$('textarea.rich').ckeditor({
 			customConfig:'/js/lib/ckeditor/config.js'
