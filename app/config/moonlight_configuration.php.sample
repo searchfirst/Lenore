@@ -31,6 +31,10 @@ $config = array(
 	'Rss' => array(
 		'cache_path' => ROOT.DS.APP_DIR.DS.'tmp'.DS.'cache'.DS.'rss'
 	),
+	'Aggregator' => array(
+		'feeds' => array(
+		)
+	),
 	'Thumb' => array(
 		'cache_path' => ROOT.DS.APP_DIR.DS."tmp".DS.'cache'.DS.'thumbnails',
 		'imagemagick_path' => '/usr/bin/convert',

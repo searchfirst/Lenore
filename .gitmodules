@@ -7,3 +7,6 @@
 [submodule "app/plugins/localized"]
 	path = app/plugins/localized
 	url = git://github.com/cakephp/localized.git
+[submodule "app/plugins/feeds"]
+	path = app/plugins/feeds
+	url = git://github.com/connrs/cake-feeds.git

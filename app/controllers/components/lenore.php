@@ -19,6 +19,7 @@ class LenoreComponent extends Object {
 		$this->mergeGetDataWithThisData();
 		$this->setSnippets();
 		$this->getInboxMessages();
+		$this->aggregateFeeds();
 	}
 
 	function mergeGetDataWithThisData() {
@@ -146,5 +147,11 @@ class LenoreComponent extends Object {
 			}
 			$this->Controller->set('messages_a',$messages);
 		}
+	}
+
+	function aggregateFeeds() {
+		$feedList = Configure::read('Aggregator.feeds');
+		$feeds = $this->Controller->Aggregator->find('all',array('conditions'=>$feedList));
+		$this->Controller->set('aggregatorFeeds',$feeds);
 	}
 }

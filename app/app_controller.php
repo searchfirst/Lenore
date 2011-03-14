@@ -1,7 +1,7 @@
 <?php
 class AppController extends Controller {
 	var $uses = array(
-		'Section','Category','Snippet','Message'
+		'Section','Category','Snippet','Message','Feeds.Aggregator'
 	);
 	var $helpers = array(
 		'Html','Form','Time','TextAssistant','MediaAssistant','Js','Javascript','Session','Menu','Minify.Minify','Paginator'
