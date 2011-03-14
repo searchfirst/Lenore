@@ -53,7 +53,7 @@ class LenoreComponent extends Object {
 	function minifyJs() {
 		if($this->actionIsAdmin()) {
 			$this->Controller->set('min_js_head',$this->Controller->Minify->js(array(
-				'js/lib/modernizr.js','js/lib/selectivizr.js','js/lib/flexie.js','js/lib/mediaqueries.js','js/jquery/jquery.js','js/jquery/ui/core.js',
+				'js/lib/modernizr.min.js','js/lib/selectivizr.min.js','js/lib/flexie.js','js/lib/mediaqueries.min.js','js/jquery/jquery.js','js/jquery/ui/core.js',
 				'js/jquery/ui/widget.js','js/jquery/ui/mouse.js', 'js/jquery/ui/bgiframe.js','js/jquery/ui/sortable.js','js/jquery/ui/dialog.js',
 				'js/jquery/ui/position.js','js/jquery/lib/iphoneui.js','js/jquery/lib/editable_text.js','js/jquery/hook_menu.js','js/jquery/dux_tabs.js',
 				'js/jquery/lib/flag_toggle.js','js/lib/ckeditor/lenore_load.js','dontpack1'=>'js/lib/ckeditor/ckeditor.js','dontpack2'=>'js/lib/ckeditor/adapters/jquery.js','js/admin/load_config.js',
