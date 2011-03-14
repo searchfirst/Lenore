@@ -86,10 +86,10 @@ $config = array(
 		'public' => array(
 			'js' => array(
 				'core' => array(
-					'js/lib/modernizr.min.js'
+					'js/lib/modernizr.min.js','js/lib/css3-mq-test.min.js'
 				),
 				'ltie9' => array(
-					'js/lib/css3-mq-test.min.js','js/lib/selectivizr.min.js','js/lib/mediaqueries.min.js','js/lib/ie9.min.js'
+					'js/lib/selectivizr.min.js','js/lib/mediaqueries.min.js','js/lib/ie9.min.js'
 				)
 			),
 			'css' => array(
