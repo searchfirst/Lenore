@@ -151,7 +151,7 @@ class LenoreComponent extends Object {
 
 	function aggregateFeeds() {
 		$feedList = Configure::read('Aggregator.feeds');
-		$feeds = $this->Controller->Aggregator->find('all',array('conditions'=>$feedList));
+		$feeds = $this->Controller->Aggregator->find('all',array('conditions'=>$feedList,'feed'=>array( 'cache'=>'default' )));
 		$this->Controller->set('aggregatorFeeds',$feeds);
 	}
 }
