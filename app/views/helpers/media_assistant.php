@@ -66,6 +66,9 @@ class MediaAssistantHelper extends Helper {
 				'model'=>null
 			);
 			$options = array_merge($default_options,$options);
+			if (empty($options['html_attributes']['class']) && !empty($options['conversion_parameter'])) {
+				$options['html_attributes']['class'] = $options['conversion_parameter'];
+			}
 			$options['model'] = Inflector::underscore($options['model']);
 			if(Configure::read('Moonlight.use_html')) {
 				$trailing_slash = ' /';
