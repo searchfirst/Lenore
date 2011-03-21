@@ -85,7 +85,10 @@ class AppModel extends Model {
 	
 	public function handleFileUploads() {
 		if(!empty($this->data['Resource'])) {
-			$resources = $this->getExistingResourceIds();
+			//$resources = $this->getExistingResourceIds();
+			// In 1.3, the previous line doesn't seem necessary and, in fact, breaks image handling
+			// One of these days I'll rip this crap code out and just do it the Cake way.
+			$resources = array();
 			foreach($this->data['Resource'] as $x => $resource) {
 				if($this->validFileArray($resource) && $resource['file']['error']==UPLOAD_ERR_OK) {
 					if($resource['type']==Resource::$types['Decorative'] && $this->alreadyHasDeco()) {
