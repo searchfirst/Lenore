@@ -36,5 +36,23 @@ class ResourcesController extends AppController
 		}
 	}
 
+	function admin_reorder() {
+		$ajax_result = true;
+		if(!(empty($this->data['Initial'])||empty($this->data['Final']))) {
+			$new_ids = $this->data['Final'];
+			$current_orders = $this->Resource->find('all',array(
+				'conditions' => array('Resource.id'=>$this->data['Initial']),
+				'recursive' => 0,
+				'fields' => array('Resource.id','Resource.order_by'),
+				'order' => 'Resource.order_by ASC'
+			));
+			foreach($current_orders as $x=>$co) {
+				$resource = array('Resource'=>array('id'=>$new_ids[$x],'order_by'=>$co['Resource']['order_by']));
+				if(!$this->Resource->save($resource)) $ajax_result = $ajax_result && false;
+			}
+		} else {
+			$ajax_result = $ajax_result && false;
+		}
+		$this->set('ajax_result',$ajax_result?'Success':'Fail');	
+	}
 }
-?>

@@ -2,9 +2,9 @@
 <p class="problem notification">There are too many items here. You need to remove <?php echo $inline_media['balance'];?> item.</p>
 <?php endif;?>
 <?php if(!empty($section['Resource'])):?>
-<ul>
+<ul class="sortable resources">
 <?php foreach($section['Resource'] as $resource):?>
-<li><?php echo $mediaAssistant->media(array('data'=>$resource,'conversion_parameter'=>'crop','model'=>'section'));?></li>
+<li id="Resource_<?php echo $resource['order_by'] ?>"><?php echo $mediaAssistant->media(array('data'=>$resource,'conversion_parameter'=>'crop','model'=>'section'));?></li>
 <?php endforeach;?>
 </ul>
 <?php endif;?>
