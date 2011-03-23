@@ -21,6 +21,9 @@ class CategoriesController extends AppController {
 		if(!$slug) {
 			$this->Session->setFlash('Invalid id for Category.','flash/default',array('class'=>'error'));
 			$this->render('error');}
+		if (!$this->Lenore->actionIsAdmin()) {
+			$this->Category->bindModel(array('hasMany'=>array('Product' => array('conditions' => array('Product.draft'=>false)))));
+		}
 		$category = $this->Category->find('first',array(
 			'conditions'=>array('Category.slug'=>$slug),
 			'recursive'=>2
@@ -187,4 +190,3 @@ class CategoriesController extends AppController {
 
 
 }
-?>

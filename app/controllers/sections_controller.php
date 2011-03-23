@@ -12,6 +12,9 @@ class SectionsController extends AppController {
 			//$this->Session->setFlash('Invalid id for Section.');
 			$this->redirect('/');
 		}
+		if (!$this->Lenore->actionIsAdmin()) {
+			$this->Section->bindModel(array('hasMany'=>array('Article' => array('conditions' => array('Article.draft'=>false)))));
+		}
 		if($slug=='news')
 			$this->Section->bindModel(array('hasMany'=>array('Article'=>array('className'=>'Article','conditions'=>'draft=0','order'=>'modified DESC'))));
 		if($slug=='blog')
@@ -164,4 +167,3 @@ class SectionsController extends AppController {
 	}
 
 }
-?>
