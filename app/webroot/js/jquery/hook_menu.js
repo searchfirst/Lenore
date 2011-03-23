@@ -28,7 +28,7 @@ jQuery.fn.hookMenu = function(settings) {
 		if(distance_to_right > popup_width)
 			return {label:'left',value:hook.offset().left};
 		else
-			return {label:'right',value:(hook.offset().left + hook.outerWidth())};
+			return {label:'right',value:(distance_to_right - hook.outerWidth())};
 	}
 	function preventParentClickBubble(h,x) {
 		h.click(function(e){if(e.target==x.get(0)) return false});
