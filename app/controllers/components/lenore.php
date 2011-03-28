@@ -100,8 +100,8 @@ class LenoreComponent extends Object {
 	}
 
 	function setRequestHandlerViewVars() {
-		$this->Controller->set('isAjax',$this->Controller->RequestHander->isAjax());
-		$this->Controller->set('is_ajax',$this->Controller->RequestHander->isAjax());
+		$this->Controller->set('isAjax',$this->Controller->RequestHandler->isAjax());
+		$this->Controller->set('is_ajax',$this->Controller->RequestHandler->isAjax());
 		$this->Controller->set('isMobile',$this->Controller->RequestHandler->isMobile());
 		$this->Controller->set('is_mobile',$this->Controller->RequestHandler->isMobile());
 	}
