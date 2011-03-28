@@ -100,12 +100,10 @@ class LenoreComponent extends Object {
 	}
 
 	function setRequestHandlerViewVars() {
-		if($this->Controller->RequestHandler->isAjax())
-			$this->Controller->set('is_ajax',true);
-		if($this->Controller->RequestHandler->isMobile())
-			$this->Controller->set('is_mobile',true);
-		else
-			$this->Controller->set('is_mobile',false);
+		$this->Controller->set('isAjax',$this->Controller->RequestHander->isAjax());
+		$this->Controller->set('is_ajax',$this->Controller->RequestHander->isAjax());
+		$this->Controller->set('isMobile',$this->Controller->RequestHandler->isMobile());
+		$this->Controller->set('is_mobile',$this->Controller->RequestHandler->isMobile());
 	}
 
 	function setModDateHeader() {
