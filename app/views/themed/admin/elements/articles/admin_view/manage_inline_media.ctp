@@ -4,7 +4,7 @@
 <?php if(!empty($article['Resource'])):?>
 <ul>
 <?php foreach($article['Resource'] as $resource):?>
-<li><?php echo $mediaAssistant->media(array('data'=>$resource,'conversion_parameter'=>'crop','model'=>'article'));?></li>
+<li><?php echo $mediaAssistant->media(array('data'=>$resource,'conversion_parameter'=>'admin_crop','model'=>'article'));?></li>
 <?php endforeach;?>
 </ul>
 <?php endif;?>

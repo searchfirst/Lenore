@@ -2,9 +2,15 @@
 <p class="problem notification">There are too many items here. You need to remove <?php echo $inline_media['balance'];?> item.</p>
 <?php endif;?>
 <?php if(!empty($section['Resource'])):?>
-<ul class="sortable resources">
+<ul class="sortable resources admin_list">
 <?php foreach($section['Resource'] as $resource):?>
-<li id="Resource_<?php echo $resource['order_by'] ?>"><?php echo $mediaAssistant->media(array('data'=>$resource,'conversion_parameter'=>'crop','model'=>'section'));?></li>
+<li id="Resource_<?php echo $resource['order_by'] ?>">
+<span><?php echo $mediaAssistant->media(array('data'=>$resource,'conversion_parameter'=>'admin_crop','model'=>'section'));?></span>
+<ul class="hook_menu">
+<li><?php echo $this->element('edit_form',array('controller'=>'resources','model'=>'Resource','id'=>$resource['id']))?></li>
+<li><?php echo $this->element('delete_form',array('controller'=>'resources','model'=>'Resource','id'=>$resource['id']))?></li>
+</ul>
+</li>
 <?php endforeach;?>
 </ul>
 <?php endif;?>

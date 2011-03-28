@@ -40,6 +40,7 @@ $config = array(
 		'imagemagick_path' => '/usr/bin/convert',
 		'media_parameters' => array(
 			'crop'=>array('w'=>75,'h'=>75),
+			'admin_crop'=>array('w'=>50,'h'=>50),
 			'banner'=>array('h'=>150,'aoe'=>1,'far'=>'C'),
 			'figure'=>array('w'=>435,'aoe'=>1,'far'=>'C'),
 			'fadedbanner'=>array('w'=>550,'h'=>160,'fltr'=>'clr|50|FFFFFF'),
