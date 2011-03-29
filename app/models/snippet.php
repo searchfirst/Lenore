@@ -16,6 +16,6 @@ class Snippet extends AppModel {
 	}
 
 	function clearViewCache() {
-		Cache::delete('snippets_f');
+		Cache::delete('snippets_f','default');
 	}
 }
