@@ -5,7 +5,7 @@
 <ul class="sortable resources admin_list">
 <?php foreach($category['Resource'] as $resource): ?>
 <li id="Resource_<?php echo $resource['id'] ?>">
-<span><?php echo $mediaAssistant->media(array('data'=>$resource,'conversion_parameter'=>'admin_crop','model'=>'section')) ?></span>
+<span><?php echo $this->MediaAssistant->media(array('data'=>$resource,'conversion_parameter'=>'admin_crop','model'=>'Category')) ?></span>
 <ul class="hook_menu">
 <li><?php echo $this->element('edit_form',array('controller'=>'resources','model'=>'Resource','id'=>$resource['id'])) ?></li>
 <li><?php echo $this->element('delete_form',array('controller'=>'resources','model'=>'Resource','id'=>$resource['id'])) ?></li>
