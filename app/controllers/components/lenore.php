@@ -5,9 +5,11 @@ class LenoreComponent extends Object {
 	function initialize(&$controller) {
 		$this->Controller =& $controller;
 		$this->Controller->Auth->allowedActions = array('display','login','logout','index','view','add');
-		//$this->Controller->Auth->allowedActions = array('*');
 		$this->minifyJs();
 		$this->minifyCss();
+		if (!$this->actionIsAdmin()) {
+			$this->rebindModels();
+		}
 	}
 
 	function startup(&$controller, $settings=array()) {
@@ -123,9 +125,9 @@ class LenoreComponent extends Object {
 
 	function setSnippets() {
 		if(!$this->actionIsAdmin()) {
-			if(false===($snippets=Cache::read('snippets_f'))) {
+			if(false===($snippets=Cache::read('snippets_f','default'))) {
 				$snippets = $this->Controller->Snippet->find('list',array('fields'=>array('Snippet.slug','Snippet.content')));
-				Cache::write('snippets_f',$snippets);
+				Cache::write('snippets_f',$snippets,'default');
 			}
 			$this->Controller->set('snippets',$snippets);
 		}
@@ -135,10 +137,10 @@ class LenoreComponent extends Object {
 	
 	function getInboxMessages() {
 		if($this->actionIsAdmin()) {
-			if(false===($msg_cache=Cache::read('messages_a'))) {
+			if(false===($msg_cache=Cache::read('messages_a','default'))) {
 				$messages = $this->Controller->paginate('Message');
 				$msg_cache = array('results' => $messages,'paging' => $this->Controller->params['paging']['Message']);
-				Cache::write('messages_a',$msg_cache);
+				Cache::write('messages_a',$msg_cache,'default');
 			} else {
 				$messages = $msg_cache['results'];
 				$this->Controller->params['paging']['Message'] = $msg_cache['paging'];
@@ -151,5 +153,20 @@ class LenoreComponent extends Object {
 		$feedList = Configure::read('Aggregator.feeds');
 		$feeds = $this->Controller->Aggregator->find('all',array('conditions'=>$feedList,'feed'=>array( 'cache'=>'default' )));
 		$this->Controller->set('aggregatorFeeds',$feeds);
+	}
+
+	function rebindModels() {
+		if (($catRebind = Configure::read('Category.rebind')) && in_array('Category',$this->Controller->uses)) {
+			$this->Controller->Category->rebindModel($catRebind);
+		}
+		if (($prodRebind = Configure::read('Product.rebind')) && in_array('Product',$this->Controller->uses)) {
+			$this->Controller->Product->rebindModel($prodRebind);
+		}
+		if (($sectRebind = Configure::read('Section.rebind')) && in_array('Section',$this->Controller->uses)) {
+			$this->Controller->Section->rebindModel($sectRebind);
+		}
+		if (($artRebind = Configure::read('Article.rebind')) && in_array('Article',$this->Controller->uses)) {
+			$this->Controller->Article->rebindModel($artRebind);
+		}
 	}
 }

@@ -1,12 +1,5 @@
 <?php
 class AppModel extends Model {
-	function afterSave($created) {
-		//if(($order_id = $this->getLastInsertId()) && (!isset($this->already_saved))) {
-		//	$this->already_saved = true;
-		//	$this->saveField('order_by',$order_id);
-		//}
-	}
-	
 	function afterDelete() {
 		$resource = new Resource;
 		if(!empty(Resource::$delete_list) && $this->name!='Resource')
@@ -19,6 +12,21 @@ class AppModel extends Model {
 		if($this->name!='Resource' && empty($this->data[$this->name]['id']) && $this->hasField('slug'))
 			$this->data[$this->name]['slug'] = $this->getUniqueSlug($this->data[$this->name]['title']);
 		return true;
+	}
+
+	function rebindModel($params, $reset=false) {
+		$unbind = array();
+		$newBindings = array();
+		foreach ($params as $assoc => $models) {
+			foreach ($models as $model => $settings) {
+				if (!empty($this->{$assoc}[$model])) {
+					$newBindings[$assoc][$model] = array_merge($this->{$assoc}[$model],$settings);
+					$unbind[$assoc][] = $model;
+				}
+			}
+		}
+		$this->unbindModel($unbind, $reset);
+		$this->bindModel($newBindings, $reset);
 	}
 
 	function beforeDelete($cascade) {
