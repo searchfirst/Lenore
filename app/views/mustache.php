@@ -8,6 +8,7 @@ class MustacheView extends ThemeView {
 
 	function render($action=null,$layout=null,$file=null) {
 		$m = new Mustache;
-		return $m->render(parent::render($action,$layout,$file),$this->viewVars);
+		$cake_render = parent::render($action,$layout,$file);
+		return $m->render($cake_render,$this->viewVars);
 	}
 }

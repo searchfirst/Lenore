@@ -24,9 +24,12 @@ class MenuComponent extends Object {
 	}
 
 	function setMenus() {
-		$this->Controller->set('menu_prefix',Configure::read('Menu.prefix'));
-		$this->Controller->set('menu_suffix',Configure::read('Menu.suffix'));
-		$this->Controller->set('menu_omissions',Configure::read('Menu.omissions'));
+		if(!$menu_prefix=Configure::read('Menu.prefix')) $menu_prefix = array();
+		if(!$menu_suffix=Configure::read('Menu.suffix')) $menu_suffix = array();
+		if(!$menu_omissions=Configure::read('Menu.omissions')) $menu_omissions = array();
+		$this->Controller->set('menu_prefix',$menu_prefix);
+		$this->Controller->set('menu_suffix',$menu_suffix);
+		$this->Controller->set('menu_omissions',$menu_omissions);
 		$this->Controller->set('moonlight_website_menu',$this->Controller->Section->find('list',array(
 			'conditions'=>array('Section.draft'=>false),
 			'fields'=>array('Section.slug','Section.title'),
