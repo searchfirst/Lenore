@@ -3,6 +3,7 @@ height: 1.25em;
 }
 
 ul.sortable > li.sortable-placeholder {
+background-color: rgb(59,75,91);
 background-color: rgba(59,75,91,0.2);
 }
 
@@ -23,4 +24,8 @@ cursor: move;
 
 html.no-svg ul.sortable > li > span.mover {
 background-image: url('/img/admin/mover.svg.png');
+}
+
+.ie8 span.mover {
+background-color: black;
 }

@@ -26,6 +26,7 @@
 
 .editable {
 min-height: 2em;
+background-color: rgb(230,230,230);
 background-color: rgba(0,0,0,0.1);
 display: block;
 white-space: nowrap;
