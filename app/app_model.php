@@ -102,8 +102,7 @@ class AppModel extends Model {
 					if($resource['type']==Resource::$types['Decorative'] && $this->alreadyHasDeco()) {
 						$this->fileUploadError('has_deco');
 					} else {
-						$this->repairMimeTypes($resource['type'],$resource['file']['name']);
-						$resource['mime_type'] = $resource['file']['type'];
+						$resource['mime_type'] = $this->repairMimeTypes($resource['file']['type'],$resource['file']['name']);
 						$resource['extension'] = $this->getExtension($resource['file']['type'],$resource['file']['name']);
 						$resource['slug'] = $this->Resource->getUniqueSlug($this->getParentTitle($x));
 						$resource['path'] = Configure::read('Resource.media_path').DS.Inflector::underscore($this->name).DS;
@@ -166,19 +165,16 @@ class AppModel extends Model {
 		}
 	}
 	
-	public function repairMimeTypes(&$fileupload_type,$filename) {
+	public function repairMimeTypes($fileupload_type,$filename) {
 		if($fileupload_type=='image/pjpeg') {
 			$fileupload_type = 'image/jpeg';
 		} elseif($fileupload_type=='application/octet-stream') {
-			switch(pathinfo($filename,PATHINFO_EXTENSION)) {
-				case 'flv':
-					$fileupload_type = 'video/x-flv';
-					break;
-				default:
-					$fileupload_type = 'application/octet-stream';
-					break;
+			$pathinfo_ext = pathinfo($filename,PATHINFO_EXTENSION);
+			if ($pathinfo_ext == 'flv') {
+				$fileupload_type = 'video/x-flv';
 			}
 		}
+		return $fileupload_type;
 	}
 
 	function moveUpload($resource_data) {
@@ -247,13 +243,17 @@ class AppModel extends Model {
 	}
 	
 	function getExtension($mimetype,$filename) {
-		$arr_mimetype = array(
+		$mimetypes = array(
 			'image/jpeg'	=>	'jpg',
 			'image/png'		=>	'png',
 			'image/gif'		=>	'gif'
 		);
-		if(isset($arr_mimetype[$mimetype])) return $arr_mimetype[$mimetype];
-		else return (($ext_from_file = pathinfo($filename,PATHINFO_EXTENSION))!='')?$ext_from_file:'';
+		if (isset($mimetypes[$mimetype])) {
+			return $mimetypes[$mimetype];
+		} else {
+			$deduced_mimetype = strtolower(pathinfo($filename,PATHINFO_EXTENSION));
+			return !empty($deduced_mimetype) ? $deduced_mimetype : '';
+		}
 	}
 	
 	function alreadyHasDeco() {

@@ -19,7 +19,7 @@ class ProductsController extends AppController
 		));
 		if(!empty($product) && (!isset($this->params['alt_content']) || $this->params['alt_content']!='Rss')) {
 			if($product['Category']['slug']!=$this->params['category']) {
-				$this->redirect(sprintf('/%s/%s/%s',Inflector::tableize(Configure::read('Product.alias'))),$product['Category']['slug'],$product['Product']['slug'],301);
+				$this->redirect(sprintf('/%s/%s/%s',Inflector::tableize(Configure::read('Product.alias'),$product['Category']['slug'],$product['Product']['slug'])),301);
 				return true;
 			}
 			$this->set('title_for_layout',sprintf('%s | %s',$product['Product']['title'],$product['Category']['title']));
@@ -41,9 +41,8 @@ class ProductsController extends AppController
 	}
 
 	function admin_add() {
-		if(empty($this->data)) {
-			$this->set('categories',$this->Product->Category->find('list'));
-		} else {
+		$this->set('categories',$this->Product->Category->find('list'));
+		if ($this->RequestHandler->isPost()) {
 			if($this->Product->save($this->data)) {
 				$this->Session->setFlash("This item has been saved.",'flash/default',array('class'=>'success'));
 				$this->redirect('/admin/products/view/'.$this->Product->getLastInsertId());
