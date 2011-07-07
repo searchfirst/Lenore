@@ -128,9 +128,9 @@ class LenoreComponent extends Object {
 
 	function setSnippets() {
 		if(!$this->actionIsAdmin()) {
-			if(false===($snippets=Cache::read('snippets_f','default'))) {
+			if(false===($snippets=Cache::read('snippets_f','lenore'))) {
 				$snippets = $this->Controller->Snippet->find('list',array('fields'=>array('Snippet.slug','Snippet.content')));
-				Cache::write('snippets_f',$snippets,'default');
+				Cache::write('snippets_f',$snippets,'lenore');
 			}
 			$this->Controller->set('snippets',$snippets);
 		}
@@ -140,10 +140,10 @@ class LenoreComponent extends Object {
 	
 	function getInboxMessages() {
 		if($this->actionIsAdmin()) {
-			if(false===($msg_cache=Cache::read('messages_a','default'))) {
+			if(false===($msg_cache=Cache::read('messages_a','lenore'))) {
 				$messages = $this->Controller->paginate('Message');
 				$msg_cache = array('results' => $messages,'paging' => $this->Controller->params['paging']['Message']);
-				Cache::write('messages_a',$msg_cache,'default');
+				Cache::write('messages_a',$msg_cache,'lenore');
 			} else {
 				$messages = $msg_cache['results'];
 				$this->Controller->params['paging']['Message'] = $msg_cache['paging'];
@@ -154,7 +154,10 @@ class LenoreComponent extends Object {
 
 	function aggregateFeeds() {
 		$feedList = Configure::read('Aggregator.feeds');
-		$feeds = $this->Controller->Aggregator->find('all',array('conditions'=>$feedList,'feed'=>array( 'cache'=>'default' )));
+		$feeds = array();
+		if (!empty($feedList)) {
+			$feeds = $this->Controller->Aggregator->find('all',array('conditions'=>$feedList,'feed'=>array( 'cache'=>'default' )));
+		}
 		$this->Controller->set('aggregatorFeeds',$feeds);
 	}
 

@@ -127,4 +127,9 @@
  *
  */
 	Cache::config('default', array('engine' => 'File'));
-?>
+	Cache::config('lenore', array(
+		'engine' => 'File',
+		'duration' => '+1 month',
+		'path' => CACHE . 'lenore' . DS,
+		'prefix' => 'cake_lenore_'
+	));
