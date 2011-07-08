@@ -29,6 +29,7 @@ class SectionsController extends AppController {
 			if(!empty($section['Section']['meta_description']) || !empty($section['Section']['meta_keywords']))
 				$this->set('metadata_for_layout',array('description'=>$section['Section']['meta_description'],'keywords'=>$section['Section']['meta_keywords']));
 		} else {
+			var_export($slug);
 			$this->viewPath = 'errors';
 			$this->render('not_found');
 		}

@@ -1,4 +1,4 @@
-<h2><?php echo htmlentities(MOONLIGHT_CATEGORIES_TITLE) ?></h2>
+<h1><?php echo Inflector::pluralize(Configure::read('Category.alias')) ?></h2>
 
 <div class="product_list">
 <?php foreach ($categories as $category):?>

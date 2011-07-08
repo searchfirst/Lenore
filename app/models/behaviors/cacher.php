@@ -17,6 +17,6 @@ class CacherBehavior extends ModelBehavior {
 	function deleteRegisteredCaches(&$model) {
 		if(!empty($this->settings['registered_caches']) && is_array($this->settings['registered_caches']))
 			foreach($this->settings['registered_caches'] as $cache)
-				Cache::delete($cache);
+				Cache::delete($cache,'lenore');
 	}
 }

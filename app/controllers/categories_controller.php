@@ -14,7 +14,9 @@ class CategoriesController extends AppController {
 			$this->render('not_found');
 		}
 		$this->set('title_for_layout',Configure::read('Category.alias'));
-		$this->set('categories',$this->Category->findAll());
+		$this->set('categories',$this->Category->find('all', array(
+			'conditions' => array('Category.draft' => false)
+		)));
 	}
 	
 	function view($slug = null) {

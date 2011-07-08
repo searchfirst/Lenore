@@ -29,10 +29,12 @@ class SlugRoute extends CakeRoute {
 		}
 		if (!empty($params['section'])) {
 			if (isset($article_slugs[$params['slug']]) && isset($section_slugs[$params['section']])) {
+				$params['pass']['slug'] = $params['slug'];
 				return $params;
 			}
 		}
 		if (isset($section_slugs[$params['slug']])) {
+			$params['pass']['slug'] = $params['slug'];
 			return $params;
 		}
 		return false;

@@ -1,18 +1,17 @@
 <?php
+App::import('lib', 'routes/SlugRoute');
 Router::mapResources('messages');
 Router::parseExtensions();
-Router::connect('/', array('controller' => 'Facades', 'action' => 'index'));
-Router::connect('/admin', array('controller' => 'AdminOverview', 'action' => 'index', 'admin' => true));
-Router::connect('/products',array('controller'=>'Categories','action'=>'index'));
-Router::connect('/products/:category/:slug',array('controller'=>'Products','action'=>'view'),array('category'=>'.+','slug'=>'.+','pass'=>array('slug')));
-Router::connect('/products/*',array('controller'=>'Categories','action'=>'view'));
-Router::connect('/thumbs/*', array('controller'=>'Thumbs','action'=>'index'));
+Router::connect('/', array('controller' => 'facades', 'action' => 'index'));
+Router::connect('/admin', array('controller' => 'admin_overview', 'action' => 'index', 'admin' => true));
+Router::connect('/products',array('controller'=>'categories','action'=>'index'));
+Router::connect('/products/:category/:slug',array('controller'=>'products','action'=>'view'),array('category'=>'.+','slug'=>'.+','pass'=>array('slug')));
+Router::connect('/products/:slug', array('controller' => 'categories', 'action' => 'view'), array('slug' => '.+', 'pass' => array('slug')));
+Router::connect('/thumbs/*', array('controller'=>'thumbs','action'=>'index'));
 Router::connect('/rss/:controller/', array('alt_content'=>'Rss','action'=>'index'));
 Router::connect('/rss/:controller/*', array('alt_content'=>'Rss','action'=>'view'));
-Router::connect('/contact/*', array('controller' => 'Messages', 'action' => 'index'),array('type'=>'.*'));
-Router::connect('/cart/:action',array('controller'=>'Carts'));
-Router::connect('/search',array('controller'=>'Searches','action'=>'index'));
-//Router::connect('/:section/:slug', array('controller'=>'Articles','action'=>'view'), array('section'=>'(?!admin|groups|users|minify)(.*)','slug'=>'.+'));
-//Router::connect('/:slug', array('controller' => 'Sections','action' => 'view'),array('slug'=>'(?!admin|groups|users|minify)(.*)','pass'=>array('slug')));
+Router::connect('/contact/*', array('controller' => 'messages', 'action' => 'index'),array('type'=>'.*'));
+Router::connect('/cart/:action',array('controller'=>'carts'));
+Router::connect('/search',array('controller'=>'searches','action'=>'index'));
 Router::connect('/:section/:slug', array('controller' => 'articles', 'action' => 'view'), array('routeClass' => 'SlugRoute'));
 Router::connect('/:slug', array('controller' => 'sections', 'action' => 'view'), array('routeClass' => 'SlugRoute'));
