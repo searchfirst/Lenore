@@ -83,6 +83,16 @@ $config = array(
 			)
 		)
 	),
+	'Message' => array(
+		'Notify' => array(
+			'to' => ''
+		),
+		'options' => array(
+			'contact_us' => array(
+				'subject' => 'Contact Us'
+			)
+		)
+	),
 	'Minify' => array(
 		'public' => array(
 			'js' => array(
