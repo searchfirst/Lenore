@@ -130,7 +130,10 @@ class LenoreComponent extends Object {
 		if(!$this->actionIsAdmin()) {
 			if(false===($snippets=Cache::read('snippets_f','lenore'))) {
 				$snippets = $this->Controller->Snippet->find('list',array('fields'=>array('Snippet.slug','Snippet.content')));
-				Cache::write('snippets_f',$snippets,'lenore');
+				foreach ($snippets as $k => $snippet) {
+					$rSnippets[str_replace('-','_',$k)] = $snippet;
+				}
+				Cache::write('snippets_f',$rSnippets,'lenore');
 			}
 			$this->Controller->set('snippets',$snippets);
 		}
