@@ -68,6 +68,7 @@ class CategoriesController extends AppController {
 	}
 
 	function admin_add() {
+		$this->view = 'Theme';
 		$this->set('categories',$this->Category->find('list',array(
 			'conditions' => array('Category.category_id'=>null),
 			'order' => 'Category.title'
@@ -88,6 +89,7 @@ class CategoriesController extends AppController {
 	}
 
 	function admin_edit($id=null) {
+		$this->view = 'Theme';
 		if($id!=null) {
 			if(!empty($this->data)) {
 				if($this->Category->save($this->data)) {

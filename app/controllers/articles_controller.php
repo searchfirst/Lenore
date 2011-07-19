@@ -72,6 +72,7 @@ class ArticlesController extends AppController {
 	}
 
 	function admin_add() {
+		$this->view = 'Theme';
 		if (!$this->RequestHandler->isPost()) {
 			$this->set('sections', $this->Article->Section->find('list',array('conditions'=>array('articles_enabled'=>1))));
 		} else {
@@ -87,6 +88,7 @@ class ArticlesController extends AppController {
 	}
 
 	function admin_edit($id=null) {
+		$this->view = 'Theme';
 		if($id!=null) {
 			if(!empty($this->data)) {
 				if($this->Article->save($this->data)) {

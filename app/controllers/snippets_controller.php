@@ -30,6 +30,7 @@ class SnippetsController extends AppController {
 	}
 
 	function admin_add() {
+		$this->view = 'Theme';
 		if(!empty($this->data)) {
 			if($this->Snippet->save($this->data)) {
 				$this->Session->setFlash("This item has been saved.",'flash/default',array('class'=>'success'));
@@ -41,6 +42,7 @@ class SnippetsController extends AppController {
 	}
 
 	function admin_edit($id=null) {
+		$this->view = 'Theme';
 		if($id!=null) {
 			if(!empty($this->data)) {
 				if($this->Snippet->save($this->data)) {

@@ -41,6 +41,7 @@ class ProductsController extends AppController
 	}
 
 	function admin_add() {
+		$this->view = 'Theme';
 		$this->set('categories',$this->Product->Category->find('list'));
 		if ($this->RequestHandler->isPost()) {
 			if($this->Product->save($this->data)) {
@@ -54,6 +55,7 @@ class ProductsController extends AppController
 	}
 
 	function admin_edit($id) {
+		$this->view = 'Theme';
 		if($id!=null) {
 			if(!empty($this->data)) {
 				if($this->Product->save($this->data)) {
