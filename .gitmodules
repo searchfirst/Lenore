@@ -10,3 +10,6 @@
 [submodule "app/plugins/feeds"]
 	path = app/plugins/feeds
 	url = git://github.com/connrs/cake-feeds.git
+[submodule "app/webroot/css/vendors/handy"]
+	path = app/webroot/css/vendors/handy
+	url = git://github.com/connrs/handy.git
