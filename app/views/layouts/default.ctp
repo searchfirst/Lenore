@@ -11,28 +11,18 @@
 <?php if(!empty($metadata_for_layout)) echo $this->element('metadata',array(
 	'cache'=>true,'key'=>md5(serialize($metadata_for_layout
 ))));?> 
-<?php echo $this->element('css',array(
-	'cache'=>true,'key'=>'fcss'
-));?> 
-<?php echo $this->element('js',array(
-	'cache'=>true,'key'=>'fjs'
-));?> 
+<?php echo $this->element('css',array('cache'=>false,'key'=>'fcss')) ?> 
+<?php echo $this->element('js',array('cache'=>false,'key'=>'fjs')) ?> 
 </head>
 <body class="<?php echo $this->Menu->sluggify($this->params['url']['url']);?>"><?php echo $session->check('Message.flash')?$session->flash():''; ?><div id="main">
 <header id="header" role="banner">
-<h1><?php echo $textAssistant->sanitise(Configure::read('Moonlight.website_name'));?></h1>
+<h1><?php echo $textAssistant->sanitise(Configure::read('Moonlight.website_name')) ?></h1>
 </header>
-<?php echo $this->element('menu',array(
-	'cache'=>true,'key'=>'fmenu'
-))?> 
-<?php echo $this->element('sidebar',array(
-	'cache'=>true,'key'=>'fsidebar'
-))?> 
+<?php echo $this->element('menu',array('cache'=>false,'key'=>'fmenu')) ?> 
+<?php echo $this->element('sidebar',array('cache'=>true,'key'=>'fsidebar')) ?> 
 <section id="content" role="main">
-<?php echo $content_for_layout;?> 
+<?php echo $content_for_layout ?> 
 </section>
-<?php echo $this->element('footer',array(
-	'cache'=>true,'key'=>'ffooter'
-))?> 
+<?php echo $this->element('footer',array('cache'=>true,'key'=>'ffooter')) ?> 
 </div></body>
 </html>
